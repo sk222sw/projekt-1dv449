@@ -28,7 +28,7 @@ hämta musik:
 api:er som kan komma att användas för att hämta artistinformation:
 
 * https://www.mediawiki.org/wiki/API:Main_page
-*http://www.discogs.com/developers/
+* http://www.discogs.com/developers/
 
 api:er som kan komma att användas för att hitta liknande artister:
 
