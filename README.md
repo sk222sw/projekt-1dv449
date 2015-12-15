@@ -12,7 +12,9 @@ I mitt projekt har jag tänkt skapa en webb-app där användaren skapa spellisto
 ### Tekniker
 
 Databas: mondoDB
+
 Back-end: NodeJS/ExpressJS
+
 Front-end: JavaScript, HTML, CSS
 
 ## api:er
