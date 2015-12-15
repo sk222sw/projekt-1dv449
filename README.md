@@ -2,7 +2,7 @@
 
 ## Projektbeskrivning
 
-I mitt projekt har jag tänkt skapa en webb-app där användaren skapa spellistor med låtar blandat fån Spotify, Youtube och Soundcloud. Till varje låt ska det presenteras information om artist, och eventuellt ge tips på liknande artister.
+I mitt projekt har jag tänkt skapa en webb-app där användaren skapa spellistor med låtar blandat från Spotify, Youtube och Soundcloud. Till varje låt ska det presenteras information om artist, och eventuellt ge tips på liknande artister.
 
 ### Några features
 
