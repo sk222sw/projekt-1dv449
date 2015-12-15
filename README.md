@@ -6,8 +6,8 @@ I mitt projekt har jag tänkt skapa en webb-app där användaren skapa spellisto
 
 ### Några features
 
-1. När en låt spelat färdigt ska nästa låt spelas.
-2. När man skapar en spellista skapas en unik URL som användaren kan använda för att återkomma till spellistan.
+* När en låt spelat färdigt ska nästa låt spelas.
+* När man skapar en spellista skapas en unik URL som användaren kan använda för att återkomma till spellistan.
 
 ### Tekniker
 
@@ -19,8 +19,8 @@ Front-end: JavaScript, HTML, CSS
 
 hämta musik:
 
-https://developers.google.com/youtube/
-https://developer.spotify.com/web-api/
+1. https://developers.google.com/youtube/
+2. https://developer.spotify.com/web-api/
 https://developers.soundcloud.com/
 
 api:er som kan komma att användas för att hämta artistinformation
