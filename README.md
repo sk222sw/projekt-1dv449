@@ -19,16 +19,17 @@ Front-end: JavaScript, HTML, CSS
 
 hämta musik:
 
-1. https://developers.google.com/youtube/
-2. https://developer.spotify.com/web-api/
-https://developers.soundcloud.com/
+* https://developers.google.com/youtube/
+* https://developer.spotify.com/web-api/
+* https://developers.soundcloud.com/
 
-api:er som kan komma att användas för att hämta artistinformation
+api:er som kan komma att användas för att hämta artistinformation:
 
-https://www.mediawiki.org/wiki/API:Main_page
-http://www.discogs.com/developers/
+* https://www.mediawiki.org/wiki/API:Main_page
+*http://www.discogs.com/developers/
 
-api:er som kan komma att användas för att hitta liknande artister
-http://developer.echonest.com/
-http://musicovery.com/api/V3/doc/documentation.php
+api:er som kan komma att användas för att hitta liknande artister:
+
+* http://developer.echonest.com/
+* http://musicovery.com/api/V3/doc/documentation.php
 
