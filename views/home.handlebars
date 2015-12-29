@@ -1,1 +1,25 @@
+<div class="formContainer">
+    <form class="trackForm" action="/" method="POST">
+        <input type="hidden" name="_csrf" value={{csrf}}></input>
+        <div>
+            <label for="fieldUrl">Url</label>
+            <input type="text" name="fieldUrl" />
+        </div>
+        <div>
+            <button type="submit">Add</button>
+        </div>
+    </form>
+</div>
+{{#if flash}}
+    <div class="flash-message">
+        <button type="button" class="close"
+            data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>{{flash.intro}}</strong> {{{flash.message}}}
+    </div>
+{{/if}}
+
+{{!--<script src="https://w.soundcloud.com/player/api.js"></script>--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
+<script src="https://connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
 <script type="text/javascript" src="scripts/app.js"></script>
+<script src="scripts/models/SoundCloudTrack.js"></script>
