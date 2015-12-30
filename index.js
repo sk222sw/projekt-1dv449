@@ -2,6 +2,9 @@ var express = require('express');
 var connect = require('connect');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var Playlist = require('./models/Playlist');
+
+
 
 var credentials = require('./modules/credentials.js');
 var app = express();

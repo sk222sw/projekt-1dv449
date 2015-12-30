@@ -5,6 +5,8 @@
             <label for="fieldUrl">Url</label>
             <input type="text" name="fieldUrl" />
         </div>
+            <input type="radio" name="type" value="youtube" />YouTube
+            <input type="radio" name="type" value="soundcloud" checked />SoundCloud
         <div>
             <button type="submit">Add</button>
         </div>
@@ -18,8 +20,12 @@
     </div>
 {{/if}}
 
+<h3>{{track}}</h3>
+
 {{!--<script src="https://w.soundcloud.com/player/api.js"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
 <script src="https://connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
 <script type="text/javascript" src="scripts/app.js"></script>
 <script src="scripts/models/SoundCloudTrack.js"></script>
+
+
