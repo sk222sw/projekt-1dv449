@@ -4,13 +4,10 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var Playlist = require('./models/Playlist');
 
-
-
 var credentials = require('./modules/credentials.js');
 var app = express();
 
 // app.use(connect.compress());
-
 // handlebars
 var handlebars = require('express-handlebars')
     .create({defaultLayout:'main'});
@@ -43,7 +40,7 @@ var opts = {
         socketOptions: { keepAlive: 1}
     }
 };
-mongoose.connect(credentials.mongo.development.connectionString, opts);
+// mongoose.connect(credentials.mongo.development.connectionString, opts);
 
 var Vacation = require('./models/mongo.js');
 Vacation.find(function (err, tests) {

@@ -5,6 +5,7 @@ var Vacation = require('./../models/mongo.js');
 var SoundCloudDAL = require('./../models/SoundCloudDAL');
 var Playlist = require('./../models/Playlist');
 var SCTrack = require('./../models/SoundCloudTrack');
+var PlaylistDAL = require('./../models/PlaylistDAL');
 
 var tempPlaylist = new Playlist();
 var tempJSON = SoundCloudDAL.getJsonFromUrl();
@@ -17,16 +18,31 @@ module.exports = function(app) {
 			res.render('home', {
 				track: json.title
 			});
-		})
+		});
 	});
-
+	
+	app.get('/playlists', function (req, res) {
+		res.render('playlists', {
+			playlists: []
+		});
+	});
+	
+	app.post('/playlists', function(req, res) {
+		// TODO FIX THIS 
+	    var playlist = new Playlist(req.body.fieldPlaylistTitle);
+	    
+	    PlaylistDAL.addPlaylistToDB(playlist);
+	    
+	    res.render('playlists');
+	});
+	
 	app.post('/', function (req, res) {
 		var url = req.body.fieldUrl || '';
 		
 		SoundCloudDAL.getJsonFromUrl(url)
 		.then(function(json) {
-	   		var track = new SCTrack(json);
-	   		return track;
+	  		var track = new SCTrack(json);
+	  		return track;
 		})
 		.then(function(track) {
 			if (req.xhr) return res.json({success: true});

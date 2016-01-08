@@ -1,0 +1,13 @@
+<div class="formContainer">
+    <h3>add playlist</h3>
+    <form class="playlistForm" action="/playlists" method="POST">
+        <input type="hidden" name="_csrf" value={{csrf}}></input>
+        <div>
+            <label for="fieldPlaylistTitle">Name</label>
+            <input type="text" name="fieldPlaylistTitle" />
+        </div>
+        <div>
+            <button type="submit">Add</button>
+        </div>
+    </form>
+</div>
