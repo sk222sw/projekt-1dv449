@@ -22,18 +22,38 @@ module.exports = function(app) {
 	});
 	
 	app.get('/playlists', function (req, res) {
-		res.render('playlists', {
-			playlists: []
-		});
+		
+		// var allPlaylists = PlaylistDAL.GetAll();
+		// console.log(allPlaylists);
+		PlaylistDAL.GetAll()
+		.then(function (result) {
+			// console.log(result);
+			res.render('playlists', {
+				playlists: result
+			});
+		})
+		
 	});
+	
+	app.get('/playlists/:id', function(req, res) {
+		// console.log(req.params.id);
+		PlaylistDAL.GetPlaylistById(req.params.id)
+		.then(function (playlist) {
+			console.log(playlist);
+			res.render('playlist', {
+				title: playlist.title,
+				id: playlist.id
+			})
+		})
+	})
 	
 	app.post('/playlists', function(req, res) {
 		// TODO FIX THIS 
 	    var playlist = new Playlist(req.body.fieldPlaylistTitle);
 	    
-	    PlaylistDAL.addPlaylistToDB(playlist);
+	    PlaylistDAL.AddPlaylistToDB(playlist);
 	    
-	    res.render('playlists');
+	    return res.redirect(303, '/playlists');
 	});
 	
 	app.post('/', function (req, res) {

@@ -11,3 +11,13 @@
         </div>
     </form>
 </div>
+
+<ul>
+    {{#each playlists}}
+        <li>
+            <a href="/playlists/{{id}}">
+                {{title}} - {{id}}
+            </a>
+        </li>
+    {{/each}}
+</ul>
