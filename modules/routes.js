@@ -7,13 +7,9 @@ var Playlist = require('./../models/Playlist');
 var SCTrack = require('./../models/SoundCloudTrack');
 var PlaylistDAL = require('./../models/PlaylistDAL');
 
-var tempPlaylist = new Playlist();
-var tempJSON = SoundCloudDAL.getJsonFromUrl();
-// var tempTrack = new SCTrack(tempJSON);
-
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
-		SoundCloudDAL.getJsonFromUrl()
+		SoundCloudDAL.GetJsonFromUrl()
 		.then(function (json) {
 			res.render('home', {
 				track: json.title
@@ -39,12 +35,29 @@ module.exports = function(app) {
 		// console.log(req.params.id);
 		PlaylistDAL.GetPlaylistById(req.params.id)
 		.then(function (playlist) {
-			console.log(playlist);
 			res.render('playlist', {
 				title: playlist.title,
 				id: playlist.id
-			})
-		})
+			});
+		});
+	});
+	
+	app.post('/playlists/:id', function(req, res) {
+	    var url = req.body.fieldUrl;
+	    var playlistId = req.params.id;
+	    // console.log(req.params.id);
+	    SoundCloudDAL.GetJsonFromUrl(url)
+	    .then(function JsonToSCTrack(json) {
+	    	var track = new SCTrack(json);
+	    	return track;
+	    })
+	    .then(function AddToDb(track) {
+	    	PlaylistDAL.AddTrack(track, playlistId)
+		    // return res.redirect(303, '/playlists');
+	    })
+	    // console.log("NJE?");
+	    // return res.redirect(303, '/playlists');
+	    
 	})
 	
 	app.post('/playlists', function(req, res) {
@@ -59,7 +72,7 @@ module.exports = function(app) {
 	app.post('/', function (req, res) {
 		var url = req.body.fieldUrl || '';
 		
-		SoundCloudDAL.getJsonFromUrl(url)
+		SoundCloudDAL.GetJsonFromUrl(url)
 		.then(function(json) {
 	  		var track = new SCTrack(json);
 	  		return track;

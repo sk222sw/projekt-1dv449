@@ -1,2 +1,20 @@
 <h2>{{title}}</h2>
 {{id}}
+<hr />
+{{tracks}}
+
+<div class="formContainer">
+    <h3>add track</h3>
+    <form class="trackForm" action="/playlists/{{id}}" method="POST">
+        <input type="hidden" name="_csrf" value={{csrf}}></input>
+        <div>
+            <label for="fieldUrl">Url</label>
+            <input type="text" name="fieldUrl" value="https://soundcloud.com/jesusdapnk/jesusdapnk-let-there-be-love"/>
+        </div>
+            <input type="radio" name="type" value="youtube" />YouTube
+            <input type="radio" name="type" value="soundcloud" checked />SoundCloud
+        <div>
+            <button type="submit">Add</button>
+        </div>
+    </form>
+</div>

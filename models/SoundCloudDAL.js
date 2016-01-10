@@ -5,7 +5,7 @@ var Playlist = require('./Playlist');
 
 var SoundCloudDAL = function () {};
 
-SoundCloudDAL.prototype.getJsonFromUrl = function (url) {
+SoundCloudDAL.prototype.GetJsonFromUrl = function (url) {
     url = "https://soundcloud.com/ben-klock/ben-klock-subzero-original-mix";
     var str = "https://api.soundcloud.com/resolve.json?url="+url+"&client_id="+credentials.soundcloud.client_id;
     return new Promise(function (resolve, reject) {

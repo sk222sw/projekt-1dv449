@@ -46,6 +46,23 @@ PlaylistDAL.prototype.GetPlaylistById = function(id) {
    });
 };
 
+PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
+   
+   console.log("id", playlistId);
+   
+   return new Promise(function(resolve, reject) {
+      Playlist.findById(playlistId, function(err, playlist) {
+         if (err) { reject(err); }
+         playlist.tracks.push(track);
+         console.log(playlist.tracks);
+         playlist.save(function (err) {
+            if(err) { reject(err); }
+            console.log("updated playlist with id", playlistId);
+         });
+      });
+   });
+};
+
 module.exports = new PlaylistDAL();
 
 
