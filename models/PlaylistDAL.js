@@ -47,9 +47,6 @@ PlaylistDAL.prototype.GetPlaylistById = function(id) {
 };
 
 PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
-   
-   console.log("id", playlistId);
-   
    return new Promise(function(resolve, reject) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
@@ -64,18 +61,3 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
 };
 
 module.exports = new PlaylistDAL();
-
-
-// 	app.get('/vacations', function(req, res){
-// 		Vacation.find({ 'type': 'SoundCloud'}, function (err, vacations) {
-// 			console.log(vacations)
-// 			var context = {
-// 				vacations: vacations.map(function(vacation){
-// 					return {
-// 						url: vacation.url
-// 					}
-// 				})
-// 			};
-// 			res.render('vacations', context);
-// 		});
-// 	});

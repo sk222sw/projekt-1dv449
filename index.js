@@ -35,32 +35,6 @@ app.use(express.static(__dirname + '/public'));
 require('./modules/routes')(app);
 
 // database:
-var opts = {
-    server: {
-        socketOptions: { keepAlive: 1}
-    }
-};
-// mongoose.connect(credentials.mongo.development.connectionString, opts);
-
-var Vacation = require('./models/mongo.js');
-Vacation.find(function (err, tests) {
-    if (err) throw err;
-    if (tests.length) return;
-    
-    new Vacation({
-        type: "SoundCloud",
-        url: "coolio"
-    }).save();
-    new Vacation({
-        type: "YouTube",
-        url: "bamse"
-    }).save();
-    new Vacation({
-        type: "SoundCloud",
-        url: "lalala"
-    }).save();
-})
-
 
 app.listen(app.get('port'), function() {
     console.log('express started on c9 localhost-ish:' +

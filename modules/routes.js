@@ -9,12 +9,7 @@ var PlaylistDAL = require('./../models/PlaylistDAL');
 
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
-		SoundCloudDAL.GetJsonFromUrl()
-		.then(function (json) {
-			res.render('home', {
-				track: json.title
-			});
-		});
+		res.render('home');
 	});
 	
 	app.get('/playlists', function (req, res) {
@@ -45,15 +40,16 @@ module.exports = function(app) {
 	app.post('/playlists/:id', function(req, res) {
 	    var url = req.body.fieldUrl;
 	    var playlistId = req.params.id;
-	    // console.log(req.params.id);
+
 	    SoundCloudDAL.GetJsonFromUrl(url)
 	    .then(function JsonToSCTrack(json) {
 	    	var track = new SCTrack(json);
+	    	console.log(track);
 	    	return track;
 	    })
 	    .then(function AddToDb(track) {
 	    	PlaylistDAL.AddTrack(track, playlistId)
-		    // return res.redirect(303, '/playlists');
+		    return res.redirect(303, '/playlists/'+playlistId);
 	    })
 	    // console.log("NJE?");
 	    // return res.redirect(303, '/playlists');
