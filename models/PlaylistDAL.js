@@ -50,6 +50,9 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
    return new Promise(function(resolve, reject) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
+         
+         // TODO use playlist.Add(track);
+         
          playlist.tracks.push(track);
          console.log(playlist.tracks);
          playlist.save(function (err) {

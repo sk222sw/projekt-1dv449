@@ -32,7 +32,8 @@ module.exports = function(app) {
 		.then(function (playlist) {
 			res.render('playlist', {
 				title: playlist.title,
-				id: playlist.id
+				id: playlist.id,
+				tracks: playlist.tracks
 			});
 		});
 	});
@@ -48,13 +49,10 @@ module.exports = function(app) {
 	    	return track;
 	    })
 	    .then(function AddToDb(track) {
-	    	PlaylistDAL.AddTrack(track, playlistId)
+	    	PlaylistDAL.AddTrack(track, playlistId);
 		    return res.redirect(303, '/playlists/'+playlistId);
-	    })
-	    // console.log("NJE?");
-	    // return res.redirect(303, '/playlists');
-	    
-	})
+	    });
+	});
 	
 	app.post('/playlists', function(req, res) {
 		// TODO FIX THIS 

@@ -1,7 +1,14 @@
 <h2>{{title}}</h2>
 {{id}}
 <hr />
-{{tracks}}
+
+<ul>
+    {{#each tracks}}
+        <li>
+            {{title}}
+        </li>
+    {{/each}}
+</ul>
 
 <div class="formContainer">
     <h3>add track</h3>
