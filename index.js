@@ -34,8 +34,6 @@ app.use(express.static(__dirname + '/public'));
 
 require('./modules/routes')(app);
 
-// database:
-
 app.listen(app.get('port'), function() {
     console.log('express started on c9 localhost-ish:' +
                 app.get('port') + '; press ctrl-c to terminate');

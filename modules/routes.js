@@ -6,6 +6,9 @@ var SoundCloudDAL = require('./../models/SoundCloudDAL');
 var Playlist = require('./../models/Playlist');
 var SCTrack = require('./../models/SoundCloudTrack');
 var PlaylistDAL = require('./../models/PlaylistDAL');
+var YoutubeDAL = require('./../models/YoutubeDAL');
+var YTTrack = require('./../models/YoutubeTrack');
+var murl = require('url');
 
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
@@ -13,21 +16,15 @@ module.exports = function(app) {
 	});
 	
 	app.get('/playlists', function (req, res) {
-		
-		// var allPlaylists = PlaylistDAL.GetAll();
-		// console.log(allPlaylists);
 		PlaylistDAL.GetAll()
 		.then(function (result) {
-			// console.log(result);
 			res.render('playlists', {
 				playlists: result
 			});
-		})
-		
+		});
 	});
 	
 	app.get('/playlists/:id', function(req, res) {
-		// console.log(req.params.id);
 		PlaylistDAL.GetPlaylistById(req.params.id)
 		.then(function (playlist) {
 			res.render('playlist', {
@@ -41,17 +38,29 @@ module.exports = function(app) {
 	app.post('/playlists/:id', function(req, res) {
 	    var url = req.body.fieldUrl;
 	    var playlistId = req.params.id;
+		var type = req.body.type;
 
-	    SoundCloudDAL.GetJsonFromUrl(url)
-	    .then(function JsonToSCTrack(json) {
-	    	var track = new SCTrack(json);
-	    	console.log(track);
-	    	return track;
-	    })
-	    .then(function AddToDb(track) {
-	    	PlaylistDAL.AddTrack(track, playlistId);
-		    return res.redirect(303, '/playlists/'+playlistId);
-	    });
+		if (type === "soundcloud") {
+		    SoundCloudDAL.GetJsonFromUrl(url)
+		    .then(function JsonToSCTrack(json) {
+		    	var track = new SCTrack(json);
+		    	return track;
+		    })
+		    .then(function AddToDb(track) {
+		    	PlaylistDAL.AddTrack(track, playlistId);
+			    return res.redirect(303, '/playlists/'+playlistId);
+		    });
+		} else {
+			YoutubeDAL.GetJsonFromUrl(url)
+			.then(function CreateYTTrack(json) {
+			    var track = new YTTrack(json);
+			    return track;
+			})
+			.then(function AddToDb(track) {
+				PlaylistDAL.AddTrack(track, playlistId);
+				return res.redirect(303, '/playlists/'+playlistId);
+			});
+		}
 	});
 	
 	app.post('/playlists', function(req, res) {

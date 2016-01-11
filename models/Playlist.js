@@ -3,7 +3,7 @@ var Playlist = function (title) {
     this.title = title || '';
 };
 
-Playlist.prototype.add = function (track) {
+Playlist.prototype.Add = function (track) {
     this.tracks.push(track)
 };
 

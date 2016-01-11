@@ -51,13 +51,11 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
          
-         // TODO use playlist.Add(track);
-         
          playlist.tracks.push(track);
-         console.log(playlist.tracks);
+         
          playlist.save(function (err) {
             if(err) { reject(err); }
-            console.log("updated playlist with id", playlistId);
+            console.log("added track to playlist with id", playlistId);
          });
       });
    });
