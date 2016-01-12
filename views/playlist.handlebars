@@ -1,11 +1,13 @@
-<h2>{{title}}</h2>
-{{id}}
+<h2>{{playlist.title}}</h2>
+{{playlist.id}}
 <hr />
 
 <ul>
     {{#each tracks}}
         <li>
-            {{title}}
+            {{number}} : 
+            <a href={{playlist.id}}?track={{this.number}}>{{title}}</a>
+            {{uri}}
         </li>
     {{/each}}
 </ul>
@@ -25,3 +27,9 @@
         </div>
     </form>
 </div>
+
+<hr />
+{{#if showTrack}}
+<p id="trackUri">{{track}}</p>
+    <div id="soundcloudPlayer"></div>
+{{/if}}

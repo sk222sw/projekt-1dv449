@@ -1,10 +1,15 @@
-var Playlist = function (title) {
+function Playlist(title) {
     this.tracks = [];
     this.title = title || '';
-};
+}
 
-Playlist.prototype.Add = function (track) {
-    this.tracks.push(track)
+Playlist.prototype.DistributeTrackNumbers = function () {
+
+    for (var i = 0; i < this.tracks.length; i++) {
+        this.tracks[i].number = i + 1;
+        console.log(this.tracks[i].number);
+    }
+    
 };
 
 module.exports = Playlist;

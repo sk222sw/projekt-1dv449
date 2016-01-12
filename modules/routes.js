@@ -1,6 +1,3 @@
-var request = require('request');
-var Promise = require('bluebird');
-
 var Vacation = require('./../models/mongo.js');
 var SoundCloudDAL = require('./../models/SoundCloudDAL');
 var Playlist = require('./../models/Playlist');
@@ -8,7 +5,6 @@ var SCTrack = require('./../models/SoundCloudTrack');
 var PlaylistDAL = require('./../models/PlaylistDAL');
 var YoutubeDAL = require('./../models/YoutubeDAL');
 var YTTrack = require('./../models/YoutubeTrack');
-var murl = require('url');
 
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
@@ -25,15 +21,37 @@ module.exports = function(app) {
 	});
 	
 	app.get('/playlists/:id', function(req, res) {
-		PlaylistDAL.GetPlaylistById(req.params.id)
-		.then(function (playlist) {
-			res.render('playlist', {
-				title: playlist.title,
-				id: playlist.id,
-				tracks: playlist.tracks
+	
+	
+	
+	
+	
+		var trackJson = SoundCloudDAL.GetJsonFromUrl("https://soundcloud.com/foretdevin/lifeline")
+		.then(function(trackJson) {
+			var track = new SCTrack(trackJson);
+			return track;
+		}).then(function(track) {
+			var showTrack = false;
+			if (req.query.track) {
+				showTrack = true;
+			} 
+			PlaylistDAL.GetPlaylistById(req.params.id)
+			.then(function (playlist) {
+				res.render('playlist', {
+					playlist: playlist,
+					title: playlist.title,
+					id: playlist.id,
+					tracks: playlist.tracks,
+					showTrack: showTrack,
+					track: track.uri
+				});
 			});
 		});
+		
+		
 	});
+	
+	// app.get('/playlists/:id')
 	
 	app.post('/playlists/:id', function(req, res) {
 	    var url = req.body.fieldUrl;

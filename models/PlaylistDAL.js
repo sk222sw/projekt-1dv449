@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var credentials = require("./../modules/credentials");
 var Promise = require('bluebird');
+var Playlistm = require('./Playlist');
 
 mongoose.connect(credentials.mongo.development.connectionString);
 
@@ -50,9 +51,18 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
    return new Promise(function(resolve, reject) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
+
+         var pl = new Playlistm();
+         pl.tracks = playlist.tracks;
          
          playlist.tracks.push(track);
          
+         // redistribute playlist track numbers
+         // in case a delete or update messed them up
+         pl.DistributeTrackNumbers();
+
+         playlist.tracks = pl.tracks;
+
          playlist.save(function (err) {
             if(err) { reject(err); }
             console.log("added track to playlist with id", playlistId);
