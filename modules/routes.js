@@ -21,37 +21,29 @@ module.exports = function(app) {
 	});
 	
 	app.get('/playlists/:id', function(req, res) {
-	
-	
-	
-	
-	
-		var trackJson = SoundCloudDAL.GetJsonFromUrl("https://soundcloud.com/foretdevin/lifeline")
-		.then(function(trackJson) {
-			var track = new SCTrack(trackJson);
-			return track;
-		}).then(function(track) {
-			var showTrack = false;
-			if (req.query.track) {
-				showTrack = true;
-			} 
-			PlaylistDAL.GetPlaylistById(req.params.id)
-			.then(function (playlist) {
+		var showTrack = false;
+
+		PlaylistDAL.GetPlaylistById(req.params.id)
+		.then(function(playlist) {
+		    if (req.query.track) {
+		    	showTrack = true;
+		    	PlaylistDAL.GetTrackByNumber(req.query.track, req.params.id)
+		    	.then(function(trackJson) {
+		    	    var track = new SCTrack(trackJson);
+		    	    res.render('playlist', {
+						playlist: playlist,
+						showTrack: showTrack,
+						track: track
+					});
+		    	});
+		    } else {
 				res.render('playlist', {
 					playlist: playlist,
-					title: playlist.title,
-					id: playlist.id,
-					tracks: playlist.tracks,
 					showTrack: showTrack,
-					track: track.uri
 				});
-			});
+		    }
 		});
-		
-		
 	});
-	
-	// app.get('/playlists/:id')
 	
 	app.post('/playlists/:id', function(req, res) {
 	    var url = req.body.fieldUrl;

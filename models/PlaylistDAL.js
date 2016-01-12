@@ -47,14 +47,23 @@ PlaylistDAL.prototype.GetPlaylistById = function(id) {
    });
 };
 
+PlaylistDAL.prototype.GetTrackByNumber = function(number, playlistId) {
+   return new Promise(function(resolve, reject){
+      Playlist.findById(playlistId, function(err, playlist) {
+         if (err) { reject(err); }
+         resolve(playlist.tracks[number - 1]);
+      })   
+   })
+};
+
 PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
+   console.log(track)
    return new Promise(function(resolve, reject) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
 
          var pl = new Playlistm();
          pl.tracks = playlist.tracks;
-         
          playlist.tracks.push(track);
          
          // redistribute playlist track numbers
