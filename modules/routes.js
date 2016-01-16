@@ -24,25 +24,25 @@ module.exports = function(app) {
 		var showTrack = false;
 	
 		var render = function(playlist, track) {
-    	    res.render('playlist', {
+			res.render('playlist', {
 				playlist: playlist,
 				showTrack: showTrack,
 				track: track
-			});			
+			});
 		};
 
 		PlaylistDAL.GetPlaylistById(req.params.id)
 		.then(function(playlist) {
-		    if (req.query.track) {
-		    	showTrack = true;
-		    	PlaylistDAL.GetTrackByNumber(req.query.track, req.params.id)
-		    	.then(function(trackJson) {
-		    	    var track = new SCTrack(trackJson);
-		    	    render(playlist, track);
-		    	});
-		    } else {
-		    	render(playlist, null);
-		    }
+			if (req.query.track) {
+			showTrack = true;
+				PlaylistDAL.GetTrackByNumber(req.query.track, req.params.id)
+				.then(function(trackJson) {
+					var track = new SCTrack(trackJson);
+					render(playlist, track);
+				});
+			} else {
+				render(playlist, null);
+			}
 		});
 	});
 	
@@ -74,6 +74,14 @@ module.exports = function(app) {
 		}
 	});
 	
+	app.get('/playlists/:id/info', function (req, res) {
+		var playlistId = req.params.id;
+		PlaylistDAL.GetPlaylistById(playlistId)
+		.then(function (data) {
+			res.send(data);
+		});
+	});
+
 	app.post('/playlists', function(req, res) {
 		// TODO FIX THIS 
 	    var playlist = new Playlist(req.body.fieldPlaylistTitle);
