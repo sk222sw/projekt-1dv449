@@ -7,7 +7,6 @@
         <li>
             {{number}} : 
             <a href={{playlist.id}}?track={{this.number}}>{{title}}</a>
-            {{uri}}
         </li>
     {{/each}}
 </ul>
@@ -30,7 +29,9 @@
 
 <hr />
 {{#if showTrack}}
-tracK:
 <p id="trackUri">{{track.uri}}</p>
-    <div id="soundcloudPlayer"></div>
+
+<iframe id="sc-widget" src="https://w.soundcloud.com/player/?url={{track.uri}}" scrolling="no" frameborder="no"></iframe>
+
+    {{!--<div id="soundcloudPlayer"></div>--}}
 {{/if}}

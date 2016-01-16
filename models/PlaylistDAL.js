@@ -57,7 +57,6 @@ PlaylistDAL.prototype.GetTrackByNumber = function(number, playlistId) {
 };
 
 PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
-   console.log(track)
    return new Promise(function(resolve, reject) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }

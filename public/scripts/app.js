@@ -5,20 +5,18 @@ var cId = "defe1307335b6141da3b5c880c33bbab";
 
 var url = document.getElementById("trackUri").innerHTML+cId;
 
-console.log(url);
+var widgetIframe = document.getElementById('sc-widget');
+var widget = SC.Widget(widgetIframe);
 
-SC.initialize({
-    client_id: "defe1307335b6141da3b5c880c33bbab"
+widget.bind(SC.Widget.Events.READY, function(){
+    widget.play();
+})
+
+widget.bind(SC.Widget.Events.FINISH, function() {
+    var query = window.location.search;
+    var trackQuery = query.split("=");
+    var trackNumber = trackQuery[1];
+    var newTrackNumber = parseInt(trackNumber, 10) + 1;
+    window.location = window.location.origin + window.location.pathname + trackQuery[0] + "=" + newTrackNumber.toString()
 });
 
-SC.oEmbed(url, {
-    element: document.getElementById('soundcloudPlayer')
-});
-
-SC.resolve('https://soundcloud.com/foretdevin')
-.then(function(json){
-    console.log(json);
-});
-
-
-// http://api.soundcloud.com/tracks/153859295?client_id='+cId

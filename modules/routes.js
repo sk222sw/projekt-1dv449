@@ -22,6 +22,14 @@ module.exports = function(app) {
 	
 	app.get('/playlists/:id', function(req, res) {
 		var showTrack = false;
+	
+		var render = function(playlist, track) {
+    	    res.render('playlist', {
+				playlist: playlist,
+				showTrack: showTrack,
+				track: track
+			});			
+		};
 
 		PlaylistDAL.GetPlaylistById(req.params.id)
 		.then(function(playlist) {
@@ -30,17 +38,10 @@ module.exports = function(app) {
 		    	PlaylistDAL.GetTrackByNumber(req.query.track, req.params.id)
 		    	.then(function(trackJson) {
 		    	    var track = new SCTrack(trackJson);
-		    	    res.render('playlist', {
-						playlist: playlist,
-						showTrack: showTrack,
-						track: track
-					});
+		    	    render(playlist, track);
 		    	});
 		    } else {
-				res.render('playlist', {
-					playlist: playlist,
-					showTrack: showTrack,
-				});
+		    	render(playlist, null);
 		    }
 		});
 	});
@@ -99,21 +100,6 @@ module.exports = function(app) {
 			};
 			
 			return res.redirect(303, "/");
-		});
-	});
-
-	//sample from book as a blueprint - to be deleted
-	app.get('/vacations', function(req, res){
-		Vacation.find({ 'type': 'SoundCloud'}, function (err, vacations) {
-			console.log(vacations)
-			var context = {
-				vacations: vacations.map(function(vacation){
-					return {
-						url: vacation.url
-					}
-				})
-			};
-			res.render('vacations', context);
 		});
 	});
 
