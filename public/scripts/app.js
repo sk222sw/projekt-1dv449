@@ -52,16 +52,7 @@ var app = {
 		});
 
 		widget.bind(SC.Widget.Events.FINISH, function() {
-			var query = window.location.search;
-			var trackQuery = query.split("=");
-			var trackNumber = trackQuery[1];
-
-			if (trackNumber < app.PlaylistTracks) {
-				var newTrackNumber = parseInt(trackNumber, 10) + 1;
-				window.location = window.location.origin + window.location.pathname + trackQuery[0] + "=" + newTrackNumber.toString();
-			} else {
-				$('#endMessage').html("Reached the end of ", app.playlist.title);
-			}
+			app.AutoLoadNextTrack();
 		});
 	},
 
@@ -77,7 +68,18 @@ var app = {
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 	},
 
+	AutoLoadNextTrack: function () {
+		var query = window.location.search;
+		var trackQuery = query.split("=");
+		var trackNumber = trackQuery[1];
 
+		if (trackNumber < app.PlaylistTracks) {
+			var newTrackNumber = parseInt(trackNumber, 10) + 1;
+			window.location = window.location.origin + window.location.pathname + trackQuery[0] + "=" + newTrackNumber.toString();
+		} else {
+			$('#endMessage').html("Reached the end of ", app.playlist.title);
+		}
+	}
 };
 
 // onYouTubeIframeAPIReady must be global to work for some reason
@@ -88,12 +90,20 @@ window.onYouTubeIframeAPIReady = function () {
 		width: '640',
 		videoId: app.currentTrack.youtubeId,
 		events: {
-			'onReady': onPlayerReady
+			'onReady': onPlayerReady,
+			'onStateChange': onPlayerStateChange
 		}
 	});
-      function onPlayerReady(event) {
-        event.target.playVideo();
-      }
+	function onPlayerReady(event) {
+		event.target.playVideo();
+	}
+
+	function onPlayerStateChange (state) {
+		if (state.data === 0) {
+			app.AutoLoadNextTrack();
+		}
+	}
+
 };
 // get the playlist id from the query
 app.GetPlaylistInfo(window.location.pathname.split("/")[2]);
