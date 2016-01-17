@@ -35,7 +35,7 @@ PlaylistDAL.prototype.GetAll = function () {
          if (err) { reject(err); }
          resolve(playlistsJson);
       });
-   })
+   });
 };
 
 PlaylistDAL.prototype.GetPlaylistById = function(id) {
@@ -52,8 +52,8 @@ PlaylistDAL.prototype.GetTrackByNumber = function(number, playlistId) {
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
          resolve(playlist.tracks[number - 1]);
-      })   
-   })
+      });
+   });
 };
 
 PlaylistDAL.prototype.AddTrack = function(track, playlistId) {

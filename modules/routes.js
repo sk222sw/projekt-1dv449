@@ -37,7 +37,12 @@ module.exports = function(app) {
 			showTrack = true;
 				PlaylistDAL.GetTrackByNumber(req.query.track, req.params.id)
 				.then(function(trackJson) {
-					var track = new SCTrack(trackJson);
+					var track;
+					if (trackJson.type === "SoundCloud") {
+						track = new SCTrack(trackJson);
+					} else if (trackJson.type === "Youtube") {
+						track = new YTTrack(trackJson);
+					}
 					render(playlist, track);
 				});
 			} else {
@@ -54,6 +59,7 @@ module.exports = function(app) {
 		if (type === "soundcloud") {
 		    SoundCloudDAL.GetJsonFromUrl(url)
 		    .then(function JsonToSCTrack(json) {
+		    	console.log("craeted soundcloudtrack")
 		    	var track = new SCTrack(json);
 		    	return track;
 		    })
@@ -64,6 +70,7 @@ module.exports = function(app) {
 		} else {
 			YoutubeDAL.GetJsonFromUrl(url)
 			.then(function CreateYTTrack(json) {
+				console.log("craeted youtubetrack")
 			    var track = new YTTrack(json);
 			    return track;
 			})
