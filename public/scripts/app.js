@@ -1,13 +1,19 @@
-// var cId = "defe1307335b6141da3b5c880c33bbab";
-// url: document.getElementById("trackUri").innerHTML+cId:	
-
-
 var app = {
 	currentTrackNumber: window.location.search.split("=")[1],
 	currentTrack: {},
 	playlistTracks: 0,
 	playlist: {},
 	ytplayer: undefined,
+
+	init: function () {
+		app.GetPlaylistInfo(window.location.pathname.split("/")[2]);
+		$('#showSimilar').click(function () {
+			app.GetSimilarArtists();
+		});
+		$('#showBio').click(function () {
+			app.GetArtistBio();
+		});
+	},
 
 	GetPlaylistInfo: function (id) {
 		var playlistPath = "/playlists/" + id + "/info";
@@ -79,6 +85,33 @@ var app = {
 		} else {
 			$('#endMessage').html("Reached the end of ", app.playlist.title);
 		}
+	},
+
+	GetSimilarArtists: function () {
+		var similarArtists = [];
+		var requestUrl = "http://developer.echonest.com/api/v4/artist/similar?api_key=XVTRPGOZVB0DFU6TB&name="+app.currentTrack.artist;
+
+		$.getJSON(requestUrl, function (data) {
+			for (var i = 0; i <= data.response.artists.length - 1; i++) {
+				var li = "<li>" + data.response.artists[i].name + "</li>";
+				$('#similarArtistsArea ul').append(li);
+			}
+		});
+	},
+
+	GetArtistBio: function () {
+		var artistName = app.currentTrack.artist;
+		var requestArtistInfo = "http://developer.echonest.com/api/v4/artist/search?api_key=FILDTEOIK2HBORODV&name="+artistName;
+		$.getJSON(requestArtistInfo, function (data) {
+			var echonestArtist = data.response.artists[0];
+			console.log(data);
+			var requestBio = "http://developer.echonest.com/api/v4/artist/biographies?api_key=FILDTEOIK2HBORODV&id="+echonestArtist.id+"&format=json&results=1&start=0&license=cc-by-sa"
+			$.getJSON(requestBio, function (data) {
+				console.log(data);
+				var bioText = data.response.biographies[0].text + " src: " + data.response.biographies[0].site;
+				$('#bio').html(bioText);
+			})
+		})
 	}
 };
 
@@ -106,4 +139,5 @@ window.onYouTubeIframeAPIReady = function () {
 
 };
 // get the playlist id from the query
-app.GetPlaylistInfo(window.location.pathname.split("/")[2]);
+
+app.init();
