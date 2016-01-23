@@ -7,6 +7,8 @@ var SoundCloudTrack = function(track) {
         SCId: track.user.id,
         SCUsername: track.user.username,
     };
+    this.artist = this.user.SCUsername;
+    // console.log("scusername",this.user.SCUsername);
 };
 
 module.exports = SoundCloudTrack;

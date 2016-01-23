@@ -6,7 +6,7 @@
     {{#each playlist.tracks}}
         <li>
             {{number}} : 
-            <a href={{playlist.id}}?track={{this.number}}>{{title}}</a>
+            <a href={{playlist.id}}?track={{this.number}}>{{title}}</a> <button class="deleteTrack" id="track{{this.number}}">Delete</button>
         </li>
     {{/each}}
 </ul>
@@ -34,7 +34,7 @@
 </div>
 {{#if showTrack}}
     <div id="trackPlayer"></div>
-    <div id="ytplayer"></div>
+
     <div id="player"></div>
 
     <p id="endMessage"></p>

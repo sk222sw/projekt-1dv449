@@ -4,14 +4,29 @@ var app = {
 	playlistTracks: 0,
 	playlist: {},
 	ytplayer: undefined,
+	playlistId: window.location.pathname.split("/")[2],
 
 	init: function () {
-		app.GetPlaylistInfo(window.location.pathname.split("/")[2]);
+		app.GetPlaylistInfo(app.playlistId);
 		$('#showSimilar').click(function () {
 			app.GetSimilarArtists();
 		});
 		$('#showBio').click(function () {
 			app.GetArtistBio();
+		});
+		$('.deleteTrack').click(function () {
+			var id = $(this).attr('id').slice(5, 6);
+
+			app.DeleteTrack(id);
+		});
+	},
+
+	DeleteTrack: function (id) {
+		console.log('/playlists/'+app.playlistId+"/delete/"+id);
+		$.ajax({
+			url: '/playlists/'+app.playlistId+"/delete/"+id,
+			type: 'DELETE',
+			data: {'trackId': id}
 		});
 	},
 
@@ -30,7 +45,6 @@ var app = {
 					app.LoadTrack(app.currentTrack);
 					app.PlaylistTracks = app.playlist.tracks.length;
 				}
-
 			});
 		});
 	},
@@ -39,7 +53,6 @@ var app = {
 		if (track.type === "SoundCloud") {
 			app.LoadSoundCloudTrack(track);
 		} else if (track.type === "Youtube") {
-			console.log(track);
 			app.currentTrack = track;
 			app.LoadYoutubeTrack(track);
 		}
@@ -92,26 +105,40 @@ var app = {
 		var requestUrl = "http://developer.echonest.com/api/v4/artist/similar?api_key=XVTRPGOZVB0DFU6TB&name="+app.currentTrack.artist;
 
 		$.getJSON(requestUrl, function (data) {
-			for (var i = 0; i <= data.response.artists.length - 1; i++) {
-				var li = "<li>" + data.response.artists[i].name + "</li>";
-				$('#similarArtistsArea ul').append(li);
+			if (data.response.artists.length === 0) {
+				$('#similarArtistsArea ul').append("<p>Sorry - no similar artists found.</p>");
+			} else {
+				for (var i = 0; i <= data.response.artists.length - 1; i++) {
+					var li = "<li>" + data.response.artists[i].name + "</li>";
+					$('#similarArtistsArea ul').append(li);
+				}
 			}
+		})
+		.fail(function () {
+			console.log("error");
 		});
 	},
 
 	GetArtistBio: function () {
 		var artistName = app.currentTrack.artist;
 		var requestArtistInfo = "http://developer.echonest.com/api/v4/artist/search?api_key=FILDTEOIK2HBORODV&name="+artistName;
+		
 		$.getJSON(requestArtistInfo, function (data) {
 			var echonestArtist = data.response.artists[0];
-			console.log(data);
-			var requestBio = "http://developer.echonest.com/api/v4/artist/biographies?api_key=FILDTEOIK2HBORODV&id="+echonestArtist.id+"&format=json&results=1&start=0&license=cc-by-sa"
-			$.getJSON(requestBio, function (data) {
-				console.log(data);
-				var bioText = data.response.biographies[0].text + " src: " + data.response.biographies[0].site;
-				$('#bio').html(bioText);
-			})
-		})
+			if (data.response.artists.length) {
+				var requestBio = "http://developer.echonest.com/api/v4/artist/biographies?api_key=FILDTEOIK2HBORODV&id="+echonestArtist.id+"&format=json&results=1&start=0&license=cc-by-sa";
+				$.getJSON(requestBio, function (data) {
+					if (data.response.biographies.length === 0) {
+						$('#bio').html("Sorry - no biography available.");
+					} else {
+						var bioText = data.response.biographies[0].text + " src: " + data.response.biographies[0].site;
+						$('#bio').html(bioText);
+					}
+				});
+			} else {
+				$('#bio').html("Sorry - no biography available.");
+			}
+		});
 	}
 };
 
@@ -138,6 +165,5 @@ window.onYouTubeIframeAPIReady = function () {
 	}
 
 };
-// get the playlist id from the query
 
 app.init();

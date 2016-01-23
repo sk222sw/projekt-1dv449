@@ -52,33 +52,37 @@ module.exports = function(app) {
 	});
 	
 	app.post('/playlists/:id', function(req, res) {
-	    var url = req.body.fieldUrl;
-	    var playlistId = req.params.id;
+		var url = req.body.fieldUrl;
+		var playlistId = req.params.id;
 		var type = req.body.type;
 
 		if (type === "soundcloud") {
-		    SoundCloudDAL.GetJsonFromUrl(url)
-		    .then(function JsonToSCTrack(json) {
-		    	console.log("craeted soundcloudtrack")
-		    	var track = new SCTrack(json);
-		    	return track;
-		    })
-		    .then(function AddToDb(track) {
-		    	PlaylistDAL.AddTrack(track, playlistId);
-			    return res.redirect(303, '/playlists/'+playlistId);
-		    });
+			SoundCloudDAL.GetJsonFromUrl(url)
+			.then(function JsonToSCTrack(json) {
+				console.log("craeted soundcloudtrack");
+				var track = new SCTrack(json);
+				return track;
+			})
+			.then(function AddToDb(track) {
+				PlaylistDAL.AddTrack(track, playlistId);
+				return res.redirect(303, '/playlists/'+playlistId);
+			});
 		} else {
 			YoutubeDAL.GetJsonFromUrl(url)
 			.then(function CreateYTTrack(json) {
-				console.log("craeted youtubetrack")
-			    var track = new YTTrack(json);
-			    return track;
+				console.log("craeted youtubetrack");
+				var track = new YTTrack(json);
+				return track;
 			})
 			.then(function AddToDb(track) {
 				PlaylistDAL.AddTrack(track, playlistId);
 				return res.redirect(303, '/playlists/'+playlistId);
 			});
 		}
+	});
+
+	app.del('/playlists/:id/delete/:trackId', function (req, res) {
+		console.log(req.params);
 	});
 	
 	app.get('/playlists/:id/info', function (req, res) {
@@ -91,11 +95,11 @@ module.exports = function(app) {
 
 	app.post('/playlists', function(req, res) {
 		// TODO FIX THIS 
-	    var playlist = new Playlist(req.body.fieldPlaylistTitle);
-	    
-	    PlaylistDAL.AddPlaylistToDB(playlist);
-	    
-	    return res.redirect(303, '/playlists');
+		var playlist = new Playlist(req.body.fieldPlaylistTitle);
+
+		PlaylistDAL.AddPlaylistToDB(playlist);
+
+		return res.redirect(303, '/playlists');
 	});
 	
 	app.post('/', function (req, res) {
@@ -103,8 +107,8 @@ module.exports = function(app) {
 		
 		SoundCloudDAL.GetJsonFromUrl(url)
 		.then(function(json) {
-	  		var track = new SCTrack(json);
-	  		return track;
+			var track = new SCTrack(json);
+			return track;
 		})
 		.then(function(track) {
 			if (req.xhr) return res.json({success: true});
