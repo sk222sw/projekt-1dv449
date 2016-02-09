@@ -79,4 +79,39 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
    });
 };
 
+PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
+   var i = 0;
+   var arrayIndex;
+
+   console.log("delete", trackId);
+   Playlist.findById(playlistId, function(err, playlist) {
+      if (err) { reject(err); }
+
+      var pl = new Playlistm();
+      pl.tracks = playlist.tracks;
+
+      while (i < pl.tracks.length) {
+         console.log("number", pl.tracks[i].number);
+         if (pl.tracks[i].number === parseInt(trackId, 10)) {
+            arrayIndex = i;
+            console.log("FOUND IT");
+            break;
+         }
+         i++;
+      }
+
+      pl.tracks.splice(arrayIndex, 1);
+
+      playlist.tracks = pl.tracks;
+
+      playlist.save(function (err) {
+         if(err) { reject(err); }
+         console.log("deleted", trackId);
+      });
+
+
+
+   })
+};
+
 module.exports = new PlaylistDAL();

@@ -5,6 +5,7 @@ var SCTrack = require('./../models/SoundCloudTrack');
 var PlaylistDAL = require('./../models/PlaylistDAL');
 var YoutubeDAL = require('./../models/YoutubeDAL');
 var YTTrack = require('./../models/YoutubeTrack');
+var TrackDAL = require("./../models/TrackDAL");
 
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
@@ -82,7 +83,7 @@ module.exports = function(app) {
 	});
 
 	app.del('/playlists/:id/delete/:trackId', function (req, res) {
-		console.log(req.params);
+		PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
 	});
 	
 	app.get('/playlists/:id/info', function (req, res) {

@@ -6,7 +6,8 @@
     {{#each playlist.tracks}}
         <li>
             {{number}} : 
-            <a href={{playlist.id}}?track={{this.number}}>{{title}}</a> <button class="deleteTrack" id="track{{this.number}}">Delete</button>
+            <a href={{playlist.id}}?track={{this.number}}>{{title}}</a>
+            <a href=/delete?track={{this.number}} class="deleteTrack" id="track{{this.number}}">Delete</a>
         </li>
     {{/each}}
 </ul>
