@@ -18,22 +18,22 @@ var Playlist = mongoose.model('PlaylistSchema', PlaylistSchema);
 var PlaylistDAL = function () {};
 
 PlaylistDAL.prototype.AddPlaylistToDB = function (playlist) {
-   generateTrackId();
+   var playlistId = shortId.generate();
    return new Promise(function(resolve, reject) {
       new Playlist({
-         playlistId: shortId.generate(),
+         playlistId: playlistId,
          title: playlist.title,
          tracks: []
       }).save(function(err) {
          if (err) { reject(err); }
-         else { console.log() }
+         else { resolve(playlistId) }
       })
    })
 };
 
 PlaylistDAL.prototype.DeletePlaylist = function(playlistId) {
    return new Promise(function(resolve, reject) {
-      Playlist.remove({_id: playlistId}, function(err) {
+      Playlist.remove({playlistId: playlistId}, function(err) {
          if( err ) reject(err);
          else resolve(true);
       });
