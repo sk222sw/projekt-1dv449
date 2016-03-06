@@ -72,9 +72,11 @@ module.exports = function(app) {
 				return track;
 			})
 			.then(function AddToDb(track) {
-				PlaylistDAL.AddTrack(track, playlistId);
-				return res.redirect(303, '/playlists/'+playlistId);
-			});
+				return PlaylistDAL.AddTrack(track, playlistId);
+			})
+			.then(function redir() {
+					return res.redirect(303, '/playlists/'+playlistId);
+			})
 		} else {
 			YoutubeDAL.GetJsonFromUrl(url)
 			.then(function CreateYTTrack(json) {
@@ -85,10 +87,8 @@ module.exports = function(app) {
 			.then(function AddToDb(track) {
 				return PlaylistDAL.AddTrack(track, playlistId);
 			})
-			.then(function redir(added) {
-				if (added) {
-					return res.redirect(303, '/playlists/'+playlistId);
-				}
+			.then(function redir(){
+				return res.redirect(303, '/playlists/'+playlistId);
 			})
 		}
 	});
