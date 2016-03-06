@@ -101,7 +101,7 @@ PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
       }
 
       pl.tracks.splice(arrayIndex, 1);
-
+      pl.DistributeTrackNumbers();
       playlist.tracks = pl.tracks;
 
       playlist.save(function (err) {

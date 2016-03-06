@@ -1,4 +1,3 @@
-var Vacation = require('./../models/mongo.js');
 var SoundCloudDAL = require('./../models/SoundCloudDAL');
 var Playlist = require('./../models/Playlist');
 var SCTrack = require('./../models/SoundCloudTrack');
@@ -6,6 +5,7 @@ var PlaylistDAL = require('./../models/PlaylistDAL');
 var YoutubeDAL = require('./../models/YoutubeDAL');
 var YTTrack = require('./../models/YoutubeTrack');
 var TrackDAL = require("./../models/TrackDAL");
+var url = require("url");
 
 module.exports = function(app) {
 	app.get('/:var(home|index)?', function(req, res) {
@@ -23,7 +23,14 @@ module.exports = function(app) {
 	
 	app.get('/playlists/:id', function(req, res) {
 		var showTrack = false;
-	
+
+		if (req.query.delete == 1) {
+			var parts = url.parse(req.url, true);
+			var playlistId = parts.pathname.split("/playlists/")[1];
+			var trackNumber = req.query.track;
+			 PlaylistDAL.DeleteTrack(req.params.id, trackNumber);
+			 return res.redirect(303, '/playlists/'+playlistId);
+		} else
 		var render = function(playlist, track) {
 			res.render('playlist', {
 				playlist: playlist,
@@ -77,15 +84,25 @@ module.exports = function(app) {
 			})
 			.then(function AddToDb(track) {
 				PlaylistDAL.AddTrack(track, playlistId);
+			})
+			.then(function redir() {
 				return res.redirect(303, '/playlists/'+playlistId);
-			});
+			})
 		}
 	});
 
-	app.del('/playlists/:id/delete/:trackId', function (req, res) {
-		PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
+	app.get('/delete', function (req, res) {
+		console.log(req.query);
+		// PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
+		// return res.redirect(303, '/playlists');
 	});
+
+	// app.del('/playlists/:id/delete/:trackId', function (req, res) {
+	// 	PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
+	// 	return res.redirect(303, '/playlists');
+	// });
 	
+
 	app.get('/playlists/:id/info', function (req, res) {
 		var playlistId = req.params.id;
 		PlaylistDAL.GetPlaylistById(playlistId)
