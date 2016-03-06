@@ -93,18 +93,6 @@ module.exports = function(app) {
 		}
 	});
 
-	app.get('/delete', function (req, res) {
-		console.log(req.query);
-		// PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
-		// return res.redirect(303, '/playlists');
-	});
-
-	// app.del('/playlists/:id/delete/:trackId', function (req, res) {
-	// 	PlaylistDAL.DeleteTrack(req.params.id, req.params.trackId);
-	// 	return res.redirect(303, '/playlists');
-	// });
-	
-
 	app.get('/playlists/:id/info', function (req, res) {
 		var playlistId = req.params.id;
 		PlaylistDAL.GetPlaylistById(playlistId)

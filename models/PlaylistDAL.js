@@ -83,38 +83,38 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
 };
 
 PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
-   var i = 0;
-   var arrayIndex;
+   return new Promise(function(resolve, reject){
+      var i = 0;
+      var arrayIndex;
 
-   console.log("delete", trackId);
-   Playlist.findById(playlistId, function(err, playlist) {
-      if (err) { reject(err); }
+      console.log("delete", trackId);
+      Playlist.findById(playlistId, function(err, playlist) {
+         if (err) { reject(err); }
 
-      var pl = new Playlistm();
-      pl.tracks = playlist.tracks;
+         var pl = new Playlistm();
+         pl.tracks = playlist.tracks;
 
-      while (i < pl.tracks.length) {
-         console.log("number", pl.tracks[i].number);
-         if (pl.tracks[i].number === parseInt(trackId, 10)) {
-            arrayIndex = i;
-            console.log("FOUND IT");
-            break;
+         while (i < pl.tracks.length) {
+            console.log("number", pl.tracks[i].number);
+            if (pl.tracks[i].number === parseInt(trackId, 10)) {
+               arrayIndex = i;
+               console.log("FOUND IT");
+               break;
+            }
+            i++;
          }
-         i++;
-      }
 
-      pl.tracks.splice(arrayIndex, 1);
-      pl.DistributeTrackNumbers();
-      playlist.tracks = pl.tracks;
+         pl.tracks.splice(arrayIndex, 1);
+         pl.DistributeTrackNumbers();
+         playlist.tracks = pl.tracks;
 
-      playlist.save(function (err) {
-         if(err) { reject(err); }
-         console.log("deleted", trackId);
+         playlist.save(function (err) {
+            if(err) { reject(err); }
+            console.log("deleted", trackId);
+            resolve(true);
+         });
       });
-
-
-
-   })
+   });
 };
 
 module.exports = new PlaylistDAL();
