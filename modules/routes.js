@@ -28,8 +28,10 @@ module.exports = function(app) {
 			var parts = url.parse(req.url, true);
 			var playlistId = parts.pathname.split("/playlists/")[1];
 			var trackNumber = req.query.track;
-			 PlaylistDAL.DeleteTrack(req.params.id, trackNumber);
-			 return res.redirect(303, '/playlists/'+playlistId);
+			 PlaylistDAL.DeleteTrack(req.params.id, trackNumber)
+			 .then(function(){
+			 		return res.redirect(303, '/playlists/'+playlistId);
+			 });
 		} else
 		var render = function(playlist, track) {
 			res.render('playlist', {
