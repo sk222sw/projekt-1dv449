@@ -12,7 +12,9 @@ module.exports = function(app) {
 		res.render('home');
 	});
 	
-	app.get('/playlists', function (req, res) {
+	app.get('/playlists/', function (req, res) {
+
+		console.log(url.parse(req.url, true));
 		PlaylistDAL.GetAll()
 		.then(function (result) {
 			res.render('playlists', {
@@ -23,7 +25,6 @@ module.exports = function(app) {
 	
 	app.get('/playlists/:id', function(req, res) {
 		var showTrack = false;
-
 		if (req.query.delete) {
 			var parts = url.parse(req.url, true);
 			var playlistId = parts.pathname.split("/playlists/")[1];
@@ -116,29 +117,11 @@ module.exports = function(app) {
 		// TODO FIX THIS 
 		var playlist = new Playlist(req.body.fieldPlaylistTitle);
 
-		PlaylistDAL.AddPlaylistToDB(playlist);
-
-		return res.redirect(303, '/playlists');
-	});
-	
-	app.post('/', function (req, res) {
-		var url = req.body.fieldUrl || '';
-		
-		SoundCloudDAL.GetJsonFromUrl(url)
-		.then(function(json) {
-			var track = new SCTrack(json);
-			return track;
-		})
-		.then(function(track) {
-			if (req.xhr) return res.json({success: true});
-			req.session.flash = {
-				type: 'success',
-				intro: 'Thank yousdfsdf!',
-				message: 'Awesome url, dude!'
-			};
-			
-			return res.redirect(303, "/");
+		PlaylistDAL.AddPlaylistToDB(playlist)
+		.then(function() {
+			return res.redirect(303, '/playlists'+id);
 		});
+
 	});
 
 	app.use(function(req, res) {

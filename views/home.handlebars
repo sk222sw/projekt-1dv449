@@ -1,16 +1,12 @@
+<h1>Plurlist</h1>
+<p>plurlist is a simple tool to create playlists containing music from different sources</p>
+<p>no registering needed - just create your playlist and bookmark it</p>
 
-
-
-
-
-<h3>{{track}}</h3>
-
-
-
-{{!--<script src="https://w.soundcloud.com/player/api.js"></script>--}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
-<script src="https://connect.soundcloud.com/sdk/sdk-3.0.0.js"></script>
-<script type="text/javascript" src="scripts/app.js"></script>
-<script src="scripts/models/SoundCloudTrack.js"></script>
-
-
+<div class="formContainer">
+    <form class="playlistForm" action="/playlists" method="POST">
+        <input type="hidden" name="_csrf" value={{csrf}}></input>
+        <div>
+            <button type="submit">Create plurlist</button>
+        </div>
+    </form>
+</div>

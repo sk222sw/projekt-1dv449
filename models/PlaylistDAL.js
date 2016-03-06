@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var credentials = require("./../modules/credentials");
 var Promise = require('bluebird');
 var Playlistm = require('./Playlist');
+var shortid = require('shortid');
 
 mongoose.connect(credentials.mongo.development.connectionString);
 
@@ -17,11 +18,17 @@ var Playlist = mongoose.model('PlaylistSchema', PlaylistSchema);
 var PlaylistDAL = function () {};
 
 PlaylistDAL.prototype.AddPlaylistToDB = function (playlist) {
-
-   new Playlist({
-      title: playlist.title,
-      tracks: []
-   }).save();
+   generateTrackId();
+   return new Promise(function(resolve, reject) {
+      new Playlist({
+         playlistId: shortId.generate(),
+         title: playlist.title,
+         tracks: []
+      }).save(function(err) {
+         if (err) { reject(err); }
+         else { console.log() }
+      })
+   })
 };
 
 PlaylistDAL.prototype.DeletePlaylist = function(playlistId) {
