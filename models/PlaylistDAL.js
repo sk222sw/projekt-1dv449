@@ -73,7 +73,10 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
 
          playlist.save(function (err) {
             if(err) { reject(err); }
-            console.log("added track to playlist with id", playlistId);
+            else {
+               console.log("added track to playlist with id", playlistId);
+               resolve(true);
+            }
          });
       });
    });
