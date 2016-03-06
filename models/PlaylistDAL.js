@@ -16,17 +16,21 @@ var Playlist = mongoose.model('PlaylistSchema', PlaylistSchema);
 
 var PlaylistDAL = function () {};
 
-PlaylistDAL.prototype.GetPlaylistFromDB = function () {
-    
-};
-
 PlaylistDAL.prototype.AddPlaylistToDB = function (playlist) {
 
    new Playlist({
       title: playlist.title,
       tracks: []
    }).save();
-   
+};
+
+PlaylistDAL.prototype.DeletePlaylist = function(playlistId) {
+   return new Promise(function(resolve, reject) {
+      Playlist.remove({_id: playlistId}, function(err) {
+         if( err ) reject(err);
+         else resolve(true);
+      });
+   });
 };
 
 PlaylistDAL.prototype.GetAll = function () {
@@ -64,9 +68,7 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
          var pl = new Playlistm();
          pl.tracks = playlist.tracks;
          playlist.tracks.push(track);
-         
-         // redistribute playlist track numbers
-         // in case a delete or update messed them up
+
          pl.DistributeTrackNumbers();
 
          playlist.tracks = pl.tracks;
@@ -74,7 +76,6 @@ PlaylistDAL.prototype.AddTrack = function(track, playlistId) {
          playlist.save(function (err) {
             if(err) { reject(err); }
             else {
-               console.log("added track to playlist with id", playlistId);
                resolve(true);
             }
          });
@@ -87,7 +88,6 @@ PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
       var i = 0;
       var arrayIndex;
 
-      console.log("delete", trackId);
       Playlist.findById(playlistId, function(err, playlist) {
          if (err) { reject(err); }
 
@@ -95,10 +95,8 @@ PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
          pl.tracks = playlist.tracks;
 
          while (i < pl.tracks.length) {
-            console.log("number", pl.tracks[i].number);
             if (pl.tracks[i].number === parseInt(trackId, 10)) {
                arrayIndex = i;
-               console.log("FOUND IT");
                break;
             }
             i++;
@@ -110,7 +108,6 @@ PlaylistDAL.prototype.DeleteTrack = function(playlistId, trackId) {
 
          playlist.save(function (err) {
             if(err) { reject(err); }
-            console.log("deleted", trackId);
             resolve(true);
          });
       });

@@ -1,5 +1,6 @@
 <h2>{{playlist.title}}</h2>
 {{playlist.id}}
+<a href={{playlist.id}}?delete=playlist>Delete playlist</a>
 <hr />
 
 <ul>
@@ -7,7 +8,7 @@
         <li>
             {{number}} : 
             <a href={{playlist.id}}?track={{this.number}}>{{title}}</a>
-            <a href={{playlist.id}}?track={{this.number}}&delete=1>Delete</a>
+            <a href={{playlist.id}}?track={{this.number}}&delete=track>Delete</a>
         </li>
     {{/each}}
 </ul>

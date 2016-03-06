@@ -24,22 +24,31 @@ module.exports = function(app) {
 	app.get('/playlists/:id', function(req, res) {
 		var showTrack = false;
 
-		if (req.query.delete == 1) {
+		if (req.query.delete) {
 			var parts = url.parse(req.url, true);
 			var playlistId = parts.pathname.split("/playlists/")[1];
-			var trackNumber = req.query.track;
-			 PlaylistDAL.DeleteTrack(req.params.id, trackNumber)
-			 .then(function(){
-			 		return res.redirect(303, '/playlists/'+playlistId);
-			 });
-		} else
-		var render = function(playlist, track) {
-			res.render('playlist', {
-				playlist: playlist,
-				showTrack: showTrack,
-				track: track
-			});
-		};
+
+			if (req.query.delete === "playlist") {
+				PlaylistDAL.DeletePlaylist(playlistId)
+				.then(function(){
+					return res.redirect(303, '/playlists');
+				})
+			} else if (req.query.delete == "track") {
+				var trackNumber = req.query.track;
+				 PlaylistDAL.DeleteTrack(req.params.id, trackNumber)
+				 .then(function(){
+						return res.redirect(303, '/playlists/'+playlistId);
+				 });
+			}
+		}	else {
+			var render = function(playlist, track) {
+				res.render('playlist', {
+					playlist: playlist,
+					showTrack: showTrack,
+					track: track
+				});
+			};
+		}
 
 		PlaylistDAL.GetPlaylistById(req.params.id)
 		.then(function(playlist) {
