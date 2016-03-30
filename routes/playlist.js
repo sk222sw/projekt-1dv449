@@ -14,10 +14,10 @@ const PlaylistSchema = new Schema({
 const Playlist = mongoose.model("PlaylistSchema", PlaylistSchema);
 
 router.get('/', (req, res) => {
-  res.send("hej");
+
 });
 
-router.get('/hej', (req, res) => {
+router.get('/:id', (req, res) => {
   getPlaylists()
   .then(json => {
     res.json(json);
@@ -26,7 +26,7 @@ router.get('/hej', (req, res) => {
 
 function getPlaylists() {
   return new Promise((resolve, reject) => {
-    Playlist.find({}, (err, json) => {
+    Playlist.find({_id: "56e972b23f5229f01a57b7a8"}, (err, json) => {
       if (err) { reject(err); }
       resolve(json);
     });

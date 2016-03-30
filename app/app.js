@@ -9,14 +9,36 @@ export default class App extends React.Component {
       tracks: [
         {
           id: uuid.v4(),
-          title: "ben klock - sub zero"
-        },
-        {
-          id: uuid.v4(),
-          title: "aril brikha - berghain"
+          title: ""
         }
       ]
     };
+
+    this.fetchData();
+  }
+
+  fetchData = () => {
+    const playlistId = this.props.params.playlist;
+    const request = new Request(`./playlist/${playlistId}`, {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "text/json"
+      })
+    });
+
+    fetch(request).then(result => {
+      return result.json();
+    })
+    .then(j => {
+      j[0].tracks.map(track => {
+        this.setState({
+          tracks: this.state.tracks.concat([{
+            id: uuid.v4(),
+            title: track.title
+          }])
+        });
+      });
+    });
   }
 
   addTrack = () => {
@@ -31,19 +53,6 @@ export default class App extends React.Component {
   deleteTrack = (id, e) => {
     e.stopPropagation();
 
-    const request = new Request("./playlist/hej", {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "text/json"
-      })
-    });
-
-    fetch(request).then(result => {
-      return result.json();
-    })
-    .then(j => {
-      console.log(j);
-    });
     this.setState({
       tracks: this.state.tracks.filter(track => track.id !== id)
     });

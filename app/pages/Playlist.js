@@ -2,8 +2,9 @@ import React from "react";
 
 export default class Playlist extends React.Component {
   render() {
-    console.log(this.props);
+    const { query } = this.props.location;
     const { params } = this.props;
+    console.log(params.playlist)
     return (
       <h1>Playlist {params.playlist}</h1>
     );
