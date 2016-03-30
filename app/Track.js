@@ -3,10 +3,9 @@ import React from "react";
 export default class Track extends React.Component {
   constructor(props) {
     super(props);
-    this.renderDelete = this.renderDelete.bind(this);
   }
 
-  renderDelete() {
+  renderDelete = () => {
     return <button onClick={this.props.onDelete}>x</button>;
   }
 
