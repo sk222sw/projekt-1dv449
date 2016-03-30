@@ -31,6 +31,19 @@ export default class App extends React.Component {
   deleteTrack = (id, e) => {
     e.stopPropagation();
 
+    const request = new Request("./playlist/hej", {
+      method: "GET",
+      headers: new Headers({
+        "Content-Type": "text/json"
+      })
+    });
+
+    fetch(request).then(result => {
+      return result.json();
+    })
+    .then(j => {
+      console.log(j);
+    });
     this.setState({
       tracks: this.state.tracks.filter(track => track.id !== id)
     });

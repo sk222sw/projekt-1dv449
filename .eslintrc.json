@@ -31,6 +31,10 @@
     "func-names": 0,
     "no-console": 0,
     "new-cap": 0,
-    "react/prefer-stateless-function": 0
+    "react/prefer-stateless-function": 0,
+    "arrow-body-style": 0,
+    "react/prop-types": 0,
+    "react/jsx-closing-bracket-location": 0,
+    "react/jsx-no-bind": 0    
   }
 }

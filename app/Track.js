@@ -5,7 +5,6 @@ export default class Track extends React.Component {
     return <button onClick={this.props.onDelete}>x</button>;
   }
 
-
   render() {
     const onDelete = this.props.onDelete;
     return (
@@ -16,3 +15,8 @@ export default class Track extends React.Component {
         );
   }
 }
+
+Track.propTypes = {
+  title: React.PropTypes.string,
+  onDelete: React.PropTypes.func // tror jag
+};

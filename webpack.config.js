@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
@@ -28,14 +29,10 @@ module.exports = {
         include: PATHS.app
       }
     ]
-  }
+  },
+  plugins: [
+  new webpack.ProvidePlugin({
+    'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+  })
+  ]
 };
-
-
-// preLoaders: [
-//   {
-//     test: /\.js$/,
-//     loader: "eslint-loader",
-//     include: PATHS.app
-//   },
-// ],
