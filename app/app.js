@@ -5,7 +5,6 @@ import uuid from "node-uuid";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.addNote = this.addTrack.bind(this);
     this.deleteTrack = this.deleteTrack.bind(this);
     this.state = {
       tracks: [
@@ -21,7 +20,7 @@ export default class App extends React.Component {
     };
   }
 
-  addTrack() {
+  addTrack = () => {
     this.setState({
       tracks: this.state.tracks.concat([{
         id: uuid.v4(),
@@ -42,7 +41,7 @@ export default class App extends React.Component {
     const tracks = this.state.tracks;
     return (
       <div>
-        <button onClick={this.addNote}>+</button>
+        <button onClick={this.addTrack}>+</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
         />
