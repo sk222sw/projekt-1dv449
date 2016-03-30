@@ -5,7 +5,6 @@ import uuid from "node-uuid";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.deleteTrack = this.deleteTrack.bind(this);
     this.state = {
       tracks: [
         {
@@ -29,7 +28,7 @@ export default class App extends React.Component {
     });
   }
 
-  deleteTrack(id, e) {
+  deleteTrack = (id, e) => {
     e.stopPropagation();
 
     this.setState({
