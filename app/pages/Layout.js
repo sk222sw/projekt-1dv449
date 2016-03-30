@@ -1,13 +1,17 @@
 import React from "react";
 import { Link } from "react-router";
 
+import Footer from "./../layout/Footer";
+import Header from "./../layout/Header";
+
 export default class Layout extends React.Component {
   render() {
     return (
       <div>
-        <h1>plurlist</h1>
+        <Header />
         {this.props.children}
-        <Link to="playlist">Playlist</Link>
+        <Link to="playlist" activeClassName="activeLink">Playlist</Link>
+        <Footer />
       </div>
     );
   }
