@@ -9,8 +9,7 @@ export default class App extends React.Component {
       tracks: [
         {
           id: uuid.v4(),
-          title: "",
-          trackNumber: 1
+          title: ""
         }
       ]
     };
@@ -36,9 +35,8 @@ export default class App extends React.Component {
       j[0].tracks.map(track => {
         this.setState({
           tracks: this.state.tracks.concat([{
-            id: this.state.tracks.length + 1,
-            title: track.title,
-            trackNumber: this.state.tracks.length + 1
+            id: track.id,
+            title: track.title
           }])
         });
       });
@@ -46,20 +44,20 @@ export default class App extends React.Component {
   }
 
   addTrack = () => {
+    const trackId = uuid.v4();
     const title = this.refs.newTrack.value;
     if (title !== "") {
       this.setState({
         tracks: this.state.tracks.concat([{
-          id: this.state.tracks.length + 1,
-          title: title,
-          trackNumber: this.state.tracks.length + 1
+          id: trackId,
+          title: title
         }])
       });
-      this.addToDatabase();
+      this.addToDatabase(trackId);
     }
   }
 
-  addToDatabase = () => {
+  addToDatabase = (trackId) => {
     const title = this.refs.newTrack.value;
     const playlistId = this.props.params.playlist;
 
@@ -70,7 +68,7 @@ export default class App extends React.Component {
       "uri": "",
       "user": {},
       "artist": "",
-      "id": uuid.v4()
+      "id": trackId
     }
 
     const data = {
@@ -96,11 +94,13 @@ export default class App extends React.Component {
 
   deleteTrack = (id, e) => {
     e.stopPropagation();
-    const trackNumber = id;
     const playlistId = this.props.params.playlist;
     const http = new XMLHttpRequest();
-    const url = `/playlist/${playlistId}/delete/${trackNumber}`;
-    const params = `id=${playlistId}&title=${trackNumber}`;
+    const url = `/playlist/${playlistId}/delete/${id}`;
+    const params = `id=${playlistId}&title=${id}`;
+
+    console.log(id);
+
     http.open("POST", url, true);
 
     //Send the proper header information along with the request
@@ -113,7 +113,6 @@ export default class App extends React.Component {
     }
     http.send(params);
 
-    console.log("id: ", id);
     this.setState({
       tracks: this.state.tracks.filter(track => track.id !== id)
     });
