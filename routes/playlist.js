@@ -2,13 +2,23 @@ const express = require('express');
 const router = express.Router();
 const DAL = require("./../models/DAL");
 
-const _ = require("lodash");
-
-
-
 router.get('/', (req, res) => {
 
 });
+
+// router.get("/new", (req, res) => {
+//   const id = DAL.newPlaylist();
+//   res.json({"id": "hemligt"});
+// })
+
+router.get("/new", (req, res) => {
+  DAL.newPlaylist()
+  .then(result => {
+    console.log(result);
+    res.json(result);
+  })
+})
+
 
 router.get('/:id', (req, res) => {
   DAL.getPlaylist()
@@ -42,8 +52,5 @@ router.post("/:id/delete/:track", (req, res) => {
   })
 
 });
-
-
-
 
 module.exports = router;

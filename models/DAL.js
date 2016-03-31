@@ -38,25 +38,36 @@ DAL.prototype.addTrack = function (playlistId, track) {
 }
 
 DAL.prototype.deleteTrack = function (playlistId, track) {
-    return new Promise((resolve, reject) => {
-      Playlist.findById(playlistId, (err, playlist) => {
-        if (err) { reject(err); }
+  return new Promise((resolve, reject) => {
+    Playlist.findById(playlistId, (err, playlist) => {
+      if (err) { reject(err); }
 
-        var trackIndex = null;
-        for (var i = 0; i < playlist.tracks.length; i++) {
-          if (playlist.tracks[i].id === track) {
-            trackIndex = i;
-          }
+      var trackIndex = null;
+      for (var i = 0; i < playlist.tracks.length; i++) {
+        if (playlist.tracks[i].id === track) {
+          trackIndex = i;
         }
-        playlist.tracks.splice(trackIndex, 1);
-        playlist.save(function (err) {
-           if(err) { reject(err); }
-           return true;
-        });
-      })
+      }
+      playlist.tracks.splice(trackIndex, 1);
+      playlist.save(function (err) {
+         if(err) { reject(err); }
+         return true;
+      });
     })
+  })
 }
 
-DAL.prototype.createPlaylist = function() {};
+DAL.prototype.newPlaylist = function() {
+  return new Promise((resolve, reject) => {
+    const pl = new Playlist({ title: "", tracks: []});
+
+    pl.save(err => {
+      if (err) { reject(err); }
+      else {
+        resolve(pl);
+      }
+    })
+  })
+};
 
 module.exports = new DAL();
