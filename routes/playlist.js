@@ -24,6 +24,30 @@ router.get('/:id', (req, res) => {
   })
 });
 
+router.post("/", (req, res) => {
+  const id = req.body.id;
+  return new Promise((resolve, reject) => {
+    Playlist.findById(id, (err, playlist) => {
+      if (err) { reject(err); }
+      const track = {
+          "type": "",
+          "title": req.body.title,
+          "number": 0,
+          "uri": "",
+          "user": {},
+          "artist": ""
+      };
+      playlist.tracks.push(track);
+      playlist.save(err => {
+        if (err) { reject(err); }
+        else {
+          res.send("succeeded");
+        }
+      })
+    })
+  });
+})
+
 function getPlaylists() {
   return new Promise((resolve, reject) => {
     Playlist.find({_id: "56e972b23f5229f01a57b7a8"}, (err, json) => {

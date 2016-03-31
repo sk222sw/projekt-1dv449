@@ -14,7 +14,9 @@ export default class App extends React.Component {
       ]
     };
 
-    this.fetchData();
+    if (this.props.params.playlist) {
+      this.fetchData();
+    }
   }
 
   fetchData = () => {
@@ -42,12 +44,33 @@ export default class App extends React.Component {
   }
 
   addTrack = () => {
+    const title = this.refs.newTrack.value;
     this.setState({
       tracks: this.state.tracks.concat([{
         id: uuid.v4(),
-        title: "new track"
+        title: title
       }])
     });
+    this.addToDatabase();
+  }
+
+  addToDatabase = () => {
+    const title = this.refs.newTrack.value;
+    const playlistId = this.props.params.playlist;
+    var http = new XMLHttpRequest();
+    var url = "/playlist/";
+    var params = `id=${playlistId}&title=${title}`;
+    http.open("POST", url, true);
+
+    //Send the proper header information along with the request
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == 4 && http.status == 200) {
+          console.log(http.responseText);
+        }
+    }
+    http.send(params);
   }
 
   deleteTrack = (id, e) => {
@@ -62,6 +85,9 @@ export default class App extends React.Component {
     const tracks = this.state.tracks;
     return (
       <div>
+        <form id="newTrackForm">
+          <input ref="newTrack" />
+        </form>
         <button onClick={this.addTrack}>+</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}

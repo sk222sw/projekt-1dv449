@@ -4,7 +4,6 @@ import App from "./app";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
 import Layout from "./pages/Layout";
-import Playlist from "./pages/Playlist";
 
 import "./stylesheets/style.css";
 
