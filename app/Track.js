@@ -9,7 +9,7 @@ export default class Track extends React.Component {
     const onDelete = this.props.onDelete;
     return (
           <div>
-            <span>{this.props.title}</span>
+            <span>{this.props.trackNumber} : {this.props.title}</span>
             {onDelete ? this.renderDelete() : null}
           </div>
         );
@@ -18,5 +18,6 @@ export default class Track extends React.Component {
 
 Track.propTypes = {
   title: React.PropTypes.string,
+  id: React.PropTypes.func,
   onDelete: React.PropTypes.func // tror jag
 };

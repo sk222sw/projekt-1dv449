@@ -25,19 +25,12 @@ router.get('/:id', (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const id = req.body.id;
+  console.log(req.body);
+  const playlistId = req.body.playlistId;
   return new Promise((resolve, reject) => {
-    Playlist.findById(id, (err, playlist) => {
+    Playlist.findById(playlistId, (err, playlist) => {
       if (err) { reject(err); }
-      const track = {
-          "type": "",
-          "title": req.body.title,
-          "number": 0,
-          "uri": "",
-          "user": {},
-          "artist": ""
-      };
-      playlist.tracks.push(track);
+      playlist.tracks.push(req.body.track);
       playlist.save(err => {
         if (err) { reject(err); }
         else {
@@ -47,6 +40,24 @@ router.post("/", (req, res) => {
     })
   });
 })
+
+router.post("/:id/delete/:track", (req, res) => {
+  const playlistId = req.params.id;
+  const track = req.params.track;
+
+  console.log("delet");
+  new Promise((resolve, reject) => {
+    Playlist.findById(playlistId, (err, playlist) => {
+      if (err) { reject(err); }
+      playlist.tracks.splice(track - 1, 1);
+      playlist.save(function (err) {
+         if(err) { reject(err); }
+         res.send("deleted");
+      });
+    })
+  })
+  res.send(`aboyut to delete ${playlistId} track ${track}`);
+});
 
 function getPlaylists() {
   return new Promise((resolve, reject) => {

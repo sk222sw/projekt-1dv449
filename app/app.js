@@ -9,7 +9,8 @@ export default class App extends React.Component {
       tracks: [
         {
           id: uuid.v4(),
-          title: ""
+          title: "",
+          trackNumber: 1
         }
       ]
     };
@@ -35,8 +36,9 @@ export default class App extends React.Component {
       j[0].tracks.map(track => {
         this.setState({
           tracks: this.state.tracks.concat([{
-            id: uuid.v4(),
-            title: track.title
+            id: this.state.tracks.length + 1,
+            title: track.title,
+            trackNumber: this.state.tracks.length + 1
           }])
         });
       });
@@ -45,21 +47,60 @@ export default class App extends React.Component {
 
   addTrack = () => {
     const title = this.refs.newTrack.value;
-    this.setState({
-      tracks: this.state.tracks.concat([{
-        id: uuid.v4(),
-        title: title
-      }])
-    });
-    this.addToDatabase();
+    if (title !== "") {
+      this.setState({
+        tracks: this.state.tracks.concat([{
+          id: this.state.tracks.length + 1,
+          title: title,
+          trackNumber: this.state.tracks.length + 1
+        }])
+      });
+      this.addToDatabase();
+    }
   }
 
   addToDatabase = () => {
     const title = this.refs.newTrack.value;
     const playlistId = this.props.params.playlist;
-    var http = new XMLHttpRequest();
-    var url = "/playlist/";
-    var params = `id=${playlistId}&title=${title}`;
+
+    const track = {
+      "type": "",
+      "title": title,
+      "number": 1,
+      "uri": "",
+      "user": {},
+      "artist": "",
+      "id": uuid.v4()
+    }
+
+    const data = {
+      "playlistId": playlistId,
+      "track": track
+    }
+
+    const http = new XMLHttpRequest();
+    const url = "/playlist/";
+    const params = `id=${playlistId}&title=${title}`;
+    http.open("POST", url, true);
+
+    //Send the proper header information along with the request
+    http.setRequestHeader("Content-type", "application/json");
+
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == 4 && http.status == 200) {
+          console.log(http.responseText);
+        }
+    }
+    http.send(JSON.stringify(data));
+  }
+
+  deleteTrack = (id, e) => {
+    e.stopPropagation();
+    const trackNumber = id;
+    const playlistId = this.props.params.playlist;
+    const http = new XMLHttpRequest();
+    const url = `/playlist/${playlistId}/delete/${trackNumber}`;
+    const params = `id=${playlistId}&title=${trackNumber}`;
     http.open("POST", url, true);
 
     //Send the proper header information along with the request
@@ -71,11 +112,8 @@ export default class App extends React.Component {
         }
     }
     http.send(params);
-  }
 
-  deleteTrack = (id, e) => {
-    e.stopPropagation();
-
+    console.log("id: ", id);
     this.setState({
       tracks: this.state.tracks.filter(track => track.id !== id)
     });
@@ -85,10 +123,8 @@ export default class App extends React.Component {
     const tracks = this.state.tracks;
     return (
       <div>
-        <form id="newTrackForm">
-          <input ref="newTrack" />
-        </form>
-        <button onClick={this.addTrack}>+</button>
+        <input ref="newTrack" />
+        <button onClick={this.addTrack}>&#8594;</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
         />
