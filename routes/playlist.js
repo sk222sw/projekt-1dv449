@@ -9,11 +9,9 @@ router.get('/', (req, res) => {
 router.get("/new", (req, res) => {
   DAL.newPlaylist()
   .then(result => {
-    console.log(result);
     res.json(result);
   })
 })
-
 
 router.get('/:id', (req, res) => {
   DAL.getPlaylist(req.params.id)
@@ -25,8 +23,11 @@ router.get('/:id', (req, res) => {
 router.post("/", (req, res) => {
   DAL.addTrack(req.body.playlistId, req.body.track)
   .then(r => {
+    console.log(r);
     if (r) {
-      res.send("succeeded");
+      res.send(200);
+    } else {
+      res.send(500);
     }
   })
   .catch(err => {

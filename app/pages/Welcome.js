@@ -21,7 +21,6 @@ export default class Welcome extends React.Component {
 
     fetch(request)
     .then(result => {
-      console.log("result: ", result);
       this.state.showCreateButton = false;
       return result.json();
     })

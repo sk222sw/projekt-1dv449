@@ -1,0 +1,46 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'watch' ]
+2 info using npm@3.3.12
+3 info using node@v5.5.0
+4 verbose run-script [ 'prewatch', 'watch', 'postwatch' ]
+5 info lifecycle dotons@0.0.0~prewatch: dotons@0.0.0
+6 silly lifecycle dotons@0.0.0~prewatch: no script for prewatch, continuing
+7 info lifecycle dotons@0.0.0~watch: dotons@0.0.0
+8 verbose lifecycle dotons@0.0.0~watch: unsafe-perm in lifecycle true
+9 verbose lifecycle dotons@0.0.0~watch: PATH: C:\Program Files\nodejs\node_modules\npm\bin\node-gyp-bin;C:\Users\Sonny\Plugg\Webbteknik 2\express-webpack-react-eslint-babel\node_modules\.bin;C:\Users\Sonny\bin;C:\Program Files (x86)\Git\mingw32\bin;C:\Program Files (x86)\Git\usr\local\bin;C:\Program Files (x86)\Git\usr\bin;C:\Program Files (x86)\Git\usr\bin;C:\Program Files (x86)\Git\mingw32\bin;C:\Program Files (x86)\Git\usr\bin;C:\Users\Sonny\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Program Files (x86)\Skype\Phone;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\nodejs;C:\Program Files (x86)\Heroku\bin;C:\Program Files (x86)\git\cmd;C:\Program Files (x86)\QuickTime\QTSystem;C:\RailsInstaller\Git\cmd;C:\RailsInstaller\Ruby2.2.0\bin;C:\Users\Sonny\AppData\Roaming\npm;C:\Users\Sonny\AppData\Local\atom\bin;C:\Program Files (x86)\Git\usr\bin\vendor_perl;C:\Program Files (x86)\Git\usr\bin\core_perl
+10 verbose lifecycle dotons@0.0.0~watch: CWD: C:\Users\Sonny\Plugg\Webbteknik 2\express-webpack-react-eslint-babel
+11 silly lifecycle dotons@0.0.0~watch: Args: [ '/d /s /c', 'webpack -p --watch --inline --colors' ]
+12 silly lifecycle dotons@0.0.0~watch: Returned: code: 1  signal: null
+13 info lifecycle dotons@0.0.0~watch: Failed to exec watch script
+14 verbose stack Error: dotons@0.0.0 watch: `webpack -p --watch --inline --colors`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:232:16)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at EventEmitter.emit (events.js:185:7)
+14 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:100:13)
+14 verbose stack     at ChildProcess.emit (events.js:185:7)
+14 verbose stack     at maybeClose (internal/child_process.js:821:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+15 verbose pkgid dotons@0.0.0
+16 verbose cwd C:\Users\Sonny\Plugg\Webbteknik 2\express-webpack-react-eslint-babel
+17 error Windows_NT 6.1.7601
+18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "watch"
+19 error node v5.5.0
+20 error npm  v3.3.12
+21 error code ELIFECYCLE
+22 error dotons@0.0.0 watch: `webpack -p --watch --inline --colors`
+22 error Exit status 1
+23 error Failed at the dotons@0.0.0 watch script 'webpack -p --watch --inline --colors'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the dotons package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     webpack -p --watch --inline --colors
+23 error You can get their info via:
+23 error     npm owner ls dotons
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

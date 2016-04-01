@@ -30,7 +30,7 @@ DAL.prototype.addTrack = function (playlistId, track) {
       playlist.save(err => {
         if (err) { reject(err); }
         else {
-          return true;
+          resolve(true);
         }
       })
     })

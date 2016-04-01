@@ -9,11 +9,12 @@ export default class App extends React.Component {
       tracks: [
         {
           id: uuid.v4(),
-          title: ""
+          title: "",
         }
-      ]
+      ],
+      displayFlash: false,
+      flashMessage: "nullah!"
     };
-
     if (this.props.params.playlist) {
       this.fetchData();
     }
@@ -46,15 +47,27 @@ export default class App extends React.Component {
   addTrack = () => {
     const trackId = uuid.v4();
     const title = this.refs.newTrack.value;
-    if (title !== "") {
+    if (this.validateUrl(title)) {
       this.setState({
         tracks: this.state.tracks.concat([{
           id: trackId,
           title
-        }])
+        }]),
+        displayFlash: true,
+        flashMessage: "Added track"
       });
       this.addToDatabase(trackId);
+    } else {
+      this.setState({
+        displayFlash: true,
+        flashMessage: "That doesnt seem to be a valid URL"        
+      })
     }
+  }
+
+  validateUrl = (urlString) => {
+    const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    return urlRegex.test(urlString.toLowerCase());
   }
 
   addToDatabase = (trackId) => {
@@ -83,7 +96,9 @@ export default class App extends React.Component {
 
     http.onreadystatechange = function () {
       if (http.readyState === 4 && http.status === 200) {
-        console.log(http.responseText);
+        console.log(http.status);
+      } else {
+
       }
     };
     http.send(JSON.stringify(data));
@@ -96,13 +111,12 @@ export default class App extends React.Component {
     const url = `/playlist/${playlistId}/delete/${id}`;
     const params = `id=${playlistId}&title=${id}`;
 
-    console.log(id);
-
     http.open("POST", url, true);
 
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
     http.onreadystatechange = function () {
+      console.log("http.status");
       if (http.readyState === 4 && http.status === 200) {
         console.log(http.responseText);
       }
@@ -110,14 +124,25 @@ export default class App extends React.Component {
     http.send(params);
 
     this.setState({
-      tracks: this.state.tracks.filter(track => track.id !== id)
+      tracks: this.state.tracks.filter(track => track.id !== id),
+      displayFlash: true,
+      flashMessage: "Deleted track"
     });
   }
+
+  // flash = () => {
+  //   return this.state.flashMessage;
+  // }
 
   render() {
     const tracks = this.state.tracks;
     return (
       <div>
+        {
+          this.state.displayFlash ?
+            <p>{this.state.flashMessage}</p> :
+            null
+        }
         <input ref="newTrack" />
         <button onClick={this.addTrack}>&#8594;</button>
         <TrackList tracks={tracks}
