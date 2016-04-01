@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 export default class Welcome extends React.Component {
   constructor(props) {
@@ -21,26 +22,34 @@ export default class Welcome extends React.Component {
     fetch(request)
     .then(result => {
       console.log("result: ", result);
+      this.state.showCreateButton = false;
       return result.json();
     })
     .then(json => {
-      console.log(json._id);
       this.setState({
         playlistId: json._id
       });
-    })
-    .then(() => {
-      console.log(this.state);
     });
   }
 
+  playlistUrl = () =>
+    `http://${window.location.host}/#/playlist/${this.state.playlistId}`;
+
   render() {
+    this.playlistUrl();
     return (
       <div>
         <p>plurlist is a simple tool to create playlists containing music from different sources</p>
         <p>no registering needed - just create your playlist and bookmark it</p>
-        <button onClick={this.createPlurlist}>Create plurlist</button>
-        {this.state.playlistId}
+        {this.state.showCreateButton ?
+          <button onClick={this.createPlurlist}>Create plurlist</button> :
+            <p>
+              Great, here is your link:
+              <Link to={`/playlist/${this.state.playlistId}`}>
+                {this.playlistUrl()}
+              </Link>
+            </p>
+        }
       </div>
     );
   }

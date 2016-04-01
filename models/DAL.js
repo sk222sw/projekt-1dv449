@@ -13,9 +13,9 @@ const Playlist = mongoose.model("PlaylistSchema", PlaylistSchema);
 
 const DAL = function () {};
 
-DAL.prototype.getPlaylist = function() {
+DAL.prototype.getPlaylist = function(_id) {
   return new Promise((resolve, reject) => {
-    Playlist.find({_id: "56e972b23f5229f01a57b7a8"}, (err, json) => {
+    Playlist.find({_id}, (err, json) => {
       if (err) { reject(err); }
       resolve(json);
     });

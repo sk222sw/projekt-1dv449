@@ -6,11 +6,6 @@ router.get('/', (req, res) => {
 
 });
 
-// router.get("/new", (req, res) => {
-//   const id = DAL.newPlaylist();
-//   res.json({"id": "hemligt"});
-// })
-
 router.get("/new", (req, res) => {
   DAL.newPlaylist()
   .then(result => {
@@ -21,7 +16,7 @@ router.get("/new", (req, res) => {
 
 
 router.get('/:id', (req, res) => {
-  DAL.getPlaylist()
+  DAL.getPlaylist(req.params.id)
   .then(json => {
     res.json(json);
   })
