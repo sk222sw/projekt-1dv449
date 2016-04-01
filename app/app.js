@@ -50,7 +50,7 @@ export default class App extends React.Component {
       this.setState({
         tracks: this.state.tracks.concat([{
           id: trackId,
-          title: title
+          title
         }])
       });
       this.addToDatabase(trackId);
@@ -60,35 +60,32 @@ export default class App extends React.Component {
   addToDatabase = (trackId) => {
     const title = this.refs.newTrack.value;
     const playlistId = this.props.params.playlist;
-
     const track = {
-      "type": "",
-      "title": title,
-      "number": 1,
-      "uri": "",
-      "user": {},
-      "artist": "",
-      "id": trackId
-    }
+      type: "",
+      title,
+      number: 1,
+      uri: "",
+      user: {},
+      artist: "",
+      id: trackId
+    };
 
     const data = {
-      "playlistId": playlistId,
-      "track": track
-    }
+      playlistId,
+      track
+    };
 
     const http = new XMLHttpRequest();
     const url = "/playlist/";
-    const params = `id=${playlistId}&title=${title}`;
     http.open("POST", url, true);
 
-    //Send the proper header information along with the request
     http.setRequestHeader("Content-type", "application/json");
 
-    http.onreadystatechange = function() {//Call a function when the state changes.
-        if(http.readyState == 4 && http.status == 200) {
-          console.log(http.responseText);
-        }
-    }
+    http.onreadystatechange = function () {
+      if (http.readyState === 4 && http.status === 200) {
+        console.log(http.responseText);
+      }
+    };
     http.send(JSON.stringify(data));
   }
 
@@ -103,14 +100,13 @@ export default class App extends React.Component {
 
     http.open("POST", url, true);
 
-    //Send the proper header information along with the request
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
-    http.onreadystatechange = function() {//Call a function when the state changes.
-        if(http.readyState == 4 && http.status == 200) {
-          console.log(http.responseText);
-        }
-    }
+    http.onreadystatechange = function () {
+      if (http.readyState === 4 && http.status === 200) {
+        console.log(http.responseText);
+      }
+    };
     http.send(params);
 
     this.setState({

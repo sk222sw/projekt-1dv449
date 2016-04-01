@@ -5,9 +5,9 @@ export default class Welcome extends React.Component {
     super(props);
 
     this.state = {
-      playlistId: ""
+      playlistId: "",
+      showCreateButton: true
     };
-
   }
 
   createPlurlist = () => {
@@ -27,11 +27,11 @@ export default class Welcome extends React.Component {
       console.log(json._id);
       this.setState({
         playlistId: json._id
-      })
+      });
     })
     .then(() => {
       console.log(this.state);
-    })
+    });
   }
 
   render() {
