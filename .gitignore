@@ -1,2 +1,5 @@
 node_modules
 projekt
+bat/
+*.bat
+npm-debug.log
