@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router";
 
+import PlaylistStore from "../stores/PlaylistStore";
+import * as PlaylistActions from "../actions/PlaylistActions";
+
 export default class Welcome extends React.Component {
   constructor(props) {
     super(props);
@@ -11,24 +14,26 @@ export default class Welcome extends React.Component {
     };
   }
 
-  createPlurlist = () => {
-    const request = new Request(`./playlist/new`, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "application/json"
-      })
-    });
+  componentWillMount() {
+    PlaylistStore.on("change", this.getPlaylistId);
+  }
 
-    fetch(request)
-    .then(result => {
-      this.state.showCreateButton = false;
-      return result.json();
+  componentWillUnmount() {
+    PlaylistStore.removeListener("change", this.getPlaylistId);
+  }
+
+  getPlaylistId = () => {
+    this.setState({
+      playlistId: PlaylistStore.getId(),
+      showCreateButton: false
     })
-    .then(json => {
-      this.setState({
-        playlistId: json._id
-      });
+  }
+
+  createPlurlist = () => {
+    this.setState({
+      showCreateButton: false
     });
+    PlaylistActions.createPlaylist();
   }
 
   playlistUrl = () =>

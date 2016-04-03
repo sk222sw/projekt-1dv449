@@ -22,6 +22,10 @@ class TrackStore extends EventEmitter {
     ];
   }
 
+  fetchTracks() {
+
+  }
+
   createTrack(title) {
     this.tracks.push({
       title,
@@ -35,8 +39,12 @@ class TrackStore extends EventEmitter {
     return this.tracks;
   }
 
-  receiveTracks() {
-    return this.tracks;
+  receiveTracks(tracks) {
+    console.log(tracks);
+    this.tracks.push({
+      title: "HEJSAN CYKA",
+      id: uuid.v4()
+    })
   }
 
   handleActions(action) {
@@ -45,12 +53,11 @@ class TrackStore extends EventEmitter {
         this.createTrack(action.text);
         break;
       case "RECEIVE_TRACKS":
-        console.log(action.playlist);
-        this.receiveTracks();
+        this.receiveTracks(action.playlist);
         this.emit("change");
         break;
       case "FETCH_TRACKS":
-        console.log("fetching tracks. display loader!");
+        this.fetchTracks();
         break;
       default:
 
