@@ -2,22 +2,37 @@ import React from "react";
 import TrackList from "./TrackList";
 import uuid from "node-uuid";
 
+import TrackStore from "./stores/TrackStore";
+import * as TrackActions from "./actions/TrackActions";
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.getTracks = this.getTracks.bind(this);
     this.state = {
-      tracks: [
-        {
-          id: uuid.v4(),
-          title: "",
-        }
-      ],
+      tracks: TrackStore.getAll(),
       displayFlash: false,
       flashMessage: "nullah!"
     };
+
     if (this.props.params.playlist) {
       this.fetchData();
     }
+  }
+
+  componentWillMount() {
+    TrackStore.on("change", this.getTracks);
+    console.log("count", TrackStore.listenerCount("change"));
+  }
+
+  componentWillUnmount() {
+    TrackStore.removeListener("change", this.getTracks);
+  }
+
+  getTracks() {
+    this.setState({
+      tracks: TrackStore.getAll()
+    });
   }
 
   fetchData = () => {
@@ -60,7 +75,7 @@ export default class App extends React.Component {
     } else {
       this.setState({
         displayFlash: true,
-        flashMessage: "That doesnt seem to be a valid URL"        
+        flashMessage: "That doesnt seem to be a valid URL"
       })
     }
   }
@@ -130,9 +145,17 @@ export default class App extends React.Component {
     });
   }
 
-  // flash = () => {
-  //   return this.state.flashMessage;
-  // }
+  createTrack() {
+    TrackActions.createTrack(Date.now());
+  }
+
+  reloadTracks() {
+    TrackActions.reloadTracks();
+  }
+
+  fetchTracks() {
+    TrackActions.fetchTracks();
+  }
 
   render() {
     const tracks = this.state.tracks;
@@ -144,7 +167,8 @@ export default class App extends React.Component {
             null
         }
         <input ref="newTrack" />
-        <button onClick={this.addTrack}>&#8594;</button>
+        <button onClick={this.createTrack.bind(this)}>&#8594;</button>
+        <button onClick={this.reloadTracks.bind(this)}>RELOAD</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
         />
