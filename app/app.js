@@ -8,7 +8,10 @@ import * as PlaylistActions from "./actions/PlaylistActions";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tracks: [], displayFlash: false, flashMessage: "" };
+    this.state = { tracks: [],
+      displayFlash: false,
+      flashMessage: ""
+    };
 
     if (this.props.params.playlist) {
       PlaylistActions.fetchPlaylist(this.props.params.playlist);
@@ -34,34 +37,9 @@ export default class App extends React.Component {
     return urlRegex.test(urlString.toLowerCase());
   }
 
-  deleteTrack = (id, e) => {
-    e.stopPropagation();
+  deleteTrack = (trackId) => {
     const playlistId = this.props.params.playlist;
-    const http = new XMLHttpRequest();
-    const url = `/playlist/${playlistId}/delete/${id}`;
-    const params = `id=${playlistId}&title=${id}`;
-
-    http.open("POST", url, true);
-
-    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-    http.onreadystatechange = function () {
-      console.log("http.status");
-      if (http.readyState === 4 && http.status === 200) {
-        console.log(http.responseText);
-      }
-    };
-    http.send(params);
-
-    this.setState({
-      tracks: this.state.tracks.filter(track => track.id !== id),
-      displayFlash: true,
-      flashMessage: "Deleted track"
-    });
-  }
-
-  fetchPlaylist = () => {
-    PlaylistActions.fetchPlaylist(this.props.params.playlist);
+    PlaylistActions.deleteTrack(playlistId, trackId);
   }
 
   createTrack() {
@@ -74,6 +52,7 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log("render");
     const tracks = this.state.tracks;
     return (
       <div>

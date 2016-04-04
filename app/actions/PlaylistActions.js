@@ -2,10 +2,6 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 export function fetchPlaylist(id) {
-  dispatcher.dispatch({
-    type: "FETCH_PLAYLIST",
-    id
-  });
   fetch(`./playlist/${id}`)
   .then(playlist => playlist.json())
   .then(json => {
@@ -28,9 +24,7 @@ export function createPlaylist() {
   });
 }
 
-
 export function createTrack(track, playlistId) {
-  console.log(track, playlistId);
   axios.post("/playlist",
       {
         track,
@@ -40,7 +34,6 @@ export function createTrack(track, playlistId) {
           "Content-Type": "application/json"
         }
     }).then(function(response) {
-        console.log(response);
         dispatcher.dispatch({
           type: "CREATE_TRACK",
           track
@@ -49,4 +42,13 @@ export function createTrack(track, playlistId) {
     .catch(err => {
       console.log(err);
     })
+}
+
+export function deleteTrack(playlistId, trackId) {
+  const url = `/playlist/${playlistId}/delete/${trackId}`;
+
+  axios.post(url, {})
+  .then(response => {
+    dispatcher.dispatch({ type: "DELETE_TRACK", id: trackId });
+  });
 }

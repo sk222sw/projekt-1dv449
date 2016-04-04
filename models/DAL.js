@@ -51,7 +51,7 @@ DAL.prototype.deleteTrack = function (playlistId, track) {
       playlist.tracks.splice(trackIndex, 1);
       playlist.save(function (err) {
          if(err) { reject(err); }
-         return true;
+         resolve(true);
       });
     })
   })

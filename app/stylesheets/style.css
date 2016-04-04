@@ -7,3 +7,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+.loader {
+  height: 20px;
+  width: 20px;
+  background: url("/images/ajax-loader.gif");
+}
+
+.noLoader {
+  height: 20px;
+  width: 20px;
+  background: green;
+}

@@ -1,6 +1,7 @@
 import { EventEmitter } from "events";
 
 import dispatcher from "../dispatcher";
+import _ from "lodash";
 
 class PlaylistStore extends EventEmitter {
   constructor() {
@@ -30,19 +31,25 @@ class PlaylistStore extends EventEmitter {
   }
 
   receievePlaylist = (playlist) => {
+    this.loader = false;
     this.playlist = playlist;
     this.emit("change");
   }
 
   createTrack = (track) => {
-    console.log("i createtrack i playliststore", this.getTracks());
     this.playlist.tracks.push(track);
+    this.emit("change");
+  }
+
+  deleteTrack = (id) => {
+    this.playlist.tracks = _.filter(this.getTracks(), track => track.id !== id );
     this.emit("change");
   }
 
   handleActions(action) {
     switch (action.type) {
       case "CREATE_PLAYLIST":
+        this.loader = true;
         this.createPlaylist(action.id);
         break;
       case "FETCH_PLAYLIST":
@@ -53,10 +60,19 @@ class PlaylistStore extends EventEmitter {
         break;
       case "CREATE_TRACK":
         this.createTrack(action.track);
+        break;
+      case "DELETE_TRACK":
+        this.deleteTrack(action.id);
+        break;
+      case "DISPLAY_LOADER":
+        // TODO display loader
+        break;
+      case "ERROR_HANDLER":
+        // TODO create error handling action
       default:
+      // TODO figure out something default?
     }
   }
-
 }
 
 const playlistStore = new PlaylistStore;

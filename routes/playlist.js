@@ -33,20 +33,21 @@ router.post("/", (req, res) => {
   .catch(err => {
     console.log(err.message);
     res.send("Sorry, there was an error adding the track to the database");
-  })
+  });
 })
 
 router.post("/:id/delete/:track", (req, res) => {
-  const playlistId = req.params.id;
-  const track = req.params.track;
-
   DAL.deleteTrack(req.params.id, req.params.track)
   .then(r => {
     if (r) {
-      res.send(`dios mio!!`);
+      console.log("res.send");
+      res.send(200);
     }
   })
-
+  .catch(err => {
+    console.log(err.message);
+    res.send("Sorry, there was an error", 500);
+  })
 });
 
 module.exports = router;

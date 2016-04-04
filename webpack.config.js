@@ -8,6 +8,7 @@ const PATHS = {
 };
 module.exports = {
   context: path.join(__dirname, "app"),
+  debug: true,
   devtool: "eval-source-map",
   entry: {
     app: "./index.js"
