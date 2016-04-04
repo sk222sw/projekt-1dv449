@@ -7,18 +7,7 @@ class TrackStore extends EventEmitter {
   constructor() {
     super();
     this.tracks = [
-      {
-        id: uuid.v4(),
-        title: "hsfsdfej",
-      },
-      {
-        id: uuid.v4(),
-        title: "hesssj",
-      },
-      {
-        id: uuid.v4(),
-        title: "hejfff",
-      }
+
     ];
   }
 
@@ -26,12 +15,8 @@ class TrackStore extends EventEmitter {
 
   }
 
-  createTrack(title) {
-    this.tracks.push({
-      title,
-      id: uuid.v4()
-    })
-
+  createTrack(track) {
+    this.tracks.push(track);
     this.emit("change");
   }
 
@@ -44,13 +29,13 @@ class TrackStore extends EventEmitter {
     this.tracks.push({
       title: "HEJSAN CYKA",
       id: uuid.v4()
-    })
+    });
   }
 
   handleActions(action) {
     switch (action.type) {
       case "CREATE_TRACK":
-        this.createTrack(action.text);
+        this.createTrack(action.track);
         break;
       case "RECEIVE_TRACKS":
         this.receiveTracks(action.playlist);
@@ -62,7 +47,6 @@ class TrackStore extends EventEmitter {
       default:
 
     }
-    console.log("TrackStore recieved an action", action)
   }
 
 }

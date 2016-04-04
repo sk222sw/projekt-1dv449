@@ -1,122 +1,46 @@
 import React from "react";
-import TrackList from "./TrackList";
 import uuid from "node-uuid";
 
+import TrackList from "./TrackList";
 import TrackStore from "./stores/TrackStore";
+import PlaylistStore from "./stores/PlaylistStore";
 import * as TrackActions from "./actions/TrackActions";
+import * as PlaylistActions from "./actions/PlaylistActions";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.getTracks = this.getTracks.bind(this);
-    this.state = {
-      tracks: TrackStore.getAll(),
-      displayFlash: false,
-      flashMessage: "nullah!"
-    };
+    this.state = { tracks: [], displayFlash: false, flashMessage: "" };
 
     if (this.props.params.playlist) {
-      this.fetchData();
+      PlaylistActions.fetchPlaylist(this.props.params.playlist);
     }
   }
 
+  // componentDidMount() {
+  //   console.log(PlaylistStore.getTracks());
+  //   this.fetchPlaylist();
+  // }
+
   componentWillMount() {
     TrackStore.on("change", this.getTracks);
-    console.log("count", TrackStore.listenerCount("change"));
+    PlaylistStore.on("change", this.getTracks);
   }
 
   componentWillUnmount() {
     TrackStore.removeListener("change", this.getTracks);
+    PlaylistStore.removeListener("change", this.getTracks);
   }
 
-  getTracks() {
+  getTracks = () => {
     this.setState({
-      tracks: TrackStore.getAll()
+      tracks: PlaylistStore.getTracks()
     });
-  }
-
-  fetchData = () => {
-    const playlistId = this.props.params.playlist;
-    const request = new Request(`./playlist/${playlistId}`, {
-      method: "GET",
-      headers: new Headers({
-        "Content-Type": "text/json"
-      })
-    });
-
-    fetch(request).then(result => {
-      return result.json();
-    })
-    .then(j => {
-      j[0].tracks.map(track => {
-        this.setState({
-          tracks: this.state.tracks.concat([{
-            id: track.id,
-            title: track.title
-          }])
-        });
-      });
-    });
-  }
-
-  addTrack = () => {
-    const trackId = uuid.v4();
-    const title = this.refs.newTrack.value;
-    if (this.validateUrl(title)) {
-      this.setState({
-        tracks: this.state.tracks.concat([{
-          id: trackId,
-          title
-        }]),
-        displayFlash: true,
-        flashMessage: "Added track"
-      });
-      this.addToDatabase(trackId);
-    } else {
-      this.setState({
-        displayFlash: true,
-        flashMessage: "That doesnt seem to be a valid URL"
-      })
-    }
   }
 
   validateUrl = (urlString) => {
     const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     return urlRegex.test(urlString.toLowerCase());
-  }
-
-  addToDatabase = (trackId) => {
-    const title = this.refs.newTrack.value;
-    const playlistId = this.props.params.playlist;
-    const track = {
-      type: "",
-      title,
-      number: 1,
-      uri: "",
-      user: {},
-      artist: "",
-      id: trackId
-    };
-
-    const data = {
-      playlistId,
-      track
-    };
-
-    const http = new XMLHttpRequest();
-    const url = "/playlist/";
-    http.open("POST", url, true);
-
-    http.setRequestHeader("Content-type", "application/json");
-
-    http.onreadystatechange = function () {
-      if (http.readyState === 4 && http.status === 200) {
-        console.log(http.status);
-      } else {
-
-      }
-    };
-    http.send(JSON.stringify(data));
   }
 
   deleteTrack = (id, e) => {
@@ -145,8 +69,17 @@ export default class App extends React.Component {
     });
   }
 
+  fetchPlaylist = () => {
+    PlaylistActions.fetchPlaylist(this.props.params.playlist);
+  }
+
   createTrack() {
-    TrackActions.createTrack(Date.now());
+    const newTrack = {
+      url: this.refs.newTrack.value,
+      title: "temp title",
+      id: uuid.v4()
+    }
+    TrackActions.createTrack(newTrack, this.props.params.playlist);
   }
 
   reloadTracks() {

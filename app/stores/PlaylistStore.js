@@ -7,7 +7,8 @@ class PlaylistStore extends EventEmitter {
     super();
 
     this.playlist = {
-      id: ""
+      id: "",
+      tracks: []
     };
   }
 
@@ -16,17 +17,37 @@ class PlaylistStore extends EventEmitter {
     this.emit("change");
   }
 
+  getId() {
+    return this.playlist.id;
+  }
+
+  fetchPlaylist() {
+    // TODO show a loader or something?
+  }
+
+  getTracks = () => {
+    return this.playlist.tracks;
+  }
+
+  receievePlaylist = (playlist) => {
+    console.log("receieve playlist with tracks: ", playlist.tracks);
+    this.playlist = playlist;
+    this.emit("change");
+  }
+
   handleActions(action) {
     switch (action.type) {
       case "CREATE_PLAYLIST":
         this.createPlaylist(action.id);
         break;
+      case "FETCH_PLAYLIST":
+        this.fetchPlaylist(action.id);
+        break;
+      case "RECEIVE_PLAYLIST":
+        this.receievePlaylist(action.playlist);
+        break;
       default:
     }
-  }
-
-  getId() {
-    return this.playlist.id;
   }
 
 }

@@ -3,3 +3,4 @@ projekt
 bat/
 *.bat
 npm-debug.log
+temp

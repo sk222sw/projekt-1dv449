@@ -64,6 +64,7 @@ DAL.prototype.newPlaylist = function() {
     pl.save(err => {
       if (err) { reject(err); }
       else {
+        console.log("DAL", pl)
         resolve(pl);
       }
     })

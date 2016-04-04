@@ -16,7 +16,6 @@ router.get("/new", (req, res) => {
 router.get('/:id', (req, res) => {
   DAL.getPlaylist(req.params.id)
   .then(json => {
-    console.log(json);
     res.json(json);
   })
 });

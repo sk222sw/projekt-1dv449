@@ -26,7 +26,7 @@ export default class Welcome extends React.Component {
     this.setState({
       playlistId: PlaylistStore.getId(),
       showCreateButton: false
-    })
+    });
   }
 
   createPlurlist = () => {

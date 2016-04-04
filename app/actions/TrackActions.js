@@ -1,10 +1,26 @@
 import dispatcher from "../dispatcher";
+import axios from "axios";
 
-export function createTrack(text) {
-  dispatcher.dispatch({
-    type: "CREATE_TRACK",
-    text
-  });
+export function createTrack(track, playlistId) {
+  console.log(track);
+  axios.post("/playlist",
+      {
+        track,
+        playlistId
+      }, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+    }).then(function(response) {
+        console.log(response);
+        dispatcher.dispatch({
+          type: "CREATE_TRACK",
+          track
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    })
 }
 
 export function deleteTrack(id) {
