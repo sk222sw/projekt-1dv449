@@ -7,6 +7,7 @@ export default ({ tracks, onDelete }) => {
         <li key={track.id}>
           <Track
             title={track.title}
+            url={track.url}
             onDelete={onDelete.bind(null, track.id)} />
         </li>
     )}</ul>

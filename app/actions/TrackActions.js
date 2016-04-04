@@ -2,7 +2,6 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 export function createTrack(track, playlistId) {
-  console.log(track);
   axios.post("/playlist",
       {
         track,

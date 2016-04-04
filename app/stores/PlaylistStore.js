@@ -30,8 +30,13 @@ class PlaylistStore extends EventEmitter {
   }
 
   receievePlaylist = (playlist) => {
-    console.log("receieve playlist with tracks: ", playlist.tracks);
     this.playlist = playlist;
+    this.emit("change");
+  }
+
+  createTrack = (track) => {
+    console.log("i createtrack i playliststore", this.getTracks());
+    this.playlist.tracks.push(track);
     this.emit("change");
   }
 
@@ -46,6 +51,8 @@ class PlaylistStore extends EventEmitter {
       case "RECEIVE_PLAYLIST":
         this.receievePlaylist(action.playlist);
         break;
+      case "CREATE_TRACK":
+        this.createTrack(action.track);
       default:
     }
   }

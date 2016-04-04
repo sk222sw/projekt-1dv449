@@ -9,7 +9,7 @@ export default class Track extends React.Component {
     const onDelete = this.props.onDelete;
     return (
           <div>
-            <span>{this.props.trackNumber} : {this.props.title}</span>
+            <span>{this.props.trackNumber} : {this.props.url}</span>
             {onDelete ? this.renderDelete() : null}
           </div>
         );

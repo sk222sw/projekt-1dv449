@@ -17,11 +17,6 @@ export default class App extends React.Component {
     }
   }
 
-  // componentDidMount() {
-  //   console.log(PlaylistStore.getTracks());
-  //   this.fetchPlaylist();
-  // }
-
   componentWillMount() {
     TrackStore.on("change", this.getTracks);
     PlaylistStore.on("change", this.getTracks);
@@ -76,10 +71,11 @@ export default class App extends React.Component {
   createTrack() {
     const newTrack = {
       url: this.refs.newTrack.value,
-      title: "temp title",
+      title: "",
       id: uuid.v4()
     }
-    TrackActions.createTrack(newTrack, this.props.params.playlist);
+    // TrackActions.createTrack(newTrack, this.props.params.playlist);
+    PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
   reloadTracks() {
