@@ -2,9 +2,7 @@ import React from "react";
 import uuid from "node-uuid";
 
 import TrackList from "./TrackList";
-import TrackStore from "./stores/TrackStore";
 import PlaylistStore from "./stores/PlaylistStore";
-import * as TrackActions from "./actions/TrackActions";
 import * as PlaylistActions from "./actions/PlaylistActions";
 
 export default class App extends React.Component {
@@ -18,12 +16,10 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    TrackStore.on("change", this.getTracks);
     PlaylistStore.on("change", this.getTracks);
   }
 
   componentWillUnmount() {
-    TrackStore.removeListener("change", this.getTracks);
     PlaylistStore.removeListener("change", this.getTracks);
   }
 
@@ -74,16 +70,7 @@ export default class App extends React.Component {
       title: "",
       id: uuid.v4()
     }
-    // TrackActions.createTrack(newTrack, this.props.params.playlist);
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
-  }
-
-  reloadTracks() {
-    TrackActions.reloadTracks();
-  }
-
-  fetchTracks() {
-    TrackActions.fetchTracks();
   }
 
   render() {
@@ -97,7 +84,6 @@ export default class App extends React.Component {
         }
         <input ref="newTrack" />
         <button onClick={this.createTrack.bind(this)}>&#8594;</button>
-        <button onClick={this.reloadTracks.bind(this)}>RELOAD</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
         />
