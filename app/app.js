@@ -47,7 +47,7 @@ export default class App extends React.Component {
       url: this.refs.newTrack.value,
       title: "",
       id: uuid.v4()
-    }
+    };
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 

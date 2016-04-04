@@ -31,7 +31,6 @@ class PlaylistStore extends EventEmitter {
   }
 
   receievePlaylist = (playlist) => {
-    this.loader = false;
     this.playlist = playlist;
     this.emit("change");
   }
@@ -42,14 +41,13 @@ class PlaylistStore extends EventEmitter {
   }
 
   deleteTrack = (id) => {
-    this.playlist.tracks = _.filter(this.getTracks(), track => track.id !== id );
+    this.playlist.tracks = _.filter(this.getTracks(), track => track.id !== id);
     this.emit("change");
   }
 
   handleActions(action) {
     switch (action.type) {
       case "CREATE_PLAYLIST":
-        this.loader = true;
         this.createPlaylist(action.id);
         break;
       case "FETCH_PLAYLIST":

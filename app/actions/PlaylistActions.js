@@ -25,30 +25,29 @@ export function createPlaylist() {
 }
 
 export function createTrack(track, playlistId) {
-  axios.post("/playlist",
-      {
-        track,
-        playlistId
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-    }).then(function(response) {
-        dispatcher.dispatch({
-          type: "CREATE_TRACK",
-          track
-        });
-    })
-    .catch(err => {
-      console.log(err);
-    })
+  axios.post("/playlist", {
+    track,
+    playlistId
+  }, {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }).then(() => {
+    dispatcher.dispatch({
+      type: "CREATE_TRACK",
+      track
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });
 }
 
 export function deleteTrack(playlistId, trackId) {
   const url = `/playlist/${playlistId}/delete/${trackId}`;
 
   axios.post(url, {})
-  .then(response => {
+  .then(() => {
     dispatcher.dispatch({ type: "DELETE_TRACK", id: trackId });
   });
 }
