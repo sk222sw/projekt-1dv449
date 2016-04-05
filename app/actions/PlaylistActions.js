@@ -43,6 +43,13 @@ export function createTrack(track, playlistId) {
   });
 }
 
+export function soundCloudApi(trackUrl) {
+  dispatcher.dispatch({
+    type: "SOUNDCLOUD_API",
+    trackUrl
+  });
+}
+
 export function deleteTrack(playlistId, trackId) {
   const url = `/playlist/${playlistId}/delete/${trackId}`;
 

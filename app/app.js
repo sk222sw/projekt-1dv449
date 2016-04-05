@@ -4,13 +4,15 @@ import uuid from "node-uuid";
 import TrackList from "./TrackList";
 import PlaylistStore from "./stores/PlaylistStore";
 import * as PlaylistActions from "./actions/PlaylistActions";
+import Player from "./components/Player";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { tracks: [],
       displayFlash: false,
-      flashMessage: ""
+      flashMessage: "",
+      currentTrack: null
     };
 
     if (this.props.params.playlist) {
@@ -51,8 +53,11 @@ export default class App extends React.Component {
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
+  pickTrack = (apiUrl) => {
+    PlaylistActions.soundCloudApi(apiUrl);
+  }
+
   render() {
-    console.log("render");
     const tracks = this.state.tracks;
     return (
       <div>
@@ -65,7 +70,9 @@ export default class App extends React.Component {
         <button onClick={this.createTrack.bind(this)}>&#8594;</button>
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
+          pickTrack={this.pickTrack}
         />
+      <Player track={this.state.currentTrack} />
       </div>
     );
   }

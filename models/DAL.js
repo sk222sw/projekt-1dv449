@@ -1,5 +1,6 @@
 const Promise = require("bluebird");
 const mongoose = require("mongoose");
+const request = require("request");
 
 mongoose.connect("mongodb://sonny:123@ds037165.mlab.com:37165/playlist")
 
@@ -70,5 +71,18 @@ DAL.prototype.newPlaylist = function() {
     })
   })
 };
+
+DAL.prototype.getSoundCloudData = function (url) {
+  console.log("DAL");
+  url = "https://soundcloud.com/ben-klock/ben-klock-subzero-original-mix";
+  const apiString = "https://api.soundcloud.com/resolve.json?url="+url+"&client_id=defe1307335b6141da3b5c880c33bbab";
+  return new Promise((resolve, reject) => {
+    request(apiString, (err, res, rawJson) => {
+      if (err) { reject(err); }
+      const json = JSON.parse(rawJson);
+      resolve(json);
+    })
+  })
+}
 
 module.exports = new DAL();

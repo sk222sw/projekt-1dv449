@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const routes = require('./routes/index');
 const users = require('./routes/users');
 const playlist = require('./routes/playlist');
+const apiHandler = require('./routes/apiHandler');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/playlist', playlist);
+app.use('/apiHandler', apiHandler);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
