@@ -11,7 +11,8 @@ module.exports = {
   debug: true,
   devtool: "eval-source-map",
   entry: {
-    app: "./index.js"
+    app: "./index.js",
+    vendor: ["./api/SC"]
   },
   output: {
     path: PATHS.build,
@@ -21,13 +22,21 @@ module.exports = {
     loaders: [
       {
         test: /\.js$/,
-        loaders: ["babel", "eslint-loader"],
+        loaders: ["babel"],
         include: PATHS.app
       },
       {
         test: /\.css$/,
         loaders: ["style", "css"],
         include: PATHS.app
+      }
+    ],
+    preLoaders: [
+      {
+        test: /\.js$/,
+        loaders: ["eslint-loader"],
+        include: PATHS.app,
+        exclude: path.join(PATHS.app, "api")
       }
     ]
   },
