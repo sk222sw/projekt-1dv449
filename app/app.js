@@ -10,10 +10,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { tracks: [],
-      displayFlash: false,
-      flashMessage: "",
-      currentTrack: 1,
-      currentTrackUri: ""
+      currentTrack: 0,
+      currentTrackUri: "",
+      firstTrack: true
     };
 
     if (this.props.params.playlist) {
@@ -34,9 +33,15 @@ export default class App extends React.Component {
   // CRUDE : : : : : : : : : : : :
 
   getTracks = () => {
+    console.log(this.state.currentTrack);
     this.setState({
-      tracks: PlaylistStore.getTracks()
+      tracks: PlaylistStore.getTracks(),
+      currentTrack: PlaylistStore.getTrackNumber()
     });
+    if (this.state.firstTrack) {
+      this.state.firstTrack = false;
+      PlaylistActions.getFirstTrack(this.state.tracks[0].url);
+    }
   }
 
   deleteTrack = (trackId) => {
@@ -52,7 +57,6 @@ export default class App extends React.Component {
     };
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
-
 
   // track things : : : : : : : :
 
@@ -87,11 +91,6 @@ export default class App extends React.Component {
     const tracks = this.state.tracks;
     return (
       <div>
-        {
-          this.state.displayFlash ?
-            <p>{this.state.flashMessage}</p> :
-            null
-        }
         <input ref="newTrack" />
         <button onClick={this.createTrack.bind(this)}>&#8594;</button>
         <TrackList tracks={tracks}

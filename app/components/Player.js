@@ -14,7 +14,6 @@ export default class Player extends React.Component {
 
   componentDidMount() {
     PlaylistStore.on("next-track", this.reRenderPlayer);
-    this.createSoundCloudPlayer();
   }
 
   soundCloud = () => {
@@ -60,7 +59,7 @@ export default class Player extends React.Component {
         now playing: {this.props.track}
         <button onClick={this.reRenderPlayer}>cool button</button>
         <div id="trackPlayer">
-          <iframe id="sc-widget"></iframe>
+          <iframe id="sc-widget" frameBorder="0"></iframe>
         </div>
       </div>
     );

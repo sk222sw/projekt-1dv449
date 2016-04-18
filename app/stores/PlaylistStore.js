@@ -12,7 +12,7 @@ class PlaylistStore extends EventEmitter {
       id: ""
     };
     this.currentTrack = undefined;
-    this.trackNumber = 1;
+    this.trackNumber = 0;
   }
 
   createPlaylist = (id) => {
@@ -51,17 +51,26 @@ class PlaylistStore extends EventEmitter {
     return this.trackNumber;
   }
 
-  getCurrentTrack = () => {
-    return this.currentTrack;
+  getTrackNumber = () => {
+    return this.trackNumber;
   }
 
   getCurrentTrackUri = () => {
     return this.currentTrackUri;
   }
 
+  firstTrack = (track) => {
+    console.log("hej");
+    this.currentTrack = track;
+    this.currentTrackUri = track.uri;
+    this.emit("next-track");
+    this.emit("change");
+  }
+
   nextTrack = (track) => {
     this.trackNumber++;
     this.currentTrack = track;
+    console.log(track);
     this.currentTrackUri = track.uri;
     this.emit("next-track");
     this.emit("change");
@@ -86,6 +95,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "NEXT_TRACK":
         this.nextTrack(action.track);
+        break;
+      case "FIRST_TRACK":
+        this.firstTrack(action.track);
         break;
       case "DISPLAY_LOADER":
         // TODO display loader

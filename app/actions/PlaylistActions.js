@@ -55,9 +55,20 @@ export function nextTrack(url) {
     url
   })
   .then(response => {
-    console.log(response.data);
     dispatcher.dispatch({
       type: "NEXT_TRACK",
+      track: response.data
+    });
+  });
+}
+
+export function getFirstTrack(url) {
+  axios.post("/apiHandler", {
+    url
+  })
+  .then(response => {
+    dispatcher.dispatch({
+      type: "FIRST_TRACK",
       track: response.data
     });
   });
