@@ -8,9 +8,11 @@ class PlaylistStore extends EventEmitter {
     super();
 
     this.playlist = {
-      id: "",
-      tracks: []
+      tracks: [],
+      id: ""
     };
+
+    this.trackNumber = 1;
   }
 
   createPlaylist = (id) => {
@@ -45,6 +47,16 @@ class PlaylistStore extends EventEmitter {
     this.emit("change");
   }
 
+  getTrackNumber = () => {
+    return this.trackNumber;
+  }
+
+  nextTrack = () => {
+    this.trackNumber++;
+    this.emit("next-track");
+    this.emit("change");
+  }
+
   handleActions(action) {
     switch (action.type) {
       case "CREATE_PLAYLIST":
@@ -61,6 +73,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "DELETE_TRACK":
         this.deleteTrack(action.id);
+        break;
+      case "NEXT_TRACK":
+        this.nextTrack();
         break;
       case "DISPLAY_LOADER":
         // TODO display loader

@@ -1,4 +1,8 @@
+/* global SC (for eslint) */
+
 import React from "react";
+import * as PlaylistActions from "../actions/PlaylistActions";
+import PlaylistStore from "../stores/PlaylistStore";
 
 export default class Player extends React.Component {
   constructor() {
@@ -9,7 +13,14 @@ export default class Player extends React.Component {
   }
 
   componentDidMount() {
+    console.log("props", this.props);
     this.createSoundCloudPlayer();
+    PlaylistStore.on("next-track", this.createSoundCloudPlayer);
+  }
+
+  getNextTrack = () => {
+    console.log("getting next track", this.props.track.url);
+    PlaylistActions.nextTrack();
   }
 
   soundCloud = () => {
@@ -27,18 +38,25 @@ export default class Player extends React.Component {
 
   createSoundCloudPlayer = () => {
     const widgetIframe = document.getElementById('sc-widget');
-    widgetIframe.src = this.state.track;
+    widgetIframe.src = this.props.track.url;
     const widget = SC.Widget(widgetIframe);
     widget.bind(SC.Widget.Events.READY, () => {
       widget.bind(SC.Widget.Events.PLAY, () => {
         console.log("play");
-      })
+      });
     });
+  }
+
+  play = () => {
+    console.log("hej");
   }
 
   render() {
     return (
       <div>
+        <div>
+          <button onClick={this.getNextTrack}>Next</button>
+        </div>
         <div id="trackPlayer">
           <iframe id="sc-widget"></iframe>
         </div>

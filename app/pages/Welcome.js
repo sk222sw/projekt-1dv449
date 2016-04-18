@@ -45,6 +45,9 @@ export default class Welcome extends React.Component {
       <div>
         <p>plurlist is a simple tool to create playlists containing music from different sources</p>
         <p>no registering needed - just create your playlist and bookmark it</p>
+        <Link to="/playlist/5714c45730de0c44035c43cc">
+          here's a develop link
+        </Link>
         {this.state.showCreateButton ?
           <button onClick={this.createPlurlist}>Create plurlist</button> :
             <p>

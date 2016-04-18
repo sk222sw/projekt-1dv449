@@ -50,6 +50,12 @@ export function soundCloudApi(trackUrl) {
   });
 }
 
+export function nextTrack() {
+  dispatcher.dispatch({
+    type: "NEXT_TRACK"
+  });
+}
+
 export function deleteTrack(playlistId, trackId) {
   const url = `/playlist/${playlistId}/delete/${trackId}`;
 

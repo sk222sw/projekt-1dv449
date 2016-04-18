@@ -12,7 +12,7 @@ export default class App extends React.Component {
     this.state = { tracks: [],
       displayFlash: false,
       flashMessage: "",
-      currentTrack: null
+      currentTrack: 1
     };
 
     if (this.props.params.playlist) {
@@ -21,10 +21,12 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
+    PlaylistStore.on("next-track", this.nextTrack);
     PlaylistStore.on("change", this.getTracks);
   }
 
   componentWillUnmount() {
+    PlaylistStore.removeListener("next-track", this.nextTrack);
     PlaylistStore.removeListener("change", this.getTracks);
   }
 
@@ -53,8 +55,20 @@ export default class App extends React.Component {
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
+  getCurrentTrack = () => {
+    return this.state.tracks[this.state.currentTrack];
+  }
+
   pickTrack = (apiUrl) => {
     PlaylistActions.soundCloudApi(apiUrl);
+  }
+
+  nextTrack = () => {
+    console.log("hej next track");
+    this.setState({
+      currentTrack: PlaylistStore.getTrackNumber()
+    });
+    console.log("current track: ", this.state.currentTrack);
   }
 
   render() {
@@ -72,7 +86,7 @@ export default class App extends React.Component {
           onDelete={this.deleteTrack}
           pickTrack={this.pickTrack}
         />
-      <Player track={this.state.currentTrack} />
+      <Player track={this.getCurrentTrack()} />
       </div>
     );
   }

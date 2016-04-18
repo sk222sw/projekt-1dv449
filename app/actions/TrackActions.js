@@ -3,23 +3,24 @@ import axios from "axios";
 
 export function createTrack(track, playlistId) {
   axios.post("/playlist",
-      {
-        track,
-        playlistId
-      }, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-    }).then(function(response) {
-        console.log(response);
-        dispatcher.dispatch({
-          type: "CREATE_TRACK",
-          track
-        });
+    {
+      track,
+      playlistId
+    }, {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => {
+      console.log(response);
+      dispatcher.dispatch({
+        type: "CREATE_TRACK",
+        track
+      });
     })
     .catch(err => {
       console.log(err);
-    })
+    });
 }
 
 export function deleteTrack(id) {
