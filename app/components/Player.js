@@ -1,7 +1,6 @@
 /* global SC (for eslint) */
 
 import React from "react";
-import * as PlaylistActions from "../actions/PlaylistActions";
 import PlaylistStore from "../stores/PlaylistStore";
 
 export default class Player extends React.Component {
@@ -10,17 +9,12 @@ export default class Player extends React.Component {
     this.state = {
       track: "https://w.soundcloud.com/player/?url=http://api.soundcloud.com/users/1539950/favorites"
     };
+    this.url = "";
   }
 
   componentDidMount() {
-    console.log("props", this.props);
+    PlaylistStore.on("next-track", this.reRenderPlayer);
     this.createSoundCloudPlayer();
-    PlaylistStore.on("next-track", this.createSoundCloudPlayer);
-  }
-
-  getNextTrack = () => {
-    console.log("getting next track", this.props.track.url);
-    PlaylistActions.nextTrack();
   }
 
   soundCloud = () => {
@@ -37,8 +31,21 @@ export default class Player extends React.Component {
   }
 
   createSoundCloudPlayer = () => {
+    if (this.url !== "") {
+      const widgetIframe = document.getElementById('sc-widget');
+      widgetIframe.src = this.state.track;
+      const widget = SC.Widget(widgetIframe);
+      widget.bind(SC.Widget.Events.READY, () => {
+        widget.bind(SC.Widget.Events.PLAY, () => {
+          console.log("play");
+        });
+      });
+    }
+  }
+
+  reRenderPlayer = () => {
     const widgetIframe = document.getElementById('sc-widget');
-    widgetIframe.src = this.props.track.url;
+    widgetIframe.src = "https://w.soundcloud.com/player/?url=" + this.props.track;
     const widget = SC.Widget(widgetIframe);
     widget.bind(SC.Widget.Events.READY, () => {
       widget.bind(SC.Widget.Events.PLAY, () => {
@@ -47,16 +54,11 @@ export default class Player extends React.Component {
     });
   }
 
-  play = () => {
-    console.log("hej");
-  }
-
   render() {
     return (
       <div>
-        <div>
-          <button onClick={this.getNextTrack}>Next</button>
-        </div>
+        now playing: {this.props.track}
+        <button onClick={this.reRenderPlayer}>cool button</button>
         <div id="trackPlayer">
           <iframe id="sc-widget"></iframe>
         </div>

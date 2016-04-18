@@ -12,7 +12,8 @@ export default class App extends React.Component {
     this.state = { tracks: [],
       displayFlash: false,
       flashMessage: "",
-      currentTrack: 1
+      currentTrack: 1,
+      currentTrackUri: ""
     };
 
     if (this.props.params.playlist) {
@@ -21,24 +22,21 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    PlaylistStore.on("next-track", this.nextTrack);
     PlaylistStore.on("change", this.getTracks);
+    PlaylistStore.on("next-track", this.setNextTrack);
   }
 
   componentWillUnmount() {
-    PlaylistStore.removeListener("next-track", this.nextTrack);
     PlaylistStore.removeListener("change", this.getTracks);
+    PlaylistStore.removeListener("next-track", this.setNextTrack);
   }
+
+  // CRUDE : : : : : : : : : : : :
 
   getTracks = () => {
     this.setState({
       tracks: PlaylistStore.getTracks()
     });
-  }
-
-  validateUrl = (urlString) => {
-    const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-    return urlRegex.test(urlString.toLowerCase());
   }
 
   deleteTrack = (trackId) => {
@@ -55,6 +53,9 @@ export default class App extends React.Component {
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
+
+  // track things : : : : : : : :
+
   getCurrentTrack = () => {
     return this.state.tracks[this.state.currentTrack];
   }
@@ -63,13 +64,24 @@ export default class App extends React.Component {
     PlaylistActions.soundCloudApi(apiUrl);
   }
 
-  nextTrack = () => {
-    console.log("hej next track");
+  setNextTrack = () => {
     this.setState({
-      currentTrack: PlaylistStore.getTrackNumber()
+      currentTrackUri: PlaylistStore.getCurrentTrackUri()
     });
-    console.log("current track: ", this.state.currentTrack);
   }
+
+  getNextTrack = () => {
+    PlaylistActions.nextTrack(this.getCurrentTrack().url);
+  }
+
+ // STUFF _:  _ : :: : ::: : ::
+
+  validateUrl = (urlString) => {
+    const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+    return urlRegex.test(urlString.toLowerCase());
+  }
+
+  // RENDER AREA :: : : : : : : ::
 
   render() {
     const tracks = this.state.tracks;
@@ -86,7 +98,10 @@ export default class App extends React.Component {
           onDelete={this.deleteTrack}
           pickTrack={this.pickTrack}
         />
-      <Player track={this.getCurrentTrack()} />
+      <div>
+        <button onClick={this.getNextTrack}>Next</button>
+      </div>
+      <Player track={this.state.currentTrackUri} />
       </div>
     );
   }

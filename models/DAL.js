@@ -73,8 +73,8 @@ DAL.prototype.newPlaylist = function() {
 };
 
 DAL.prototype.getSoundCloudData = function (url) {
-  console.log("DAL");
-  url = "https://soundcloud.com/ben-klock/ben-klock-subzero-original-mix";
+  console.log(url);
+  // url = "https://soundcloud.com/ben-klock/ben-klock-subzero-original-mix";
   const apiString = "https://api.soundcloud.com/resolve.json?url="+url+"&client_id=defe1307335b6141da3b5c880c33bbab";
   return new Promise((resolve, reject) => {
     request(apiString, (err, res, rawJson) => {

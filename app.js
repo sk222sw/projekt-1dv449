@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const favicon = require("serve-favicon");
 
 const routes = require('./routes/index');
-const users = require('./routes/users');
 const playlist = require('./routes/playlist');
 const apiHandler = require('./routes/apiHandler');
 

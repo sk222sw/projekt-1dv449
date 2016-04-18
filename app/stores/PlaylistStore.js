@@ -11,7 +11,7 @@ class PlaylistStore extends EventEmitter {
       tracks: [],
       id: ""
     };
-
+    this.currentTrack = undefined;
     this.trackNumber = 1;
   }
 
@@ -51,8 +51,18 @@ class PlaylistStore extends EventEmitter {
     return this.trackNumber;
   }
 
-  nextTrack = () => {
+  getCurrentTrack = () => {
+    return this.currentTrack;
+  }
+
+  getCurrentTrackUri = () => {
+    return this.currentTrackUri;
+  }
+
+  nextTrack = (track) => {
     this.trackNumber++;
+    this.currentTrack = track;
+    this.currentTrackUri = track.uri;
     this.emit("next-track");
     this.emit("change");
   }
@@ -75,7 +85,7 @@ class PlaylistStore extends EventEmitter {
         this.deleteTrack(action.id);
         break;
       case "NEXT_TRACK":
-        this.nextTrack();
+        this.nextTrack(action.track);
         break;
       case "DISPLAY_LOADER":
         // TODO display loader

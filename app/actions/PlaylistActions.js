@@ -50,9 +50,16 @@ export function soundCloudApi(trackUrl) {
   });
 }
 
-export function nextTrack() {
-  dispatcher.dispatch({
-    type: "NEXT_TRACK"
+export function nextTrack(url) {
+  axios.post("/apiHandler", {
+    url
+  })
+  .then(response => {
+    console.log(response.data);
+    dispatcher.dispatch({
+      type: "NEXT_TRACK",
+      track: response.data
+    });
   });
 }
 
