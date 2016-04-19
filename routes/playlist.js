@@ -23,7 +23,6 @@ router.get('/:id', (req, res) => {
 router.post("/", (req, res) => {
   DAL.addTrack(req.body.playlistId, req.body.track)
   .then(r => {
-    console.log(r);
     if (r) {
       res.send(200);
     } else {
@@ -40,7 +39,6 @@ router.post("/:id/delete/:track", (req, res) => {
   DAL.deleteTrack(req.params.id, req.params.track)
   .then(r => {
     if (r) {
-      console.log("res.send");
       res.send(200);
     }
   })

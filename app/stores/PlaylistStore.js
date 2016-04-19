@@ -7,13 +7,16 @@ class PlaylistStore extends EventEmitter {
   constructor() {
     super();
 
-    this.playlist = {
+    this.state = {
       tracks: [],
-      id: ""
+      id: "",
+      currentTrackIndex: 1,
+      currentTrackUri: "",
+      firstTrack: true
     };
-    this.currentTrack = undefined;
-    this.trackNumber = 0;
   }
+
+  getState = () => this.state;
 
   createPlaylist = (id) => {
     this.playlist.id = id;
@@ -22,6 +25,10 @@ class PlaylistStore extends EventEmitter {
 
   getId() {
     return this.playlist.id;
+  }
+
+  getTrackIndex = () => {
+    return this.state.currentTrackIndex;
   }
 
   fetchPlaylist() {
@@ -47,31 +54,20 @@ class PlaylistStore extends EventEmitter {
     this.emit("change");
   }
 
-  getTrackNumber = () => {
-    return this.trackNumber;
-  }
-
-  getTrackNumber = () => {
-    return this.trackNumber;
-  }
-
   getCurrentTrackUri = () => {
-    return this.currentTrackUri;
+    return this.state.currentTrackUri;
   }
 
   firstTrack = (track) => {
-    console.log("hej");
-    this.currentTrack = track;
-    this.currentTrackUri = track.uri;
+    this.state.currentTrackUri = track.uri;
+    this.state.currentTrackIndex++;
     this.emit("next-track");
     this.emit("change");
   }
 
   nextTrack = (track) => {
-    this.trackNumber++;
-    this.currentTrack = track;
-    console.log(track);
-    this.currentTrackUri = track.uri;
+    this.state.currentTrackIndex++;
+    this.state.currentTrackUri = track.uri;
     this.emit("next-track");
     this.emit("change");
   }

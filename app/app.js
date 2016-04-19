@@ -9,11 +9,7 @@ import Player from "./components/Player";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { tracks: [],
-      currentTrack: 0,
-      currentTrackUri: "",
-      firstTrack: true
-    };
+    this.state = PlaylistStore.getState();
 
     if (this.props.params.playlist) {
       PlaylistActions.fetchPlaylist(this.props.params.playlist);
@@ -30,13 +26,15 @@ export default class App extends React.Component {
     PlaylistStore.removeListener("next-track", this.setNextTrack);
   }
 
+  updateState = () => {
+    this.setState(PlaylistStore.getState());
+  }
+
   // CRUDE : : : : : : : : : : : :
 
   getTracks = () => {
-    console.log(this.state.currentTrack);
     this.setState({
       tracks: PlaylistStore.getTracks(),
-      currentTrack: PlaylistStore.getTrackNumber()
     });
     if (this.state.firstTrack) {
       this.state.firstTrack = false;
@@ -60,8 +58,10 @@ export default class App extends React.Component {
 
   // track things : : : : : : : :
 
-  getCurrentTrack = () => {
-    return this.state.tracks[this.state.currentTrack];
+  // används inte?
+  getCurrentTrackIndex = () => {
+    console.log("index", this.state.currentTrackIndex);
+    return this.state.tracks[this.state.currentTrackIndex];
   }
 
   pickTrack = (apiUrl) => {
@@ -75,17 +75,20 @@ export default class App extends React.Component {
   }
 
   getNextTrack = () => {
-    PlaylistActions.nextTrack(this.getCurrentTrack().url);
+    this.setState({
+      currentTrackIndex: PlaylistStore.getTrackIndex()
+    });
+    PlaylistActions.nextTrack(this.state.tracks[this.state.currentTrackIndex].url);
   }
 
- // STUFF _:  _ : :: : ::: : ::
+ // STUFF : : : : : : : :
 
   validateUrl = (urlString) => {
     const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
     return urlRegex.test(urlString.toLowerCase());
   }
 
-  // RENDER AREA :: : : : : : : ::
+  // RENDER AREA : : : : : : : :
 
   render() {
     const tracks = this.state.tracks;
