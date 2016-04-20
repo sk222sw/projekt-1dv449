@@ -8,8 +8,6 @@ const PATHS = {
 };
 module.exports = {
   context: path.join(__dirname, "app"),
-  debug: true,
-  devtool: "eval-source-map",
   entry: {
     app: "./index.js",
     vendor: ["./api/SC"]
@@ -41,8 +39,8 @@ module.exports = {
     ]
   },
   plugins: [
-  new webpack.ProvidePlugin({
-    'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-  })
+    new webpack.ProvidePlugin({
+      fetch: 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+    })
   ]
 };

@@ -10,7 +10,11 @@ class PlaylistStore extends EventEmitter {
     this.state = {
       tracks: [],
       id: "",
-      currentTrackIndex: 1,
+      playingTrack: {
+        number: 0,
+        uri: ""
+      },
+      nextTrackNumber: 0,
       currentTrackUri: "",
       firstTrack: true
     };
@@ -19,16 +23,12 @@ class PlaylistStore extends EventEmitter {
   getState = () => this.state;
 
   createPlaylist = (id) => {
-    this.playlist.id = id;
+    this.state.id = id;
     this.emit("change");
   }
 
   getId() {
-    return this.playlist.id;
-  }
-
-  getTrackIndex = () => {
-    return this.state.currentTrackIndex;
+    return this.state.id;
   }
 
   fetchPlaylist() {
@@ -36,21 +36,21 @@ class PlaylistStore extends EventEmitter {
   }
 
   getTracks = () => {
-    return this.playlist.tracks;
+    return this.state.tracks;
   }
 
   receievePlaylist = (playlist) => {
-    this.playlist = playlist;
+    this.state.tracks = playlist.tracks;
     this.emit("change");
   }
 
   createTrack = (track) => {
-    this.playlist.tracks.push(track);
+    this.state.tracks.push(track);
     this.emit("change");
   }
 
   deleteTrack = (id) => {
-    this.playlist.tracks = _.filter(this.getTracks(), track => track.id !== id);
+    this.state.tracks = _.filter(this.getTracks(), track => track.id !== id);
     this.emit("change");
   }
 
@@ -58,16 +58,17 @@ class PlaylistStore extends EventEmitter {
     return this.state.currentTrackUri;
   }
 
-  firstTrack = (track) => {
-    this.state.currentTrackUri = track.uri;
-    this.state.currentTrackIndex++;
-    this.emit("next-track");
-    this.emit("change");
+  getNextTrackNumber = () => {
+    return this.state.nextTrackNumber;
   }
 
   nextTrack = (track) => {
-    this.state.currentTrackIndex++;
     this.state.currentTrackUri = track.uri;
+    if (this.state.nextTrackNumber >= this.state.tracks.length - 1) {
+      this.state.nextTrackNumber = 0;
+    } else {
+      this.state.nextTrackNumber++;
+    }
     this.emit("next-track");
     this.emit("change");
   }
@@ -91,9 +92,6 @@ class PlaylistStore extends EventEmitter {
         break;
       case "NEXT_TRACK":
         this.nextTrack(action.track);
-        break;
-      case "FIRST_TRACK":
-        this.firstTrack(action.track);
         break;
       case "DISPLAY_LOADER":
         // TODO display loader

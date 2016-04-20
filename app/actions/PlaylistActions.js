@@ -62,18 +62,6 @@ export function nextTrack(url) {
   });
 }
 
-export function getFirstTrack(url) {
-  axios.post("/apiHandler", {
-    url
-  })
-  .then(response => {
-    dispatcher.dispatch({
-      type: "FIRST_TRACK",
-      track: response.data
-    });
-  });
-}
-
 export function deleteTrack(playlistId, trackId) {
   const url = `/playlist/${playlistId}/delete/${trackId}`;
 

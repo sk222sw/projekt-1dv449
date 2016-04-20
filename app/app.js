@@ -18,12 +18,12 @@ export default class App extends React.Component {
 
   componentWillMount() {
     PlaylistStore.on("change", this.getTracks);
-    PlaylistStore.on("next-track", this.setNextTrack);
+    PlaylistStore.on("next-track", this.setTrack);
   }
 
   componentWillUnmount() {
     PlaylistStore.removeListener("change", this.getTracks);
-    PlaylistStore.removeListener("next-track", this.setNextTrack);
+    PlaylistStore.removeListener("next-track", this.setTrack);
   }
 
   updateState = () => {
@@ -33,13 +33,11 @@ export default class App extends React.Component {
   // CRUDE : : : : : : : : : : : :
 
   getTracks = () => {
+    this.updateState();
+
     this.setState({
       tracks: PlaylistStore.getTracks(),
     });
-    if (this.state.firstTrack) {
-      this.state.firstTrack = false;
-      PlaylistActions.getFirstTrack(this.state.tracks[0].url);
-    }
   }
 
   deleteTrack = (trackId) => {
@@ -56,40 +54,26 @@ export default class App extends React.Component {
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
-  // track things : : : : : : : :
-
-  // används inte?
-  getCurrentTrackIndex = () => {
-    console.log("index", this.state.currentTrackIndex);
-    return this.state.tracks[this.state.currentTrackIndex];
-  }
-
   pickTrack = (apiUrl) => {
     PlaylistActions.soundCloudApi(apiUrl);
   }
 
-  setNextTrack = () => {
+  setTrack = () => {
     this.setState({
-      currentTrackUri: PlaylistStore.getCurrentTrackUri()
+      currentTrackUri: PlaylistStore.getCurrentTrackUri(),
     });
   }
 
   getNextTrack = () => {
-    this.setState({
-      currentTrackIndex: PlaylistStore.getTrackIndex()
-    });
-    PlaylistActions.nextTrack(this.state.tracks[this.state.currentTrackIndex].url);
+    this.updateState();
+    PlaylistActions.nextTrack(this.state.tracks[this.state.nextTrackNumber].url);
   }
 
- // STUFF : : : : : : : :
+  listState = () => {
 
-  validateUrl = (urlString) => {
-    const urlRegex = /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-    return urlRegex.test(urlString.toLowerCase());
   }
 
   // RENDER AREA : : : : : : : :
-
   render() {
     const tracks = this.state.tracks;
     return (
