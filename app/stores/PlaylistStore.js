@@ -11,10 +11,9 @@ class PlaylistStore extends EventEmitter {
       tracks: [],
       id: "",
       playingTrack: {
-        number: 0,
-        uri: ""
+        user: {}
       },
-      nextTrackNumber: 0,
+      currentTrackNumber: 0,
       currentTrackUri: "",
       firstTrack: true
     };
@@ -58,19 +57,32 @@ class PlaylistStore extends EventEmitter {
     return this.state.currentTrackUri;
   }
 
-  getNextTrackNumber = () => {
-    return this.state.nextTrackNumber;
+  getcurrentTrackNumber = () => {
+    return this.state.currentTrackNumber;
   }
 
   nextTrack = (track) => {
+    console.log(track);
+    this.state.playingTrack = {
+      title: track.title,
+      userName: track.user.userName,
+      url: track.uri
+    };
+    console.log(this.state.playingTrack);
     this.state.currentTrackUri = track.uri;
-    if (this.state.nextTrackNumber >= this.state.tracks.length - 1) {
-      this.state.nextTrackNumber = 0;
+
+    if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
+      this.state.currentTrackNumber = 0;
     } else {
-      this.state.nextTrackNumber++;
+      this.state.currentTrackNumber++;
     }
+
     this.emit("next-track");
     this.emit("change");
+  }
+
+  getTitle = track => {
+    console.log("getTitle", track.title);
   }
 
   handleActions(action) {
@@ -92,6 +104,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "NEXT_TRACK":
         this.nextTrack(action.track);
+        break;
+      case "GET_TITLE":
+        this.getTitle(action.track);
         break;
       case "DISPLAY_LOADER":
         // TODO display loader

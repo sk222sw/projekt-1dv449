@@ -24,9 +24,27 @@ export default class Player extends React.Component {
     });
   }
 
+  renderTrackInfo = () => {
+    return (
+      <div>
+        <div>
+          Title: {this.props.playingTrack.title}
+        </div>
+        <div>
+          Username: {this.props.playingTrack.userName}
+        </div>
+    </div>
+    );
+  }
+
   render() {
     return (
       <div>
+        {
+          this.props.track !== "" ?
+            this.renderTrackInfo() :
+            null
+        }
         <div id="trackPlayer">
           <iframe id="sc-widget" frameBorder="0"></iframe>
         </div>

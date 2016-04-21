@@ -43,10 +43,15 @@ export function createTrack(track, playlistId) {
   });
 }
 
-export function soundCloudApi(trackUrl) {
-  dispatcher.dispatch({
-    type: "SOUNDCLOUD_API",
-    trackUrl
+export function getTitle(url) {
+  axios.post("/apiHandler", {
+    url
+  })
+  .then(response => {
+    dispatcher.dispatch({
+      type: "GET_TITLE",
+      track: response.data
+    });
   });
 }
 

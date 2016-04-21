@@ -1,9 +1,12 @@
 import React from "react";
 
 export default class Track extends React.Component {
-
   pickTrack = () => {
     return <span onClick={this.props.pickTrack}>{this.props.url}</span>;
+  }
+
+  updateTrack = () => {
+    // return <button onClick={this.props.updateTrack}>edit</button>;
   }
 
   renderDelete = () => {
@@ -15,6 +18,7 @@ export default class Track extends React.Component {
     return (
           <div>
             {this.pickTrack()}
+            {this.updateTrack()}
             {onDelete ? this.renderDelete() : null}
           </div>
         );

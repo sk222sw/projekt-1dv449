@@ -19762,8 +19762,13 @@
 	      PlaylistActions.deleteTrack(playlistId, trackId);
 	    };
 
-	    _this.pickTrack = function (apiUrl) {
-	      PlaylistActions.soundCloudApi(apiUrl);
+	    _this.updateTrack = function (trackId) {
+	      console.log(trackId);
+	    };
+
+	    _this.pickTrack = function (url) {
+	      console.log(url);
+	      return PlaylistActions.getTitle(url);
 	    };
 
 	    _this.setTrack = function () {
@@ -19774,7 +19779,7 @@
 
 	    _this.getNextTrack = function () {
 	      _this.updateState();
-	      PlaylistActions.nextTrack(_this.state.tracks[_this.state.nextTrackNumber].url);
+	      PlaylistActions.nextTrack(_this.state.tracks[_this.state.currentTrackNumber].url);
 	    };
 
 	    _this.listState = function () {};
@@ -19799,9 +19804,6 @@
 	      _PlaylistStore2.default.removeListener("change", this.getTracks);
 	      _PlaylistStore2.default.removeListener("next-track", this.setTrack);
 	    }
-
-	    // CRUDE : : : : : : : : : : : :
-
 	  }, {
 	    key: "createTrack",
 	    value: function createTrack() {
@@ -19830,7 +19832,8 @@
 	        ),
 	        _react2.default.createElement(_TrackList2.default, { tracks: tracks,
 	          onDelete: this.deleteTrack,
-	          pickTrack: this.pickTrack
+	          pickTrack: this.pickTrack,
+	          updateTrack: this.updateTrack
 	        }),
 	        _react2.default.createElement(
 	          "div",
@@ -19838,10 +19841,10 @@
 	          _react2.default.createElement(
 	            "button",
 	            { onClick: this.getNextTrack },
-	            "Next"
+	            "Play/Next"
 	          )
 	        ),
-	        _react2.default.createElement(_Player2.default, { track: this.state.currentTrackUri })
+	        _react2.default.createElement(_Player2.default, { track: this.state.currentTrackUri, playingTrack: this.state.playingTrack })
 	      );
 	    }
 	  }]);
@@ -23930,6 +23933,7 @@
 	  var tracks = _ref.tracks;
 	  var onDelete = _ref.onDelete;
 	  var pickTrack = _ref.pickTrack;
+	  var updateTrack = _ref.updateTrack;
 
 	  return _react2.default.createElement(
 	    "ul",
@@ -23942,6 +23946,7 @@
 	          title: track.title,
 	          url: track.url,
 	          pickTrack: pickTrack.bind(null, track.url),
+	          updateTrack: updateTrack.bind(null, track.id),
 	          onDelete: onDelete.bind(null, track.id) })
 	      );
 	    })
@@ -23993,6 +23998,8 @@
 	        { onClick: _this.props.pickTrack },
 	        _this.props.url
 	      );
+	    }, _this.updateTrack = function () {
+	      // return <button onClick={this.props.updateTrack}>edit</button>;
 	    }, _this.renderDelete = function () {
 	      return _react2.default.createElement(
 	        "button",
@@ -24010,6 +24017,7 @@
 	        "div",
 	        null,
 	        this.pickTrack(),
+	        this.updateTrack(),
 	        onDelete ? this.renderDelete() : null
 	      );
 	    }
@@ -24100,29 +24108,41 @@
 	      return _this.state.currentTrackUri;
 	    };
 
-	    _this.getNextTrackNumber = function () {
-	      return _this.state.nextTrackNumber;
+	    _this.getcurrentTrackNumber = function () {
+	      return _this.state.currentTrackNumber;
 	    };
 
 	    _this.nextTrack = function (track) {
+	      console.log(track);
+	      _this.state.playingTrack = {
+	        title: track.title,
+	        userName: track.user.userName,
+	        url: track.uri
+	      };
+	      console.log(_this.state.playingTrack);
 	      _this.state.currentTrackUri = track.uri;
-	      if (_this.state.nextTrackNumber >= _this.state.tracks.length - 1) {
-	        _this.state.nextTrackNumber = 0;
+
+	      if (_this.state.currentTrackNumber >= _this.state.tracks.length - 1) {
+	        _this.state.currentTrackNumber = 0;
 	      } else {
-	        _this.state.nextTrackNumber++;
+	        _this.state.currentTrackNumber++;
 	      }
+
 	      _this.emit("next-track");
 	      _this.emit("change");
+	    };
+
+	    _this.getTitle = function (track) {
+	      console.log("getTitle", track.title);
 	    };
 
 	    _this.state = {
 	      tracks: [],
 	      id: "",
 	      playingTrack: {
-	        number: 0,
-	        uri: ""
+	        user: {}
 	      },
-	      nextTrackNumber: 0,
+	      currentTrackNumber: 0,
 	      currentTrackUri: "",
 	      firstTrack: true
 	    };
@@ -24160,6 +24180,9 @@
 	          break;
 	        case "NEXT_TRACK":
 	          this.nextTrack(action.track);
+	          break;
+	        case "GET_TITLE":
+	          this.getTitle(action.track);
 	          break;
 	        case "DISPLAY_LOADER":
 	          // TODO display loader
@@ -28178,7 +28201,7 @@
 	exports.fetchPlaylist = fetchPlaylist;
 	exports.createPlaylist = createPlaylist;
 	exports.createTrack = createTrack;
-	exports.soundCloudApi = soundCloudApi;
+	exports.getTitle = getTitle;
 	exports.nextTrack = nextTrack;
 	exports.deleteTrack = deleteTrack;
 
@@ -28232,10 +28255,14 @@
 	  });
 	}
 
-	function soundCloudApi(trackUrl) {
-	  _dispatcher2.default.dispatch({
-	    type: "SOUNDCLOUD_API",
-	    trackUrl: trackUrl
+	function getTitle(url) {
+	  _axios2.default.post("/apiHandler", {
+	    url: url
+	  }).then(function (response) {
+	    _dispatcher2.default.dispatch({
+	      type: "GET_TITLE",
+	      track: response.data
+	    });
 	  });
 	}
 
@@ -29746,6 +29773,23 @@
 	          console.log("play");
 	        });
 	      });
+	    }, _this.renderTrackInfo = function () {
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "div",
+	          null,
+	          "Title: ",
+	          _this.props.playingTrack.title
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          null,
+	          "Username: ",
+	          _this.props.playingTrack.userName
+	        )
+	      );
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 
@@ -29767,6 +29811,7 @@
 	      return _react2.default.createElement(
 	        "div",
 	        null,
+	        this.props.track !== "" ? this.renderTrackInfo() : null,
 	        _react2.default.createElement(
 	          "div",
 	          { id: "trackPlayer" },

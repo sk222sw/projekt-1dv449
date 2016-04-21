@@ -30,8 +30,6 @@ export default class App extends React.Component {
     this.setState(PlaylistStore.getState());
   }
 
-  // CRUDE : : : : : : : : : : : :
-
   getTracks = () => {
     this.updateState();
 
@@ -45,6 +43,10 @@ export default class App extends React.Component {
     PlaylistActions.deleteTrack(playlistId, trackId);
   }
 
+  updateTrack = trackId => {
+    console.log(trackId);
+  }
+
   createTrack() {
     const newTrack = {
       url: this.refs.newTrack.value,
@@ -54,8 +56,9 @@ export default class App extends React.Component {
     PlaylistActions.createTrack(newTrack, this.props.params.playlist);
   }
 
-  pickTrack = (apiUrl) => {
-    PlaylistActions.soundCloudApi(apiUrl);
+  pickTrack = (url) => {
+    console.log(url);
+    return PlaylistActions.getTitle(url);
   }
 
   setTrack = () => {
@@ -66,7 +69,7 @@ export default class App extends React.Component {
 
   getNextTrack = () => {
     this.updateState();
-    PlaylistActions.nextTrack(this.state.tracks[this.state.nextTrackNumber].url);
+    PlaylistActions.nextTrack(this.state.tracks[this.state.currentTrackNumber].url);
   }
 
   listState = () => {
@@ -83,11 +86,12 @@ export default class App extends React.Component {
         <TrackList tracks={tracks}
           onDelete={this.deleteTrack}
           pickTrack={this.pickTrack}
+          updateTrack={this.updateTrack}
         />
       <div>
-        <button onClick={this.getNextTrack}>Next</button>
+        <button onClick={this.getNextTrack}>Play/Next</button>
       </div>
-      <Player track={this.state.currentTrackUri} />
+      <Player track={this.state.currentTrackUri} playingTrack={this.state.playingTrack} />
       </div>
     );
   }
