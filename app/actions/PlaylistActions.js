@@ -2,8 +2,11 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 export function fetchPlaylist(id) {
-  fetch(`./playlist/${id}`)
-  .then(playlist => playlist.json())
+  axios.get(`./playlist/${id}`)
+  .then(playlist => { 
+    console.log(playlist.json); 
+    return playlist.json(); 
+  })
   .then(json => {
     const playlist = json[0];
     dispatcher.dispatch({ type: "RECEIVE_PLAYLIST", playlist });
@@ -14,7 +17,7 @@ export function fetchPlaylist(id) {
 }
 
 export function createPlaylist() {
-  fetch("./playlist/new")
+  axios.get("./playlist/new")
   .then(playlist => playlist.json())
   .then(playlist => {
     dispatcher.dispatch({

@@ -85,4 +85,16 @@ DAL.prototype.getSoundCloudData = function (url) {
   })
 }
 
+DAL.prototype.getArtistInfo = function (artist) {
+  console.log("hej");
+  const requestString = "https://api.discogs.com/database/search?q=Nirvana&key=foo123&secret=DOWuJnVGdcpwInntlOJJLzoNwdTZIoRS"
+  return new Promise((resolve, reject) => {
+    request(requestString, (err, res, rawJson) => {
+      if (err) { reject(err); }
+      console.log(rawJson);
+      resolve(rawJson);
+    });
+  });
+};
+
 module.exports = new DAL();

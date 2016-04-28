@@ -28,15 +28,15 @@ module.exports = {
         loaders: ["style", "css"],
         include: PATHS.app
       }
-    ],
-    preLoaders: [
-      {
-        test: /\.js$/,
-        loaders: ["eslint-loader"],
-        include: PATHS.app,
-        exclude: path.join(PATHS.app, "api")
-      }
     ]
+    // preLoaders: [
+    //   {
+    //     test: /\.js$/,
+    //     loaders: ["eslint-loader"],
+    //     include: PATHS.app,
+    //     exclude: path.join(PATHS.app, "api")
+    //   }
+    // ]
   },
   plugins: [
     new webpack.ProvidePlugin({

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const DAL = require("./../models/DAL");
+const request = require("request");
 
 router.get("/", (req, res) => {
   DAL.getSoundCloudData("url")
@@ -38,6 +39,15 @@ router.post("/", (req, res) => {
   })
   .then(track => {
     res.json(track);
+  });
+});
+
+router.get("/info", (req, res) => {
+  console.log("HEJEHEKJFHÖSLKJFH");
+  DAL.getArtistInfo("benklock")
+  .then(response => {
+    console.log(response);
+    res.sendStatus(200);  
   });
 });
 
