@@ -28217,10 +28217,10 @@
 
 	function fetchPlaylist(id) {
 	  _axios2.default.get("./playlist/" + id).then(function (playlist) {
-	    console.log(playlist.json);
-	    return playlist.json();
+	    return playlist.data[0];
 	  }).then(function (json) {
-	    var playlist = json[0];
+	    console.log(json.tracks);
+	    var playlist = json;
 	    _dispatcher2.default.dispatch({ type: "RECEIVE_PLAYLIST", playlist: playlist });
 	  }).catch(function (err) {
 	    console.log(err);
@@ -28229,8 +28229,9 @@
 
 	function createPlaylist() {
 	  _axios2.default.get("./playlist/new").then(function (playlist) {
-	    return playlist.json();
+	    return playlist.data;
 	  }).then(function (playlist) {
+	    console.log("playlist", playlist);
 	    _dispatcher2.default.dispatch({
 	      type: "CREATE_PLAYLIST",
 	      id: playlist._id

@@ -3,12 +3,12 @@ import axios from "axios";
 
 export function fetchPlaylist(id) {
   axios.get(`./playlist/${id}`)
-  .then(playlist => { 
-    console.log(playlist.json); 
-    return playlist.json(); 
+  .then(playlist => {
+    return playlist.data[0];
   })
   .then(json => {
-    const playlist = json[0];
+    console.log(json.tracks);
+    const playlist = json;
     dispatcher.dispatch({ type: "RECEIVE_PLAYLIST", playlist });
   })
   .catch(err => {
@@ -18,8 +18,9 @@ export function fetchPlaylist(id) {
 
 export function createPlaylist() {
   axios.get("./playlist/new")
-  .then(playlist => playlist.json())
+  .then(playlist => playlist.data)
   .then(playlist => {
+    console.log("playlist", playlist)
     dispatcher.dispatch({
       type: "CREATE_PLAYLIST",
       id: playlist._id
