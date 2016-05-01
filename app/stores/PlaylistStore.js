@@ -15,7 +15,11 @@ class PlaylistStore extends EventEmitter {
       },
       currentTrackNumber: 0,
       currentTrackUri: "",
-      firstTrack: true
+      firstTrack: true,
+      similarArtists: [],
+      errorMessage: "",
+      artistInfo: "",
+      loader: false
     };
   }
 
@@ -62,13 +66,11 @@ class PlaylistStore extends EventEmitter {
   }
 
   nextTrack = (track) => {
-    console.log(track);
     this.state.playingTrack = {
       title: track.title,
       userName: track.user.userName,
       url: track.uri
     };
-    console.log(this.state.playingTrack);
     this.state.currentTrackUri = track.uri;
 
     if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
@@ -81,8 +83,39 @@ class PlaylistStore extends EventEmitter {
     this.emit("change");
   }
 
-  getTitle = track => {
-    console.log("getTitle", track.title);
+  getSimilarArtists = response => {
+    console.log("reponse", response);
+    if (response.err || response.data.length === 0) {
+      this.state.errorMessage = "Sorry, no similar artists could be found";
+    } else {
+      this.state.similarArtists = response.artists;
+    }
+    this.emit("change");
+  }
+
+  getArtistInfo = info => {
+    console.log("info", info);
+    if (info == "undefined" || info == null || info === "") {
+      this.state.errorMessage = "Sorry, no artist info could be found.";
+    } else {
+      this.state.artistInfo = info;
+    }
+    this.emit("change");
+  }
+
+  showLoader = () => {
+    this.state.loader = true;
+    this.emit("change");
+  }
+
+  removeLoader = () => {
+    this.state.loader = false;
+    this.emit("change");
+  }
+
+  hideError = () => {
+    this.state.errorMessage = "";
+    this.emit("change");
   }
 
   handleActions(action) {
@@ -108,13 +141,23 @@ class PlaylistStore extends EventEmitter {
       case "GET_TITLE":
         this.getTitle(action.track);
         break;
-      case "DISPLAY_LOADER":
-        // TODO display loader
+      case "GET_SIMILAR_ARTISTS":
+        this.getSimilarArtists(action);
         break;
-      case "ERROR_HANDLER":
-        // TODO create error handling action
+      case "GET_ARTIST_INFO":
+        this.getArtistInfo(action.artistInfo.data.profile);
+        break;
+      case "SHOW_LOADER":
+        this.showLoader();
+        break;
+      case "REMOVE_LOADER":
+        this.removeLoader();
+        break;
+      case "HIDE_ERROR":
+        this.hideError();
+        break;
       default:
-      // TODO figure out something default?
+        break;
     }
   }
 }

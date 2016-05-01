@@ -1,11 +1,7 @@
 body {
-  padding: 50px;
+  height: 100%;
+  width: 100%;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: red;
-}
-
-a {
-  color: #00B7FF;
 }
 
 .loader {
@@ -18,4 +14,101 @@ a {
   height: 20px;
   width: 20px;
   background: green;
+}
+
+header {
+  background: #1f8dd6;
+  height: 200px;
+  color: white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.05);
+}
+
+h1 {
+  font-size: 3em;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  letter-spacing: 0.2em;
+  line-height: 150px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.pure-button-primary {
+  background: #1f8dd6;
+}
+
+.main {
+  font-size: 1.3em;
+  opacity: 0.8;
+  margin-top: 100px;
+  text-align: center;
+}
+
+.welcome button {
+  height: 100px;
+  width: 450px;
+}
+
+.track-list {
+  background: green;
+}
+
+.similar-artists-picture {
+  height: 600px;
+  background: url("/images/concert.jpg");
+}
+
+.similar-artists {
+  height: inherit;
+  background: rgba(141, 210, 255, 0.8);
+}
+
+.similar-artist-image {
+  max-width: 10%;
+}
+
+.new-track {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.new-track input {
+  width: 100%;
+  height: 28px;
+  border: none;
+}
+
+.new-track button {
+  width: 100%;
+}
+
+.button-shadow {
+  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.19), 0 3px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.button-shadow:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.27), 0 3px 6px rgba(0, 0, 0, 0.2);
+  background: rgba(75, 150, 255, 1);
+}
+
+.error-area {
+  color: white;
+  height: 2em;
+  padding-top: 2em;
+}
+
+.error {
+  width: 100%;
+  background: red;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.close {
+  float: right;
+  font-size: 0.65em;
 }

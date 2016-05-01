@@ -14,7 +14,7 @@ function getArtistSimilarArtists(error, response, body) {
     _.each(artists, artist => {
       console.log(artist.name);
     });
-    
+
   } else {
     console.log(error);
     console.log(response.statusCode);

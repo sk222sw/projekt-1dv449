@@ -25,6 +25,7 @@
     "mongoose": "^4.4.10",
     "morgan": "~1.6.1",
     "node-uuid": "^1.4.7",
+    "purecss": "^0.6.0",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-router": "^2.0.1",

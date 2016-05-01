@@ -32,6 +32,8 @@ export default class Player extends React.Component {
         </div>
         <div>
           Username: {this.props.playingTrack.userName}
+          <button onClick={this.props.similarArtists}>similar</button>
+          <button onClick={this.props.getArtistInfo}>info</button>
         </div>
     </div>
     );

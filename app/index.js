@@ -6,6 +6,9 @@ import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
 import Layout from "./pages/Layout";
 
+import "./stylesheets/normalize.css";
+import "./stylesheets/pure-min.css";
+import "./stylesheets/buttons-min.css";
 import "./stylesheets/style.css";
 
 const app = document.getElementById('app');

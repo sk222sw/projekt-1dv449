@@ -3,6 +3,7 @@ const webpack = require("webpack");
 
 const PATHS = {
   app: path.join(__dirname, 'app'),
+  style: path.join(__dirname, "app", "stylesheets"),
   styles: path.join(__dirname, 'public', "stylesheets"),
   build: path.join(__dirname, 'public', 'javascripts')
 };
@@ -25,8 +26,8 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loaders: ["style", "css"],
-        include: PATHS.app
+        loaders: ['style', 'css'],
+        include: PATHS.style
       }
     ]
     // preLoaders: [

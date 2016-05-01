@@ -1,9 +1,9 @@
 const express = require('express');
-const router = express.Router();
+const apiHandler = express.Router();
 const DAL = require("./../models/DAL");
-const request = require("request");
+const _ = require("lodash");
 
-router.get("/", (req, res) => {
+apiHandler.get("/", (req, res) => {
   DAL.getSoundCloudData("url")
   .then(json => {
     const soundCloudTrack = {
@@ -19,11 +19,10 @@ router.get("/", (req, res) => {
   })
   .then(track => {
     res.json(track);
-  })
+  });
 });
 
-router.post("/", (req, res) => {
-  console.log(req.body.url);
+apiHandler.post("/", (req, res) => {
   DAL.getSoundCloudData(req.body.url)
   .then(json => {
     const soundCloudTrack = {
@@ -42,13 +41,28 @@ router.post("/", (req, res) => {
   });
 });
 
-router.get("/info", (req, res) => {
-  console.log("HEJEHEKJFHÖSLKJFH");
-  DAL.getArtistInfo("benklock")
-  .then(response => {
-    console.log(response);
-    res.sendStatus(200);  
+apiHandler.post("/getSimilarArtists", (req, res) => {
+  DAL.getSpotifyInfo(req.body.userName)
+  .then(json => json.artists.items[0].id)
+  .then(DAL.getSimilarArtists)
+  .then(artists => {
+    res.send(artists);
+  })
+  .catch(err => {
+    res.send(err, 404);
   });
 });
 
-module.exports = router;
+apiHandler.post("/getArtistInfo", (req, res) => {
+  console.log(req.body.userName);
+  DAL.getDiscogsInfo(req.body.userName)
+  .then(DAL.getArtistInfo)
+  .then(response => {
+    res.send(response);
+  })
+  // .catch(err => {
+  //   console.log("*****************", err);
+  // })
+});
+
+module.exports = apiHandler;

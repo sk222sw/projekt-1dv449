@@ -76,22 +76,116 @@ export default class App extends React.Component {
 
   }
 
+  getSimilarArtists = () => {
+    // if (this.state.similarArtists.length === 0) {
+    PlaylistActions.getSimilarArtists(this.state.playingTrack.userName);
+    // }
+  }
+
+  renderSimilarArtists = () => {
+    return (
+      <ul>
+        {
+          this.state.similarArtists.map(artist =>
+            <li key={uuid.v4()}>
+              {artist.name}
+            </li>
+          )
+        }
+      </ul>
+    );
+  }
+
+  getArtistInfo = () => {
+    PlaylistActions.getArtistInfo(this.state.playingTrack.userName);
+  }
+
+  renderArtistInfo = () => {
+    return (
+      <div>
+        {this.state.artistInfo}
+      </div>
+    );
+  }
+
+  showLoader = () => {
+    return "laoding!";
+  }
+
+  hideError = () => {
+    PlaylistActions.hideError();
+  }
+
+  renderErrorMessage = () => {
+    return (
+      <div>
+        <div className="error" onClick={this.hideError}>
+          {this.state.errorMessage}
+          <div className="close">close</div>
+        </div>
+      </div>
+    );
+  }
+
   // RENDER AREA : : : : : : : :
   render() {
     const tracks = this.state.tracks;
     return (
-      <div>
-        <input ref="newTrack" />
-        <button onClick={this.createTrack.bind(this)}>&#8594;</button>
-        <TrackList tracks={tracks}
-          onDelete={this.deleteTrack}
-          pickTrack={this.pickTrack}
-          updateTrack={this.updateTrack}
-        />
-      <div>
-        <button onClick={this.getNextTrack}>Play/Next</button>
-      </div>
-      <Player track={this.state.currentTrackUri} playingTrack={this.state.playingTrack} />
+      <div className="pure-g">
+        <div className="pure-u-1-3 track-list">
+          <div className="new-track">
+            <div>
+              <input ref="newTrack" />
+            </div>
+            <div>
+              <button className="pure-button pure-button-primary"
+                onClick={this.createTrack.bind(this)}>&darr;</button>
+            </div>
+          </div>
+          <TrackList tracks={tracks}
+            onDelete={this.deleteTrack}
+            pickTrack={this.pickTrack}
+            updateTrack={this.updateTrack}
+          />
+        </div>
+        <div className="pure-u-1-3">
+          <div className="error-area">
+            {
+              this.state.errorMessage !== "" ? this.renderErrorMessage()
+                : null
+            }
+          </div>
+        <div>
+          {
+            this.state.loader === true
+              ? this.showLoader()
+              : null
+          }
+        </div>
+          <div>
+            <button onClick={this.getNextTrack}>Play/Next</button>
+          </div>
+          <Player
+            track={this.state.currentTrackUri}
+            playingTrack={this.state.playingTrack}
+            similarArtists={this.getSimilarArtists}
+            getArtistInfo={this.getArtistInfo}
+          />
+          <div className="artist-info">
+            {
+              this.state.artistInfo === "" ?
+                null : this.renderArtistInfo()
+            }
+          </div>
+        </div>
+        <div className="pure-u-1-3 similar-artists-picture pure-img">
+          <div className="similar-artists" onClick={this.getSimilarArtists} >
+            {
+              this.state.similarArtists.length === 0 ?
+                null : this.renderSimilarArtists()
+            }
+          </div>
+        </div>
       </div>
     );
   }

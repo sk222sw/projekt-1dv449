@@ -2,16 +2,18 @@ import dispatcher from "../dispatcher";
 import axios from "axios";
 
 export function fetchPlaylist(id) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
   axios.get(`./playlist/${id}`)
   .then(playlist => {
     return playlist.data[0];
   })
   .then(json => {
-    console.log(json.tracks);
     const playlist = json;
     dispatcher.dispatch({ type: "RECEIVE_PLAYLIST", playlist });
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
   })
   .catch(err => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
     console.log(err);
   });
 }
@@ -20,7 +22,6 @@ export function createPlaylist() {
   axios.get("./playlist/new")
   .then(playlist => playlist.data)
   .then(playlist => {
-    console.log("playlist", playlist)
     dispatcher.dispatch({
       type: "CREATE_PLAYLIST",
       id: playlist._id
@@ -29,6 +30,7 @@ export function createPlaylist() {
 }
 
 export function createTrack(track, playlistId) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
   axios.post("/playlist", {
     track,
     playlistId
@@ -37,12 +39,14 @@ export function createTrack(track, playlistId) {
       "Content-Type": "application/json"
     }
   }).then(() => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
     dispatcher.dispatch({
       type: "CREATE_TRACK",
       track
     });
   })
   .catch(err => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
     console.log(err);
   });
 }
@@ -60,10 +64,12 @@ export function getTitle(url) {
 }
 
 export function nextTrack(url) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
   axios.post("/apiHandler", {
     url
   })
   .then(response => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
     dispatcher.dispatch({
       type: "NEXT_TRACK",
       track: response.data
@@ -71,11 +77,56 @@ export function nextTrack(url) {
   });
 }
 
+export function getSimilarArtists(userName) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
+  axios.post("/apiHandler/getSimilarArtists", {
+    userName
+  })
+  .then(artists => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
+    dispatcher.dispatch({
+      type: "GET_SIMILAR_ARTISTS",
+      artists
+    });
+  })
+  .catch(err => {
+    console.log("*************DÅ");
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
+    dispatcher.dispatch({
+      type: "GET_SIMILAR_ARTISTS",
+      err
+    });
+  });
+}
+
+export function hideError() {
+  dispatcher.dispatch({
+    type: "HIDE_ERROR"
+  });
+}
+
+export function getArtistInfo(userName) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
+  axios.post("/apiHandler/getArtistInfo", {
+    userName
+  })
+  .then(artistInfo => {
+    dispatcher.dispatch({
+      type: "GET_ARTIST_INFO",
+      artistInfo
+    });
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
+  })
+  .catch(err => console.log(err));
+}
+
 export function deleteTrack(playlistId, trackId) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
   const url = `/playlist/${playlistId}/delete/${trackId}`;
 
   axios.post(url, {})
   .then(() => {
     dispatcher.dispatch({ type: "DELETE_TRACK", id: trackId });
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
   });
 }

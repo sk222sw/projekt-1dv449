@@ -14,9 +14,9 @@ const Playlist = mongoose.model("PlaylistSchema", PlaylistSchema);
 
 const DAL = function () {};
 
-DAL.prototype.getPlaylist = function(_id) {
+DAL.prototype.getPlaylist = function (_id) {
   return new Promise((resolve, reject) => {
-    Playlist.find({_id}, (err, json) => {
+    Playlist.find({ _id }, (err, json) => {
       if (err) { reject(err); }
       resolve(json);
     });
@@ -50,49 +50,92 @@ DAL.prototype.deleteTrack = function (playlistId, track) {
         }
       }
       playlist.tracks.splice(trackIndex, 1);
-      playlist.save(function (err) {
+      playlist.save(err => {
          if(err) { reject(err); }
          resolve(true);
       });
-    })
-  })
-}
+    });
+  });
+};
 
-DAL.prototype.newPlaylist = function() {
+DAL.prototype.newPlaylist = function () {
   return new Promise((resolve, reject) => {
     const pl = new Playlist({ title: "", tracks: []});
 
     pl.save(err => {
-      if (err) { reject(err); }
-      else {
-        console.log("DAL", pl)
+      if (err) {
+        reject(err);
+      } else {
         resolve(pl);
       }
-    })
-  })
+    });
+  });
 };
 
 DAL.prototype.getSoundCloudData = function (url) {
-  console.log(url);
-  // url = "https://soundcloud.com/ben-klock/ben-klock-subzero-original-mix";
-  const apiString = "https://api.soundcloud.com/resolve.json?url="+url+"&client_id=defe1307335b6141da3b5c880c33bbab";
+  const apiString = "https://api.soundcloud.com/resolve.json?url=" + url + "&client_id=defe1307335b6141da3b5c880c33bbab";
   return new Promise((resolve, reject) => {
     request(apiString, (err, res, rawJson) => {
       if (err) { reject(err); }
       const json = JSON.parse(rawJson);
       resolve(json);
-    })
-  })
-}
+    });
+  });
+};
 
-DAL.prototype.getArtistInfo = function (artist) {
-  console.log("hej");
-  const requestString = "https://api.discogs.com/database/search?q=Nirvana&key=foo123&secret=DOWuJnVGdcpwInntlOJJLzoNwdTZIoRS"
+DAL.prototype.getDiscogsInfo = function (artist) {
+  const options = {
+    url: "https://api.discogs.com/database/search?q=" + artist + "&key=krHhCJCFIowVZukzsdqK&secret=DOWuJnVGdcpwInntlOJJLzoNwdTZIoRS",
+    headers: {
+      'User-Agent': 'Plurlist/0.1 +sonnykjellberg@gmail.com'
+    }
+  };
   return new Promise((resolve, reject) => {
-    request(requestString, (err, res, rawJson) => {
+    request(options, (err, res, rawJson) => {
       if (err) { reject(err); }
-      console.log(rawJson);
-      resolve(rawJson);
+      const jsonData = JSON.parse(rawJson);
+      resolve(jsonData.results[0].resource_url);
+    });
+  });
+};
+
+DAL.prototype.getArtistInfo = function (discogsUrl) {
+  const options = {
+    url: discogsUrl,
+    headers: {
+      'User-Agent': 'Plurlist/0.1 +sonnykjellberg@gmail.com'
+    }
+  };
+  return new Promise((resolve, reject) => {
+    request(options, (err, res, rawJson) => {
+      if (err) { reject(err); }
+      const jsonData = JSON.parse(rawJson);
+      resolve(jsonData);
+    });
+  });
+};
+
+DAL.prototype.getSpotifyInfo = function (name) {
+  const encodedName = encodeURIComponent(name);
+  console.log(encodedName);
+  console.log("encoded", encodedName);
+  return new Promise((resolve, reject) => {
+    request("https://api.spotify.com/v1/search?q=" + encodedName + "&type=artist", (err, res, rawJson) => {
+      if (err) { reject(err); }
+      const jsonData = JSON.parse(rawJson);
+      resolve(jsonData);
+    });
+  });
+};
+
+DAL.prototype.getSimilarArtists = function (artistId) {
+  console.log("HHHHHHHHHH***************************");
+  const url = "https://api.spotify.com/v1/artists/" + artistId + "/related-artists";
+  return new Promise((resolve, reject) => {
+    request(url, (err, res, rawJson) => {
+      if (err) { reject(err); }
+      const jsonData = JSON.parse(rawJson);
+      resolve(jsonData.artists);
     });
   });
 };

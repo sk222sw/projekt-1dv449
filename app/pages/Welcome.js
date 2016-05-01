@@ -39,24 +39,40 @@ export default class Welcome extends React.Component {
   playlistUrl = () =>
     `http://${window.location.host}/#/playlist/${this.state.playlistId}`;
 
+  renderLink = () => {
+    return (
+      <p>
+        Great, here is your link:
+        <Link to={`/playlist/${this.state.playlistId}`}>
+          {this.playlistUrl()}
+        </Link>
+      </p>
+    );
+  }
+
   render() {
     this.playlistUrl();
     return (
-      <div>
-        <p>plurlist is a simple tool to create playlists containing music from different sources</p>
-        <p>no registering needed - just create your playlist and bookmark it</p>
-        <Link to="/playlist/5714c45730de0c44035c43cc">
-          here's a develop link
-        </Link>
-        {this.state.showCreateButton ?
-          <button onClick={this.createPlurlist}>Create plurlist</button> :
-            <p>
-              Great, here is your link:
-              <Link to={`/playlist/${this.state.playlistId}`}>
-                {this.playlistUrl()}
-              </Link>
-            </p>
-        }
+      <div className="pure-g main">
+        <div className="pure-u-1-4"></div>
+        <div className="pure-u-1-2">
+          <p>plurlist is a simple tool to create playlists containing
+          music from different sources</p>
+          <p>no registering needed - just create your playlist and bookmark it</p>
+          <div>
+          </div>
+          <div>
+            {this.state.showCreateButton ?
+              <button className="pure-button pure-button-primary button-shadow"
+                onClick={this.createPlurlist}>Click here to get started</button> :
+                this.renderLink()
+            }
+          </div>
+          <br />
+            <Link to="/playlist/5714c45730de0c44035c43cc" className="" >
+              here's a develop link
+            </Link>
+        </div>
       </div>
     );
   }
