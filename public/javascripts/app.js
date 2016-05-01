@@ -19822,10 +19822,6 @@
 	      );
 	    };
 
-	    _this.showLoader = function () {
-	      return "laoding!";
-	    };
-
 	    _this.hideError = function () {
 	      PlaylistActions.hideError();
 	    };
@@ -19926,11 +19922,6 @@
 	          _react2.default.createElement(
 	            "div",
 	            null,
-	            this.state.loader === true ? this.showLoader() : null
-	          ),
-	          _react2.default.createElement(
-	            "div",
-	            null,
 	            _react2.default.createElement(
 	              "button",
 	              { onClick: this.getNextTrack },
@@ -19941,7 +19932,8 @@
 	            track: this.state.currentTrackUri,
 	            playingTrack: this.state.playingTrack,
 	            similarArtists: this.getSimilarArtists,
-	            getArtistInfo: this.getArtistInfo
+	            getArtistInfo: this.getArtistInfo,
+	            nextTrack: this.getNextTrack
 	          }),
 	          _react2.default.createElement(
 	            "div",
@@ -24192,7 +24184,8 @@
 	    };
 
 	    _this.createPlaylist = function (id) {
-	      _this.state.id = id;
+	      _this.state.playlistId = id;
+	      _this.state.showCreateButton = false;
 	      _this.emit("change");
 	    };
 
@@ -24279,6 +24272,8 @@
 	    };
 
 	    _this.state = {
+	      playlistId: "",
+	      showCreateButton: true,
 	      tracks: [],
 	      id: "",
 	      playingTrack: {
@@ -28384,18 +28379,23 @@
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	  }).catch(function (err) {
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
-	    console.log(err);
 	  });
 	}
 
 	function createPlaylist() {
+	  _dispatcher2.default.dispatch({ type: "SHOW_LOADER" });
+	  console.log("steragint to create");
 	  _axios2.default.get("./playlist/new").then(function (playlist) {
 	    return playlist.data;
 	  }).then(function (playlist) {
+	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	    _dispatcher2.default.dispatch({
 	      type: "CREATE_PLAYLIST",
 	      id: playlist._id
 	    });
+	  }).catch(function (err) {
+	    console.log(err);
+	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	  });
 	}
 
@@ -28416,7 +28416,6 @@
 	    });
 	  }).catch(function (err) {
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
-	    console.log(err);
 	  });
 	}
 
@@ -28455,7 +28454,6 @@
 	      artists: artists
 	    });
 	  }).catch(function (err) {
-	    console.log("*************DÅ");
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	    _dispatcher2.default.dispatch({
 	      type: "GET_SIMILAR_ARTISTS",
@@ -28480,9 +28478,7 @@
 	      artistInfo: artistInfo
 	    });
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
-	  }).catch(function (err) {
-	    return console.log(err);
-	  });
+	  }).catch(function (err) {});
 	}
 
 	function deleteTrack(playlistId, trackId) {
@@ -29629,14 +29625,16 @@
 	      args[_key] = arguments[_key];
 	    }
 
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Player)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.renderPlayer = function () {
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Player)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.nothing = function () {}, _this.renderPlayer = function () {
 	      var widgetIframe = document.getElementById('sc-widget');
 	      widgetIframe.src = "https://w.soundcloud.com/player/?url=" + _this.props.track;
 	      var widget = SC.Widget(widgetIframe);
 	      widget.bind(SC.Widget.Events.READY, function () {
-	        widget.bind(SC.Widget.Events.PLAY, function () {
-	          console.log("play");
-	        });
+	        widget.play();
+	      });
+
+	      widget.bind(SC.Widget.Events.FINISH, function () {
+	        _this.props.nextTrack();
 	      });
 	    }, _this.renderTrackInfo = function () {
 	      return _react2.default.createElement(
@@ -29670,8 +29668,6 @@
 
 	  _createClass(Player, [{
 	    key: "componentWillMount",
-
-	    // ändrade precis componentDidMount till componentWillMount ifall nåt buggar
 	    value: function componentWillMount() {
 	      _PlaylistStore2.default.on("next-track", this.renderPlayer);
 	    }
@@ -29746,17 +29742,11 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Welcome).call(this, props));
 
-	    _this.getPlaylistId = function () {
-	      _this.setState({
-	        playlistId: _PlaylistStore2.default.getId(),
-	        showCreateButton: false
-	      });
+	    _this.updateState = function () {
+	      _this.setState(_PlaylistStore2.default.getState());
 	    };
 
 	    _this.createPlurlist = function () {
-	      _this.setState({
-	        showCreateButton: false
-	      });
 	      PlaylistActions.createPlaylist();
 	    };
 
@@ -29777,27 +29767,37 @@
 	      );
 	    };
 
-	    _this.state = {
-	      playlistId: "",
-	      showCreateButton: true
+	    _this.showLoader = function () {
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "sound-bar" },
+	        _react2.default.createElement("div", { className: "bar1" }),
+	        _react2.default.createElement("div", { className: "bar2" }),
+	        _react2.default.createElement("div", { className: "bar3" }),
+	        _react2.default.createElement("div", { className: "bar4" }),
+	        _react2.default.createElement("div", { className: "bar5" })
+	      );
 	    };
+
+	    _this.counter = 0;
+	    _this.state = _PlaylistStore2.default.getState();
 	    return _this;
 	  }
 
 	  _createClass(Welcome, [{
 	    key: "componentWillMount",
 	    value: function componentWillMount() {
-	      _PlaylistStore2.default.on("change", this.getPlaylistId);
+	      // PlaylistStore.on("change", this.setState);
+	      _PlaylistStore2.default.on("change", this.updateState);
 	    }
 	  }, {
 	    key: "componentWillUnmount",
 	    value: function componentWillUnmount() {
-	      _PlaylistStore2.default.removeListener("change", this.getPlaylistId);
+	      _PlaylistStore2.default.removeListener("change", this.updateState);
 	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      this.playlistUrl();
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "pure-g main" },
@@ -29816,6 +29816,11 @@
 	            "no registering needed - just create your playlist and bookmark it"
 	          ),
 	          _react2.default.createElement("div", null),
+	          _react2.default.createElement(
+	            "div",
+	            null,
+	            this.state.loader === true ? this.showLoader() : null
+	          ),
 	          _react2.default.createElement(
 	            "div",
 	            null,
@@ -35033,6 +35038,10 @@
 
 	var _reactRouter = __webpack_require__(309);
 
+	var _PlaylistStore = __webpack_require__(185);
+
+	var _PlaylistStore2 = _interopRequireDefault(_PlaylistStore);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35044,13 +35053,60 @@
 	var Header = function (_React$Component) {
 	  _inherits(Header, _React$Component);
 
-	  function Header() {
+	  function Header(props) {
 	    _classCallCheck(this, Header);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Header).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Header).call(this, props));
+
+	    _this.nothing = function () {};
+
+	    _this.updateState = function () {
+	      _this.setState(_PlaylistStore2.default.getState());
+	    };
+
+	    _this.renderTitle = function () {
+	      return _react2.default.createElement(
+	        _reactRouter.Link,
+	        { to: "/" },
+	        _react2.default.createElement(
+	          "h1",
+	          null,
+	          "plurlist"
+	        )
+	      );
+	    };
+
+	    _this.showLoader = function () {
+	      return _react2.default.createElement(
+	        "h1",
+	        null,
+	        _react2.default.createElement(
+	          "div",
+	          { className: "sound-bar" },
+	          _react2.default.createElement("div", { className: "bar1" }),
+	          _react2.default.createElement("div", { className: "bar2" }),
+	          _react2.default.createElement("div", { className: "bar3" }),
+	          _react2.default.createElement("div", { className: "bar4" }),
+	          _react2.default.createElement("div", { className: "bar5" })
+	        )
+	      );
+	    };
+
+	    _this.state = _PlaylistStore2.default.getState();
+	    return _this;
 	  }
 
 	  _createClass(Header, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      _PlaylistStore2.default.on("change", this.updateState);
+	    }
+	  }, {
+	    key: "componentWillUnmount",
+	    value: function componentWillUnmount() {
+	      _PlaylistStore2.default.removeListener("change", this.updateState);
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -35059,15 +35115,7 @@
 	        _react2.default.createElement(
 	          "header",
 	          { className: "pure-u-24-24" },
-	          _react2.default.createElement(
-	            _reactRouter.Link,
-	            { to: "/" },
-	            _react2.default.createElement(
-	              "h1",
-	              null,
-	              "plurlist"
-	            )
-	          )
+	          this.state.loader === true ? this.showLoader() : this.renderTitle()
 	        )
 	      );
 	    }
@@ -35541,7 +35589,7 @@
 
 
 	// module
-	exports.push([module.id, "body {\n  height: 100%;\n  width: 100%;\n  font: 14px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n}\n\n.loader {\n  height: 20px;\n  width: 20px;\n  background: url(\"/images/ajax-loader.gif\");\n}\n\n.noLoader {\n  height: 20px;\n  width: 20px;\n  background: green;\n}\n\nheader {\n  background: #1f8dd6;\n  height: 200px;\n  color: white;\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.05);\n}\n\nh1 {\n  font-size: 3em;\n  color: white;\n  text-decoration: none;\n  text-align: center;\n  letter-spacing: 0.2em;\n  line-height: 150px;\n}\n\na {\n  text-decoration: none;\n}\n\n.pure-button-primary {\n  background: #1f8dd6;\n}\n\n.main {\n  font-size: 1.3em;\n  opacity: 0.8;\n  margin-top: 100px;\n  text-align: center;\n}\n\n.welcome button {\n  height: 100px;\n  width: 450px;\n}\n\n.track-list {\n  background: green;\n}\n\n.similar-artists-picture {\n  height: 600px;\n  background: url(\"/images/concert.jpg\");\n}\n\n.similar-artists {\n  height: inherit;\n  background: rgba(141, 210, 255, 0.8);\n}\n\n.similar-artist-image {\n  max-width: 10%;\n}\n\n.new-track {\n  width: 50%;\n  margin: 0 auto;\n}\n\n.new-track input {\n  width: 100%;\n  height: 28px;\n  border: none;\n}\n\n.new-track button {\n  width: 100%;\n}\n\n.button-shadow {\n  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.19), 0 3px 6px rgba(0, 0, 0, 0.2);\n  transition: all 0.2s ease-in-out;\n}\n\n.button-shadow:hover {\n  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.27), 0 3px 6px rgba(0, 0, 0, 0.2);\n  background: rgba(75, 150, 255, 1);\n}\n\n.error-area {\n  color: white;\n  height: 2em;\n  padding-top: 2em;\n}\n\n.error {\n  width: 100%;\n  background: red;\n  display: inline-block;\n  cursor: pointer;\n}\n\n.close {\n  float: right;\n  font-size: 0.65em;\n}", ""]);
+	exports.push([module.id, "body {\n  height: 100%;\n  width: 100%;\n  font: 14px \"Lucida Grande\", Helvetica, Arial, sans-serif;\n}\n\nheader {\n  background: #1f8dd6;\n  height: 200px;\n  color: white;\n  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.05);\n}\n\nh1 {\n  font-size: 3em;\n  color: white;\n  text-decoration: none;\n  text-align: center;\n  letter-spacing: 0.2em;\n  line-height: 150px;\n}\n\na {\n  text-decoration: none;\n}\n\n.pure-button-primary {\n  background: #1f8dd6;\n}\n\n.main {\n  font-size: 1.3em;\n  opacity: 0.8;\n  margin-top: 100px;\n  text-align: center;\n}\n\n.welcome button {\n  height: 100px;\n  width: 450px;\n}\n\n.track-list {\n}\n\n.similar-artists-picture {\n  height: 600px;\n}\n\n.similar-artists {\n  height: inherit;\n}\n\n.similar-artist-image {\n  max-width: 10%;\n}\n\n.new-track {\n  width: 50%;\n  margin: 0 auto;\n}\n\n.new-track input {\n  width: 100%;\n  height: 28px;\n  border: none;\n}\n\n.new-track button {\n  width: 100%;\n}\n\n.button-shadow {\n  box-shadow: 0 0px 6px rgba(0, 0, 0, 0.19), 0 3px 6px rgba(0, 0, 0, 0.2);\n  transition: all 0.2s ease-in-out;\n}\n\n.button-shadow:hover {\n  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.27), 0 3px 6px rgba(0, 0, 0, 0.2);\n  background: rgba(75, 150, 255, 1);\n}\n\n.error-area {\n  color: white;\n  height: 2em;\n  padding-top: 2em;\n}\n\n.error {\n  width: 100%;\n  background: red;\n  display: inline-block;\n  cursor: pointer;\n}\n\n.close {\n  float: right;\n  font-size: 0.65em;\n}\n\n.sound-bar {\n  margin: 25px 25px 0 0;\n  display: inline-block;\n  width: 50px;\n  height: 100px;\n  text-align: center;\n  font-size: 10px;\n}\n\n.sound-bar > div {\n  margin-left: 4px;\n  background-color: #fff;\n  height: 100%;\n  width: 6px;\n  display: inline-block;\n  -webkit-animation: bar-stretch-delay 1.2s infinite ease-in-out;\n  animation: bar-stretch-delay 1.2s infinite ease-in-out;\n}\n\n.sound-bar .bar2 {\n  -webkit-animation-delay: -1.1s;\n  animation-delay: -1.1s;\n}\n\n.sound-bar .bar3 {\n  -webkit-animation-delay: -1.0s;\n  animation-delay: -1.0s;\n}\n\n.sound-bar .bar4 {\n  -webkit-animation-delay: -0.9s;\n  animation-delay: -0.9s;\n}\n\n.sound-bar .bar5 {\n  -webkit-animation-delay: -0.8s;\n  animation-delay: -0.8s;\n}\n\n@-webkit-keyframes bar-stretch-delay {\n  0%, 40%, 100% {\n    -webkit-transform: scaleY(0.4)\n  }\n\n  20% {\n    -webkit-transform: scaleY(1.0)\n  }\n}\n\n@keyframes bar-stretch-delay {\n  0%, 40%, 100% {\n    transform: scaleY(0.4);\n    -webkit-transform: scaleY(0.4);\n  }\n\n  20% {\n    transform: scaleY(1.0);\n    -webkit-transform: scaleY(1.0);\n  }\n}\n\nh1 {\n    -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */\n       -moz-animation: fadein 2s; /* Firefox < 16 */\n        -ms-animation: fadein 2s; /* Internet Explorer */\n         -o-animation: fadein 2s; /* Opera < 12.1 */\n            animation: fadein 2s;\n}\n\n@keyframes fadein {\n    from { opacity: 0; }\n    to   { opacity: 1; }\n}\n\n/* Firefox < 16 */\n@-moz-keyframes fadein {\n    from { opacity: 0; }\n    to   { opacity: 1; }\n}\n\n/* Safari, Chrome and Opera > 12.1 */\n@-webkit-keyframes fadein {\n    from { opacity: 0; }\n    to   { opacity: 1; }\n}\n\n/* Internet Explorer */\n@-ms-keyframes fadein {\n    from { opacity: 0; }\n    to   { opacity: 1; }\n}\n\n/* Opera < 12.1 */\n@-o-keyframes fadein {\n    from { opacity: 0; }\n    to   { opacity: 1; }\n}", ""]);
 
 	// exports
 

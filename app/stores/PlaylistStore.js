@@ -8,6 +8,8 @@ class PlaylistStore extends EventEmitter {
     super();
 
     this.state = {
+      playlistId: "",
+      showCreateButton: true,
       tracks: [],
       id: "",
       playingTrack: {
@@ -26,7 +28,8 @@ class PlaylistStore extends EventEmitter {
   getState = () => this.state;
 
   createPlaylist = (id) => {
-    this.state.id = id;
+    this.state.playlistId = id;
+    this.state.showCreateButton = false;
     this.emit("change");
   }
 

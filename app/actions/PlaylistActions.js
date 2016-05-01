@@ -14,19 +14,25 @@ export function fetchPlaylist(id) {
   })
   .catch(err => {
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
-    console.log(err);
   });
 }
 
 export function createPlaylist() {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
+  console.log("steragint to create");
   axios.get("./playlist/new")
-  .then(playlist => playlist.data)
-  .then(playlist => {
-    dispatcher.dispatch({
-      type: "CREATE_PLAYLIST",
-      id: playlist._id
+    .then(playlist => playlist.data)
+    .then(playlist => {
+      dispatcher.dispatch({ type: "REMOVE_LOADER" });
+      dispatcher.dispatch({
+        type: "CREATE_PLAYLIST",
+        id: playlist._id
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatcher.dispatch({ type: "REMOVE_LOADER" });
     });
-  });
 }
 
 export function createTrack(track, playlistId) {
@@ -47,7 +53,6 @@ export function createTrack(track, playlistId) {
   })
   .catch(err => {
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
-    console.log(err);
   });
 }
 
@@ -90,7 +95,6 @@ export function getSimilarArtists(userName) {
     });
   })
   .catch(err => {
-    console.log("*************DÅ");
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
     dispatcher.dispatch({
       type: "GET_SIMILAR_ARTISTS",
@@ -117,7 +121,7 @@ export function getArtistInfo(userName) {
     });
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
   })
-  .catch(err => console.log(err));
+  .catch(err => {});
 }
 
 export function deleteTrack(playlistId, trackId) {

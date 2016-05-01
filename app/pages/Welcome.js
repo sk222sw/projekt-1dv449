@@ -7,32 +7,24 @@ import * as PlaylistActions from "../actions/PlaylistActions";
 export default class Welcome extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      playlistId: "",
-      showCreateButton: true
-    };
+    this.counter = 0;
+    this.state = PlaylistStore.getState();
   }
 
   componentWillMount() {
-    PlaylistStore.on("change", this.getPlaylistId);
+    // PlaylistStore.on("change", this.setState);
+    PlaylistStore.on("change", this.updateState);
   }
 
   componentWillUnmount() {
-    PlaylistStore.removeListener("change", this.getPlaylistId);
+    PlaylistStore.removeListener("change", this.updateState);
   }
 
-  getPlaylistId = () => {
-    this.setState({
-      playlistId: PlaylistStore.getId(),
-      showCreateButton: false
-    });
+  updateState = () => {
+    this.setState(PlaylistStore.getState());
   }
 
   createPlurlist = () => {
-    this.setState({
-      showCreateButton: false
-    });
     PlaylistActions.createPlaylist();
   }
 
@@ -50,8 +42,19 @@ export default class Welcome extends React.Component {
     );
   }
 
+  showLoader = () => {
+    return (
+      <div className="sound-bar">
+        <div className="bar1"></div>
+        <div className="bar2"></div>
+        <div className="bar3"></div>
+        <div className="bar4"></div>
+        <div className="bar5"></div>
+      </div>
+    )
+  }
+
   render() {
-    this.playlistUrl();
     return (
       <div className="pure-g main">
         <div className="pure-u-1-4"></div>
@@ -60,6 +63,13 @@ export default class Welcome extends React.Component {
           music from different sources</p>
           <p>no registering needed - just create your playlist and bookmark it</p>
           <div>
+          </div>
+          <div>
+            {
+              this.state.loader === true
+                ? this.showLoader()
+                : null
+            }
           </div>
           <div>
             {this.state.showCreateButton ?

@@ -108,10 +108,6 @@ export default class App extends React.Component {
     );
   }
 
-  showLoader = () => {
-    return "laoding!";
-  }
-
   hideError = () => {
     PlaylistActions.hideError();
   }
@@ -155,13 +151,6 @@ export default class App extends React.Component {
                 : null
             }
           </div>
-        <div>
-          {
-            this.state.loader === true
-              ? this.showLoader()
-              : null
-          }
-        </div>
           <div>
             <button onClick={this.getNextTrack}>Play/Next</button>
           </div>
@@ -170,6 +159,7 @@ export default class App extends React.Component {
             playingTrack={this.state.playingTrack}
             similarArtists={this.getSimilarArtists}
             getArtistInfo={this.getArtistInfo}
+            nextTrack={this.getNextTrack}
           />
           <div className="artist-info">
             {
