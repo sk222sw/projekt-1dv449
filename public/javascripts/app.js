@@ -19768,12 +19768,7 @@
 	      PlaylistActions.deleteTrack(playlistId, trackId);
 	    };
 
-	    _this.updateTrack = function (trackId) {
-	      console.log(trackId);
-	    };
-
 	    _this.pickTrack = function (url) {
-	      console.log(url);
 	      return PlaylistActions.getTitle(url);
 	    };
 
@@ -19907,8 +19902,7 @@
 	          ),
 	          _react2.default.createElement(_TrackList2.default, { tracks: tracks,
 	            onDelete: this.deleteTrack,
-	            pickTrack: this.pickTrack,
-	            updateTrack: this.updateTrack
+	            pickTrack: this.pickTrack
 	          })
 	        ),
 	        _react2.default.createElement(
@@ -19933,7 +19927,8 @@
 	            playingTrack: this.state.playingTrack,
 	            similarArtists: this.getSimilarArtists,
 	            getArtistInfo: this.getArtistInfo,
-	            nextTrack: this.getNextTrack
+	            nextTrack: this.getNextTrack,
+	            nextTrackInfo: _PlaylistStore2.default.getNextTrackInfo()
 	          }),
 	          _react2.default.createElement(
 	            "div",
@@ -24051,7 +24046,6 @@
 	          title: track.title,
 	          url: track.url,
 	          pickTrack: pickTrack.bind(null, track.url),
-	          updateTrack: updateTrack.bind(null, track.id),
 	          onDelete: onDelete.bind(null, track.id) })
 	      );
 	    })
@@ -24183,6 +24177,10 @@
 	      return _this.state;
 	    };
 
+	    _this.getNextSoundCloudUrl = function () {
+	      return _this.state.nextSoundCloudUrl;
+	    };
+
 	    _this.createPlaylist = function (id) {
 	      _this.state.playlistId = id;
 	      _this.state.showCreateButton = false;
@@ -24237,7 +24235,6 @@
 	    };
 
 	    _this.getSimilarArtists = function (response) {
-	      console.log("reponse", response);
 	      if (response.err || response.data.length === 0) {
 	        _this.state.errorMessage = "Sorry, no similar artists could be found";
 	      } else {
@@ -24247,7 +24244,6 @@
 	    };
 
 	    _this.getArtistInfo = function (info) {
-	      console.log("info", info);
 	      if (info == "undefined" || info == null || info === "") {
 	        _this.state.errorMessage = "Sorry, no artist info could be found.";
 	      } else {
@@ -24271,6 +24267,14 @@
 	      _this.emit("change");
 	    };
 
+	    _this.getNextTrackInfo = function (track) {
+	      console.log("got next track info", track);
+	      return _this.state.currentTrackNumber >= _this.state.tracks.length ? _this.state.tracks[0] : _this.state.tracks[_this.state.currentTrackNumber];
+	      // if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
+	      // } else {
+	      // }
+	    };
+
 	    _this.state = {
 	      playlistId: "",
 	      showCreateButton: true,
@@ -24285,7 +24289,8 @@
 	      similarArtists: [],
 	      errorMessage: "",
 	      artistInfo: "",
-	      loader: false
+	      loader: false,
+	      nextSoundCloudUrl: "no url yet"
 	    };
 	    return _this;
 	  }
@@ -24339,6 +24344,9 @@
 	          break;
 	        case "HIDE_ERROR":
 	          this.hideError();
+	          break;
+	        case "GET_NEXT_TRACK_INFO":
+	          this.getNextTrackInfo(action.track);
 	          break;
 	        default:
 	          break;
@@ -28357,6 +28365,7 @@
 	exports.getSimilarArtists = getSimilarArtists;
 	exports.hideError = hideError;
 	exports.getArtistInfo = getArtistInfo;
+	exports.getNextTrackInfo = getNextTrackInfo;
 	exports.deleteTrack = deleteTrack;
 
 	var _dispatcher = __webpack_require__(285);
@@ -28384,7 +28393,6 @@
 
 	function createPlaylist() {
 	  _dispatcher2.default.dispatch({ type: "SHOW_LOADER" });
-	  console.log("steragint to create");
 	  _axios2.default.get("./playlist/new").then(function (playlist) {
 	    return playlist.data;
 	  }).then(function (playlist) {
@@ -28479,6 +28487,21 @@
 	    });
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	  }).catch(function (err) {});
+	}
+
+	function getNextTrackInfo(url) {
+	  console.log("hej", url);
+	  _axios2.default.post("/apiHandler", {
+	    url: url
+	  }).then(function (response) {
+	    _dispatcher2.default.dispatch({
+	      type: "GET_NEXT_TRACK_INFO",
+	      track: response.data
+	    });
+	    return response;
+	  }).then(function (response) {
+	    console.log("reponse!!!!", response.data.uri);
+	  });
 	}
 
 	function deleteTrack(playlistId, trackId) {
@@ -29603,40 +29626,62 @@
 
 	var _PlaylistStore2 = _interopRequireDefault(_PlaylistStore);
 
+	var _PlaylistActions = __webpack_require__(289);
+
+	var PlaylistActions = _interopRequireWildcard(_PlaylistActions);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* global SC (for eslint) */
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* global SC */
 
 	var Player = function (_React$Component) {
 	  _inherits(Player, _React$Component);
 
-	  function Player() {
-	    var _Object$getPrototypeO;
-
-	    var _temp, _this, _ret;
-
+	  function Player(props) {
 	    _classCallCheck(this, Player);
 
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Player).call(this, props));
 
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(Player)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.nothing = function () {}, _this.renderPlayer = function () {
+	    _this.nothing = function () {};
+
+	    _this.logy = function () {
+	      _this.nextSoundCloudUrl = _PlaylistStore2.default.getNextSoundCloudUrl();
+	      console.log("next är:", _PlaylistStore2.default.getNextSoundCloudUrl());
+	    };
+
+	    _this.renderPlayer = function () {
+	      var nextSound = _this.props.nextTrackInfo;
+	      // this.nextSoundCloudUrl = PlaylistStore.getNextSoundCloudUrl();
+	      // console.log("nextsound:", nextSound);
+	      // console.log("next soundcloud url", PlaylistStore.nextSoundCloudUrl);
 	      var widgetIframe = document.getElementById('sc-widget');
 	      widgetIframe.src = "https://w.soundcloud.com/player/?url=" + _this.props.track;
 	      var widget = SC.Widget(widgetIframe);
 	      widget.bind(SC.Widget.Events.READY, function () {
 	        widget.play();
 	      });
-
 	      widget.bind(SC.Widget.Events.FINISH, function () {
-	        _this.props.nextTrack();
+	        widget.load(nextSoundCloudUrl, {
+	          show_artwork: false
+	        });
+
+	        // HÄMTA nästa track när den här spelas, lägg till den som newSoundUrl
+	        // ladda den sen och det blir autoplay
+
+	        // this.props.nextTrack();
+	        widget.bind(SC.Widget.Events.READY, function () {
+	          widget.play();
+	        });
 	      });
-	    }, _this.renderTrackInfo = function () {
+	    };
+
+	    _this.renderTrackInfo = function () {
 	      return _react2.default.createElement(
 	        "div",
 	        null,
@@ -29663,18 +29708,23 @@
 	          )
 	        )
 	      );
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	    };
+
+	    _this.nextSoundCloudUrl = "";
+	    return _this;
 	  }
 
 	  _createClass(Player, [{
 	    key: "componentWillMount",
 	    value: function componentWillMount() {
 	      _PlaylistStore2.default.on("next-track", this.renderPlayer);
+	      // PlaylistStore.on("got-next-soundcloud-url", this.logy);
 	    }
 	  }, {
 	    key: "componentWillUnmount",
 	    value: function componentWillUnmount() {
 	      _PlaylistStore2.default.removeListener("next-track", this.renderPlayer);
+	      _PlaylistStore2.default.removeListener("got-next-soundcloud-url", this.logy);
 	    }
 	  }, {
 	    key: "render",

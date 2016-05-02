@@ -9,7 +9,6 @@ export default ({ tracks, onDelete, pickTrack, updateTrack }) => {
             title={track.title}
             url={track.url}
             pickTrack={pickTrack.bind(null, track.url)}
-            updateTrack={updateTrack.bind(null, track.id)}
             onDelete={onDelete.bind(null, track.id)} />
         </li>
     )}</ul>

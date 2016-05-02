@@ -21,11 +21,14 @@ class PlaylistStore extends EventEmitter {
       similarArtists: [],
       errorMessage: "",
       artistInfo: "",
-      loader: false
+      loader: false,
+      nextSoundCloudUrl: "no url yet"
     };
   }
 
   getState = () => this.state;
+
+  getNextSoundCloudUrl = () => this.state.nextSoundCloudUrl;
 
   createPlaylist = (id) => {
     this.state.playlistId = id;
@@ -87,7 +90,6 @@ class PlaylistStore extends EventEmitter {
   }
 
   getSimilarArtists = response => {
-    console.log("reponse", response);
     if (response.err || response.data.length === 0) {
       this.state.errorMessage = "Sorry, no similar artists could be found";
     } else {
@@ -97,7 +99,6 @@ class PlaylistStore extends EventEmitter {
   }
 
   getArtistInfo = info => {
-    console.log("info", info);
     if (info == "undefined" || info == null || info === "") {
       this.state.errorMessage = "Sorry, no artist info could be found.";
     } else {
@@ -119,6 +120,16 @@ class PlaylistStore extends EventEmitter {
   hideError = () => {
     this.state.errorMessage = "";
     this.emit("change");
+  }
+
+  getNextTrackInfo = (track) => {
+    console.log("got next track info", track);
+    return this.state.currentTrackNumber >= this.state.tracks.length
+      ? this.state.tracks[0]
+      : this.state.tracks[this.state.currentTrackNumber];
+    // if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
+    // } else {
+    // }
   }
 
   handleActions(action) {
@@ -158,6 +169,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "HIDE_ERROR":
         this.hideError();
+        break;
+      case "GET_NEXT_TRACK_INFO":
+        this.getNextTrackInfo(action.track);
         break;
       default:
         break;

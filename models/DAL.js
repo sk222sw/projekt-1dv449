@@ -117,8 +117,6 @@ DAL.prototype.getArtistInfo = function (discogsUrl) {
 
 DAL.prototype.getSpotifyInfo = function (name) {
   const encodedName = encodeURIComponent(name);
-  console.log(encodedName);
-  console.log("encoded", encodedName);
   return new Promise((resolve, reject) => {
     request("https://api.spotify.com/v1/search?q=" + encodedName + "&type=artist", (err, res, rawJson) => {
       if (err) { reject(err); }

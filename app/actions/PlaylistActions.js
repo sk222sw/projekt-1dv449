@@ -19,7 +19,6 @@ export function fetchPlaylist(id) {
 
 export function createPlaylist() {
   dispatcher.dispatch({ type: "SHOW_LOADER" });
-  console.log("steragint to create");
   axios.get("./playlist/new")
     .then(playlist => playlist.data)
     .then(playlist => {
@@ -122,6 +121,23 @@ export function getArtistInfo(userName) {
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
   })
   .catch(err => {});
+}
+
+export function getNextTrackInfo(url) {
+  console.log("hej", url)
+  axios.post("/apiHandler", {
+    url
+  })
+  .then(response => {
+    dispatcher.dispatch({
+      type: "GET_NEXT_TRACK_INFO",
+      track: response.data
+    });
+    return response;
+  })
+  .then(response => {
+    console.log("reponse!!!!", response.data.uri);
+  })
 }
 
 export function deleteTrack(playlistId, trackId) {

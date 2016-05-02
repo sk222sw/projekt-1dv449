@@ -43,10 +43,6 @@ export default class App extends React.Component {
     PlaylistActions.deleteTrack(playlistId, trackId);
   }
 
-  updateTrack = trackId => {
-    console.log(trackId);
-  }
-
   createTrack() {
     const newTrack = {
       url: this.refs.newTrack.value,
@@ -57,7 +53,6 @@ export default class App extends React.Component {
   }
 
   pickTrack = (url) => {
-    console.log(url);
     return PlaylistActions.getTitle(url);
   }
 
@@ -141,7 +136,6 @@ export default class App extends React.Component {
           <TrackList tracks={tracks}
             onDelete={this.deleteTrack}
             pickTrack={this.pickTrack}
-            updateTrack={this.updateTrack}
           />
         </div>
         <div className="pure-u-1-3">
@@ -160,6 +154,7 @@ export default class App extends React.Component {
             similarArtists={this.getSimilarArtists}
             getArtistInfo={this.getArtistInfo}
             nextTrack={this.getNextTrack}
+            nextTrackInfo={PlaylistStore.getNextTrackInfo()}
           />
           <div className="artist-info">
             {

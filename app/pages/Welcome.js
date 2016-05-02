@@ -51,7 +51,7 @@ export default class Welcome extends React.Component {
         <div className="bar4"></div>
         <div className="bar5"></div>
       </div>
-    )
+    );
   }
 
   render() {
