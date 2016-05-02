@@ -61,7 +61,14 @@ export default class Welcome extends React.Component {
         <div className="pure-u-1-2">
           <p>plurlist is a simple tool to create playlists containing
           music from different sources</p>
-          <p>no registering needed - just create your playlist and bookmark it</p>
+          <p>no registering needed - just create your playlist and bookmark it!</p>
+          <br />
+          <p>
+            right now
+              <a href="https://soundcloud.com" target="_blank" > soundcloud </a>
+            is supported, but more sources will be added soon!
+          </p>
+          <br />
           <div>
           </div>
           <div>
@@ -71,10 +78,6 @@ export default class Welcome extends React.Component {
                 this.renderLink()
             }
           </div>
-          <br />
-            <Link to="/playlist/5714c45730de0c44035c43cc" className="" >
-              here's a develop link
-            </Link>
         </div>
       </div>
     );

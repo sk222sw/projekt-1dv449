@@ -1,6 +1,5 @@
 import React from "react";
 import uuid from "node-uuid";
-import { Link } from "react-router";
 
 import TrackList from "./TrackList";
 import PlaylistStore from "./stores/PlaylistStore";
@@ -45,19 +44,19 @@ export default class App extends React.Component {
   }
 
   createTrack() {
-    this.refs.newTrack.value = "";
     const newTrack = {
       url: this.refs.newTrack.value,
       title: "",
       id: uuid.v4()
     };
-    if (this.refs.newTrack.value !== "" &&
-        this.validateSoundCloudUrl(this.refs.newTrack.value)) {
+    if (this.validateSoundCloudUrl(this.refs.newTrack.value)) {
+      console.log("should fucking validate, k");
       PlaylistActions.createTrack(newTrack, this.props.params.playlist);
     } else {
       PlaylistActions.setError(`The URL does not seem to be valid. Make sure it
         has the following format: https://soundcloud.com/[artist]/[track]`);
     }
+    this.refs.newTrack.value = "";
   }
 
   validateSoundCloudUrl(inputUrl) {
@@ -160,7 +159,7 @@ export default class App extends React.Component {
   clickForSimilarArtists = () => {
     return (
       <div className="learn-more">
-        Click here to find similar artists!
+        Click here to find similar artists from spotify
       </div>
     );
   }
@@ -168,7 +167,7 @@ export default class App extends React.Component {
   clickForArtistInfo = () => {
     return (
       <div className="learn-more">
-        Click here to learn more about this artist.
+        Click here to learn more about this artist from discogs
       </div>
     )
   }

@@ -49,7 +49,6 @@ apiHandler.post("/getSimilarArtists", (req, res) => {
     res.send(artists);
   })
   .catch(err => {
-    console.log("den går väl inte hit va?");
     res.send(err, 404);
   });
 });
