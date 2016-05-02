@@ -1,9 +1,9 @@
 {
-  "name": "dotons",
-  "version": "0.0.0",
+  "name": "plurlist",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "supervisor ./bin/www",
+    "start": "node ./bin/www",
     "watch": "webpack --watch --inline --colors",
     "dev": "webpack",
     "build": "webpack -p"
