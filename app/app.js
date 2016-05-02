@@ -67,6 +67,24 @@ export default class App extends React.Component {
     PlaylistActions.nextTrack(this.state.tracks[this.state.currentTrackNumber].url);
   }
 
+
+  getPreviousTrack = () => {
+    this.updateState();
+    let current = this.state.currentTrackNumber - 1;
+    let previousTrackNumber = 0;
+    if (current < 0) {
+      current = this.state.tracks.length - 1;
+    }
+
+    if (current <= 0) {
+      previousTrackNumber = this.state.tracks.length - 1;
+    } else {
+      previousTrackNumber = current - 1;
+    }
+
+    PlaylistActions.previousTrack(this.state.tracks[previousTrackNumber].url);
+  }
+
   listState = () => {
 
   }
@@ -146,7 +164,8 @@ export default class App extends React.Component {
             }
           </div>
           <div>
-            <button onClick={this.getNextTrack}>Play/Next</button>
+            <button className="pure-button" onClick={this.getPreviousTrack}>&#10510;</button>
+            <button className="pure-button" onClick={this.getNextTrack}>&#10511;</button>
           </div>
           <Player
             track={this.state.currentTrackUri}

@@ -10,7 +10,7 @@ export default class Track extends React.Component {
   }
 
   renderDelete = () => {
-    return <button onClick={this.props.onDelete}>x</button>;
+    return <button className="pure-button" onClick={this.props.onDelete}>&#10007;</button>;
   }
 
   render() {
@@ -18,7 +18,6 @@ export default class Track extends React.Component {
     return (
           <div>
             {this.pickTrack()}
-            {this.updateTrack()}
             {onDelete ? this.renderDelete() : null}
           </div>
         );

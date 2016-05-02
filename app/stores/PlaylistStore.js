@@ -16,6 +16,7 @@ class PlaylistStore extends EventEmitter {
         user: {}
       },
       currentTrackNumber: 0,
+      previousTrackNumber: 0,
       currentTrackUri: "",
       firstTrack: true,
       similarArtists: [],
@@ -89,6 +90,24 @@ class PlaylistStore extends EventEmitter {
     this.emit("change");
   }
 
+  previousTrack = track => {
+    this.state.playingTrack = {
+      title: track.title,
+      userName: track.user.userName,
+      url: track.uri
+    };
+    this.state.currentTrackUri = track.uri;
+
+    if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
+      this.state.currentTrackNumber = 0;
+    } else {
+      this.state.currentTrackNumber++;
+    }
+
+    this.emit("next-track");
+    this.emit("change");
+  }
+
   getSimilarArtists = response => {
     if (response.err || response.data.length === 0) {
       this.state.errorMessage = "Sorry, no similar artists could be found";
@@ -123,13 +142,9 @@ class PlaylistStore extends EventEmitter {
   }
 
   getNextTrackInfo = (track) => {
-    console.log("got next track info", track);
     return this.state.currentTrackNumber >= this.state.tracks.length
       ? this.state.tracks[0]
       : this.state.tracks[this.state.currentTrackNumber];
-    // if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
-    // } else {
-    // }
   }
 
   handleActions(action) {
@@ -151,6 +166,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "NEXT_TRACK":
         this.nextTrack(action.track);
+        break;
+      case "PREVIOUS_TRACK":
+        this.previousTrack(action.track);
         break;
       case "GET_TITLE":
         this.getTitle(action.track);

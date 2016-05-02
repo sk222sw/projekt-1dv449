@@ -81,6 +81,21 @@ export function nextTrack(url) {
   });
 }
 
+export function previousTrack(url) {
+  dispatcher.dispatch({ type: "SHOW_LOADER" });
+  axios.post("/apiHandler", {
+    url
+  })
+  .then(response => {
+    dispatcher.dispatch({ type: "REMOVE_LOADER" });
+    console.log(response);
+    dispatcher.dispatch({
+      type: "PREVIOUS_TRACK",
+      track: response.data
+    });
+  });
+}
+
 export function getSimilarArtists(userName) {
   dispatcher.dispatch({ type: "SHOW_LOADER" });
   axios.post("/apiHandler/getSimilarArtists", {

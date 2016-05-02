@@ -19783,6 +19783,23 @@
 	      PlaylistActions.nextTrack(_this.state.tracks[_this.state.currentTrackNumber].url);
 	    };
 
+	    _this.getPreviousTrack = function () {
+	      _this.updateState();
+	      var current = _this.state.currentTrackNumber - 1;
+	      var previousTrackNumber = 0;
+	      if (current < 0) {
+	        current = _this.state.tracks.length - 1;
+	      }
+
+	      if (current <= 0) {
+	        previousTrackNumber = _this.state.tracks.length - 1;
+	      } else {
+	        previousTrackNumber = current - 1;
+	      }
+
+	      PlaylistActions.previousTrack(_this.state.tracks[previousTrackNumber].url);
+	    };
+
 	    _this.listState = function () {};
 
 	    _this.getSimilarArtists = function () {
@@ -19918,8 +19935,13 @@
 	            null,
 	            _react2.default.createElement(
 	              "button",
-	              { onClick: this.getNextTrack },
-	              "Play/Next"
+	              { className: "pure-button", onClick: this.getPreviousTrack },
+	              "⤎"
+	            ),
+	            _react2.default.createElement(
+	              "button",
+	              { className: "pure-button", onClick: this.getNextTrack },
+	              "⤏"
 	            )
 	          ),
 	          _react2.default.createElement(_Player2.default, {
@@ -24102,8 +24124,8 @@
 	    }, _this.renderDelete = function () {
 	      return _react2.default.createElement(
 	        "button",
-	        { onClick: _this.props.onDelete },
-	        "x"
+	        { className: "pure-button", onClick: _this.props.onDelete },
+	        "✗"
 	      );
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
@@ -24116,7 +24138,6 @@
 	        "div",
 	        null,
 	        this.pickTrack(),
-	        this.updateTrack(),
 	        onDelete ? this.renderDelete() : null
 	      );
 	    }
@@ -24234,6 +24255,24 @@
 	      _this.emit("change");
 	    };
 
+	    _this.previousTrack = function (track) {
+	      _this.state.playingTrack = {
+	        title: track.title,
+	        userName: track.user.userName,
+	        url: track.uri
+	      };
+	      _this.state.currentTrackUri = track.uri;
+
+	      if (_this.state.currentTrackNumber >= _this.state.tracks.length - 1) {
+	        _this.state.currentTrackNumber = 0;
+	      } else {
+	        _this.state.currentTrackNumber++;
+	      }
+
+	      _this.emit("next-track");
+	      _this.emit("change");
+	    };
+
 	    _this.getSimilarArtists = function (response) {
 	      if (response.err || response.data.length === 0) {
 	        _this.state.errorMessage = "Sorry, no similar artists could be found";
@@ -24268,11 +24307,7 @@
 	    };
 
 	    _this.getNextTrackInfo = function (track) {
-	      console.log("got next track info", track);
 	      return _this.state.currentTrackNumber >= _this.state.tracks.length ? _this.state.tracks[0] : _this.state.tracks[_this.state.currentTrackNumber];
-	      // if (this.state.currentTrackNumber >= this.state.tracks.length - 1) {
-	      // } else {
-	      // }
 	    };
 
 	    _this.state = {
@@ -24284,6 +24319,7 @@
 	        user: {}
 	      },
 	      currentTrackNumber: 0,
+	      previousTrackNumber: 0,
 	      currentTrackUri: "",
 	      firstTrack: true,
 	      similarArtists: [],
@@ -24326,6 +24362,9 @@
 	          break;
 	        case "NEXT_TRACK":
 	          this.nextTrack(action.track);
+	          break;
+	        case "PREVIOUS_TRACK":
+	          this.previousTrack(action.track);
 	          break;
 	        case "GET_TITLE":
 	          this.getTitle(action.track);
@@ -28362,6 +28401,7 @@
 	exports.createTrack = createTrack;
 	exports.getTitle = getTitle;
 	exports.nextTrack = nextTrack;
+	exports.previousTrack = previousTrack;
 	exports.getSimilarArtists = getSimilarArtists;
 	exports.hideError = hideError;
 	exports.getArtistInfo = getArtistInfo;
@@ -28446,6 +28486,20 @@
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
 	    _dispatcher2.default.dispatch({
 	      type: "NEXT_TRACK",
+	      track: response.data
+	    });
+	  });
+	}
+
+	function previousTrack(url) {
+	  _dispatcher2.default.dispatch({ type: "SHOW_LOADER" });
+	  _axios2.default.post("/apiHandler", {
+	    url: url
+	  }).then(function (response) {
+	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
+	    console.log(response);
+	    _dispatcher2.default.dispatch({
+	      type: "PREVIOUS_TRACK",
 	      track: response.data
 	    });
 	  });
@@ -29650,35 +29704,10 @@
 
 	    _this.nothing = function () {};
 
-	    _this.logy = function () {
-	      _this.nextSoundCloudUrl = _PlaylistStore2.default.getNextSoundCloudUrl();
-	      console.log("next är:", _PlaylistStore2.default.getNextSoundCloudUrl());
-	    };
-
 	    _this.renderPlayer = function () {
-	      var nextSound = _this.props.nextTrackInfo;
-	      // this.nextSoundCloudUrl = PlaylistStore.getNextSoundCloudUrl();
-	      // console.log("nextsound:", nextSound);
-	      // console.log("next soundcloud url", PlaylistStore.nextSoundCloudUrl);
 	      var widgetIframe = document.getElementById('sc-widget');
 	      widgetIframe.src = "https://w.soundcloud.com/player/?url=" + _this.props.track;
-	      var widget = SC.Widget(widgetIframe);
-	      widget.bind(SC.Widget.Events.READY, function () {
-	        widget.play();
-	      });
-	      widget.bind(SC.Widget.Events.FINISH, function () {
-	        widget.load(nextSoundCloudUrl, {
-	          show_artwork: false
-	        });
-
-	        // HÄMTA nästa track när den här spelas, lägg till den som newSoundUrl
-	        // ladda den sen och det blir autoplay
-
-	        // this.props.nextTrack();
-	        widget.bind(SC.Widget.Events.READY, function () {
-	          widget.play();
-	        });
-	      });
+	      _this.widget = SC.Widget(widgetIframe);
 	    };
 
 	    _this.renderTrackInfo = function () {
@@ -29710,6 +29739,7 @@
 	      );
 	    };
 
+	    _this.widget = null;
 	    _this.nextSoundCloudUrl = "";
 	    return _this;
 	  }
@@ -29718,13 +29748,11 @@
 	    key: "componentWillMount",
 	    value: function componentWillMount() {
 	      _PlaylistStore2.default.on("next-track", this.renderPlayer);
-	      // PlaylistStore.on("got-next-soundcloud-url", this.logy);
 	    }
 	  }, {
 	    key: "componentWillUnmount",
 	    value: function componentWillUnmount() {
 	      _PlaylistStore2.default.removeListener("next-track", this.renderPlayer);
-	      _PlaylistStore2.default.removeListener("got-next-soundcloud-url", this.logy);
 	    }
 	  }, {
 	    key: "render",
