@@ -11,7 +11,7 @@ module.exports = {
   context: path.join(__dirname, "app"),
   entry: {
     app: "./index.js",
-    vendor: ["./api/SC"]
+    vendor: ["./api/SC", "./vendor/offline"]
   },
   output: {
     path: PATHS.build,

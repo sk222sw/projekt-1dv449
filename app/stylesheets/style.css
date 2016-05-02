@@ -1,14 +1,16 @@
 body {
   height: 100%;
   width: 100%;
+  background: #eeeded;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 header {
+  box-shadow: inset 0 -5px 30px -10px rgba(0,0,0,1);
+
   background: #1f8dd6;
   height: 200px;
   color: white;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.05);
 }
 
 h1 {
@@ -35,39 +37,101 @@ a {
   text-align: center;
 }
 
+.main-container {
+  margin-top: 30px;
+}
+
+.main-area {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  background: white;
+}
+
 .welcome button {
   height: 100px;
   width: 450px;
 }
 
+.track {
+  
+}
+
+.delete-button {
+  border: none;
+  background: inherit;
+}
+
 .track-list {
+  max-height: 200px;
+  min-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: center;
+  /*background: rgba(0, 0, 0, 0.05);*/
 }
 
-.similar-artists-picture {
-  height: 600px;
+.learn-more {
+  text-align: center;
+  line-height: 100px;
+  height: 100px;
+  color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
 }
 
-.similar-artists {
-  height: inherit;
+.learn-more:hover {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+  transition: all 0.2s ease-in-out;
 }
 
-.similar-artist-image {
-  max-width: 10%;
+.artist-info {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  margin: 0 auto;
+  width: 92%;
+  background: white;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.85);
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9em;
+}
+
+.powered-by {
+  float: right;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 0.6em;
 }
 
 .new-track {
-  width: 50%;
-  margin: 0 auto;
+  position: relative;
+  width: 100%;
 }
 
 .new-track input {
+  text-align: center;
   width: 100%;
   height: 28px;
   border: none;
+  color: rbga(0, 0, 0, 0.1);
+}
+
+.new-track input:focus {
+  outline: none;
+  border: 0px solid #DDDDDD;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+}
+
+.down-button-div {
+  width: 50px;
+  margin: 0 auto;
 }
 
 .new-track button {
-  width: 100%;
+  position: relative;
+  width: 50px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .button-shadow {
@@ -83,11 +147,20 @@ a {
 .error-area {
   color: white;
   height: 2em;
-  padding-top: 2em;
 }
 
 .error {
-  width: 100%;
+  /*position center*/
+  position: absolute;
+  top: 20%;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+
+  box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+  width: 20%;
+  padding: 6px;
   background: red;
   display: inline-block;
   cursor: pointer;
@@ -97,6 +170,41 @@ a {
   float: right;
   font-size: 0.65em;
 }
+
+.player-area {
+  width: 100%;
+}
+
+.player-area div {
+  margin: 0 auto;
+}
+
+.player-buttons button {
+  font-size: 3em;
+  background: white;
+  width: 50%;
+  height: 100px;
+}
+
+.player-buttons button:hover {
+  border: solid rgba(0, 0, 0, 0.1) 1px;
+}
+
+.player-buttons button:active,
+.player-buttons button:hover,
+.player-buttons button:focus {
+  background: white;
+}
+
+/*player*/
+#sc-widget {
+  margin: 0 auto;
+  width: 100%;
+}
+
+/*********************************/
+/* other stuff */
+/*********************************/
 
 .sound-bar {
   margin: 25px 25px 0 0;

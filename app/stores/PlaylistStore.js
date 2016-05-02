@@ -23,7 +23,8 @@ class PlaylistStore extends EventEmitter {
       errorMessage: "",
       artistInfo: "",
       loader: false,
-      nextSoundCloudUrl: "no url yet"
+      nextSoundCloudUrl: "no url yet",
+      activePlayer: false
     };
   }
 
@@ -73,6 +74,7 @@ class PlaylistStore extends EventEmitter {
   }
 
   nextTrack = (track) => {
+    this.state.activePlayer = true;
     this.state.playingTrack = {
       title: track.title,
       userName: track.user.userName,
@@ -91,6 +93,7 @@ class PlaylistStore extends EventEmitter {
   }
 
   previousTrack = track => {
+    this.state.activePlayer = true;
     this.state.playingTrack = {
       title: track.title,
       userName: track.user.userName,
@@ -111,8 +114,11 @@ class PlaylistStore extends EventEmitter {
   getSimilarArtists = response => {
     console.log(response);
     if (response.err) {
-      console.log("hej");
-      this.state.errorMessage = "Sorry, no similar artists could be found";
+      this.state.errorMessage = `Sorry, no similar artists could be found.
+                                 Maybe the artist isn't on spotify, or the
+                                 soundcloud username isn't the same as the
+                                 artist name. We're working on a solution
+                                 for this`;
     } else {
       this.state.similarArtists = response.artists.data;
     }
@@ -121,7 +127,11 @@ class PlaylistStore extends EventEmitter {
 
   getArtistInfo = info => {
     if (info == "undefined" || info == null || info === "") {
-      this.state.errorMessage = "Sorry, no artist info could be found.";
+      this.state.errorMessage = `Sorry, no artist info could be found.
+                                 Maybe there's no info on discogs, or the
+                                 soundcloud username isn't the same as the
+                                 artist name. We're working on a solution
+                                 for this`;
     } else {
       this.state.artistInfo = info;
     }

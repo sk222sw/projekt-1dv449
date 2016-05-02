@@ -31,12 +31,10 @@ export default class Player extends React.Component {
     return (
       <div>
         <div>
-          Title: {this.props.playingTrack.title}
+          Username: {this.props.playingTrack.userName}
         </div>
         <div>
-          Username: {this.props.playingTrack.userName}
-          <button onClick={this.props.similarArtists}>similar</button>
-          <button onClick={this.props.getArtistInfo}>info</button>
+          Title: {this.props.playingTrack.title}
         </div>
     </div>
     );
@@ -45,11 +43,6 @@ export default class Player extends React.Component {
   render() {
     return (
       <div>
-        {
-          this.props.track !== "" ?
-            this.renderTrackInfo() :
-            null
-        }
         <div id="trackPlayer">
           <iframe id="sc-widget" frameBorder="0"></iframe>
         </div>

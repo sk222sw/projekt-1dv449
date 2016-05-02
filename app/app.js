@@ -1,5 +1,6 @@
 import React from "react";
 import uuid from "node-uuid";
+import { Link } from "react-router";
 
 import TrackList from "./TrackList";
 import PlaylistStore from "./stores/PlaylistStore";
@@ -44,6 +45,7 @@ export default class App extends React.Component {
   }
 
   createTrack() {
+    this.refs.newTrack.value = "";
     const newTrack = {
       url: this.refs.newTrack.value,
       title: "",
@@ -101,22 +103,24 @@ export default class App extends React.Component {
   }
 
   getSimilarArtists = () => {
-    // if (this.state.similarArtists.length === 0) {
     PlaylistActions.getSimilarArtists(this.state.playingTrack.userName);
-    // }
   }
 
   renderSimilarArtists = () => {
     return (
-      <ul>
-        {
-          this.state.similarArtists.map(artist =>
-            <li key={uuid.v4()}>
-              {artist.name}
-            </li>
-          )
-        }
-      </ul>
+      <div className="artist-info animated bounceInRight">
+          {
+            this.state.similarArtists.map(artist =>
+              <div key={uuid.v4()}>
+                {artist.name}
+              </div>
+            )
+          }
+          <div className="powered-by">
+            powered by
+            <a href="https://www.spotify.com" target="_blank"> spotify</a>
+          </div>
+      </div>
     );
   }
 
@@ -127,7 +131,13 @@ export default class App extends React.Component {
   renderArtistInfo = () => {
     return (
       <div>
-        {this.state.artistInfo}
+        <div className="artist-info animated bounceInLeft">
+          {this.state.artistInfo}
+          <div className="powered-by">
+            powered by
+            <a href="https://www.discogs.com" target="_blank"> discogs</a>
+          </div>
+        </div>
       </div>
     );
   }
@@ -139,7 +149,7 @@ export default class App extends React.Component {
   renderErrorMessage = () => {
     return (
       <div>
-        <div className="error" onClick={this.hideError}>
+        <div className="error animated bounce" onClick={this.hideError}>
           {this.state.errorMessage}
           <div className="close">close</div>
         </div>
@@ -147,59 +157,92 @@ export default class App extends React.Component {
     );
   }
 
+  clickForSimilarArtists = () => {
+    return (
+      <div className="learn-more">
+        Click here to find similar artists!
+      </div>
+    );
+  }
+
+  clickForArtistInfo = () => {
+    return (
+      <div className="learn-more">
+        Click here to learn more about this artist.
+      </div>
+    )
+  }
+
   // RENDER AREA : : : : : : : :
   render() {
     const tracks = this.state.tracks;
     return (
-      <div className="pure-g">
-        <div className="pure-u-1-3 track-list">
-          <div className="new-track">
-            <div>
-              <input placeholder="paste a soundcloud url here" ref="newTrack" />
-            </div>
-            <div>
-              <button className="pure-button pure-button-primary"
-                onClick={this.createTrack.bind(this)}>&darr;</button>
-            </div>
-          </div>
-          <TrackList tracks={tracks}
-            onDelete={this.deleteTrack}
-            pickTrack={this.pickTrack}
-          />
-        </div>
+      <div className="pure-g main-container">
         <div className="pure-u-1-3">
+            {
+              this.state.activePlayer ?
+              <div className="artist-info-area">
+                <div className="similar-artists" onClick={this.getArtistInfo} >
+                  {
+                    this.state.artistInfo === "" ?
+                      this.clickForArtistInfo() : this.renderArtistInfo()
+                  }
+                </div>
+              </div>
+                : null
+            }
+        </div>
+        <div className="pure-u-1-3 main-area">
           <div className="error-area">
             {
               this.state.errorMessage !== "" ? this.renderErrorMessage()
                 : null
             }
           </div>
-          <div>
-            <button className="pure-button" onClick={this.getPreviousTrack}>&#10510;</button>
-            <button className="pure-button" onClick={this.getNextTrack}>&#10511;</button>
+          <div className="new-track">
+            <div>
+              <input placeholder="paste a soundcloud url here" ref="newTrack" />
+            </div>
+            <div className="down-button-div">
+              <button className="pure-button pure-button-primary"
+                onClick={this.createTrack.bind(this)}>&darr;</button>
+            </div>
           </div>
-          <Player
-            track={this.state.currentTrackUri}
-            playingTrack={this.state.playingTrack}
-            similarArtists={this.getSimilarArtists}
-            getArtistInfo={this.getArtistInfo}
-            nextTrack={this.getNextTrack}
-            nextTrackInfo={PlaylistStore.getNextTrackInfo()}
-          />
-          <div className="artist-info">
-            {
-              this.state.artistInfo === "" ?
-                null : this.renderArtistInfo()
-            }
+          <div className="track-list">
+            <TrackList tracks={tracks}
+              onDelete={this.deleteTrack}
+              pickTrack={this.pickTrack}
+            />
+          </div>
+          <div className="player-area">
+              <Player
+                track={this.state.currentTrackUri}
+                playingTrack={this.state.playingTrack}
+                similarArtists={this.getSimilarArtists}
+                getArtistInfo={this.getArtistInfo}
+                nextTrack={this.getNextTrack}
+                nextTrackInfo={PlaylistStore.getNextTrackInfo()}
+              />
+            <div className="player-buttons">
+              <button className="pure-button player-button" onClick={this.getPreviousTrack}>&#10510;</button>
+              <button className="pure-button player-button" onClick={this.getNextTrack}>&#10511;</button>
+            </div>
           </div>
         </div>
         <div className="pure-u-1-3 similar-artists-picture pure-img">
-          <div className="similar-artists" onClick={this.getSimilarArtists} >
-            {
-              this.state.similarArtists.length === 0 ?
-                null : this.renderSimilarArtists()
-            }
+        {
+          this.state.activePlayer ?
+          <div className="similar-artists-area" onClick={this.getSimilarArtists} >
+            <div className="similar-artists">
+              {
+                this.state.similarArtists.length === 0 ?
+                  this.clickForSimilarArtists() :
+                  this.renderSimilarArtists()
+              }
+            </div>
           </div>
+            : null
+        }
         </div>
       </div>
     );

@@ -65,13 +65,6 @@ export default class Welcome extends React.Component {
           <div>
           </div>
           <div>
-            {
-              this.state.loader === true
-                ? this.showLoader()
-                : null
-            }
-          </div>
-          <div>
             {this.state.showCreateButton ?
               <button className="pure-button pure-button-primary button-shadow"
                 onClick={this.createPlurlist}>Click here to get started</button> :
