@@ -49,7 +49,18 @@ export default class App extends React.Component {
       title: "",
       id: uuid.v4()
     };
-    PlaylistActions.createTrack(newTrack, this.props.params.playlist);
+    if (this.refs.newTrack.value !== "" &&
+        this.validateSoundCloudUrl(this.refs.newTrack.value)) {
+      PlaylistActions.createTrack(newTrack, this.props.params.playlist);
+    } else {
+      PlaylistActions.setError(`The URL does not seem to be valid. Make sure it
+        has the following format: https://soundcloud.com/[artist]/[track]`);
+    }
+  }
+
+  validateSoundCloudUrl(inputUrl) {
+    const regexp = /((https:\/\/)|(http:\/\/)|(www.)|(\s))+(soundcloud.com\/)+[a-zA-Z0-9\-\.]+(\/)+[a-zA-Z0-9\-\.]+/;
+    return inputUrl.match(regexp) && inputUrl.match(regexp)[2];
   }
 
   pickTrack = (url) => {
@@ -144,7 +155,7 @@ export default class App extends React.Component {
         <div className="pure-u-1-3 track-list">
           <div className="new-track">
             <div>
-              <input ref="newTrack" />
+              <input placeholder="paste a soundcloud url here" ref="newTrack" />
             </div>
             <div>
               <button className="pure-button pure-button-primary"

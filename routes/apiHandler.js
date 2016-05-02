@@ -49,6 +49,7 @@ apiHandler.post("/getSimilarArtists", (req, res) => {
     res.send(artists);
   })
   .catch(err => {
+    console.log("den går väl inte hit va?");
     res.send(err, 404);
   });
 });
@@ -59,10 +60,7 @@ apiHandler.post("/getArtistInfo", (req, res) => {
   .then(DAL.getArtistInfo)
   .then(response => {
     res.send(response);
-  })
-  // .catch(err => {
-  //   console.log("*****************", err);
-  // })
+  });
 });
 
 module.exports = apiHandler;

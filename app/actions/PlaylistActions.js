@@ -88,7 +88,6 @@ export function previousTrack(url) {
   })
   .then(response => {
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
-    console.log(response);
     dispatcher.dispatch({
       type: "PREVIOUS_TRACK",
       track: response.data
@@ -123,6 +122,13 @@ export function hideError() {
   });
 }
 
+export function setError(message) {
+  dispatcher.dispatch({
+    type: "SET_ERROR",
+    message
+  });
+}
+
 export function getArtistInfo(userName) {
   dispatcher.dispatch({ type: "SHOW_LOADER" });
   axios.post("/apiHandler/getArtistInfo", {
@@ -139,7 +145,6 @@ export function getArtistInfo(userName) {
 }
 
 export function getNextTrackInfo(url) {
-  console.log("hej", url)
   axios.post("/apiHandler", {
     url
   })
@@ -149,10 +154,7 @@ export function getNextTrackInfo(url) {
       track: response.data
     });
     return response;
-  })
-  .then(response => {
-    console.log("reponse!!!!", response.data.uri);
-  })
+  });
 }
 
 export function deleteTrack(playlistId, trackId) {

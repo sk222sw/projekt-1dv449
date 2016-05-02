@@ -109,10 +109,12 @@ class PlaylistStore extends EventEmitter {
   }
 
   getSimilarArtists = response => {
-    if (response.err || response.data.length === 0) {
+    console.log(response);
+    if (response.err) {
+      console.log("hej");
       this.state.errorMessage = "Sorry, no similar artists could be found";
     } else {
-      this.state.similarArtists = response.artists;
+      this.state.similarArtists = response.artists.data;
     }
     this.emit("change");
   }
@@ -133,6 +135,11 @@ class PlaylistStore extends EventEmitter {
 
   removeLoader = () => {
     this.state.loader = false;
+    this.emit("change");
+  }
+
+  setError = (message) => {
+    this.state.errorMessage = message;
     this.emit("change");
   }
 
@@ -184,6 +191,9 @@ class PlaylistStore extends EventEmitter {
         break;
       case "REMOVE_LOADER":
         this.removeLoader();
+        break;
+      case "SET_ERROR":
+        this.setError(action.message);
         break;
       case "HIDE_ERROR":
         this.hideError();

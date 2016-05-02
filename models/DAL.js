@@ -127,7 +127,6 @@ DAL.prototype.getSpotifyInfo = function (name) {
 };
 
 DAL.prototype.getSimilarArtists = function (artistId) {
-  console.log("HHHHHHHHHH***************************");
   const url = "https://api.spotify.com/v1/artists/" + artistId + "/related-artists";
   return new Promise((resolve, reject) => {
     request(url, (err, res, rawJson) => {

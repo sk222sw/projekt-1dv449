@@ -19883,7 +19883,17 @@
 	        title: "",
 	        id: _nodeUuid2.default.v4()
 	      };
-	      PlaylistActions.createTrack(newTrack, this.props.params.playlist);
+	      if (this.refs.newTrack.value !== "" && this.validateSoundCloudUrl(this.refs.newTrack.value)) {
+	        PlaylistActions.createTrack(newTrack, this.props.params.playlist);
+	      } else {
+	        PlaylistActions.setError("The URL does not seem to be valid. Make sure it\n        has the following format: https://soundcloud.com/[artist]/[track]");
+	      }
+	    }
+	  }, {
+	    key: "validateSoundCloudUrl",
+	    value: function validateSoundCloudUrl(inputUrl) {
+	      var regexp = /((https:\/\/)|(http:\/\/)|(www.)|(\s))+(soundcloud.com\/)+[a-zA-Z0-9\-\.]+(\/)+[a-zA-Z0-9\-\.]+/;
+	      return inputUrl.match(regexp) && inputUrl.match(regexp)[2];
 	    }
 	  }, {
 	    key: "render",
@@ -19904,7 +19914,7 @@
 	            _react2.default.createElement(
 	              "div",
 	              null,
-	              _react2.default.createElement("input", { ref: "newTrack" })
+	              _react2.default.createElement("input", { placeholder: "paste a soundcloud url here", ref: "newTrack" })
 	            ),
 	            _react2.default.createElement(
 	              "div",
@@ -24274,10 +24284,12 @@
 	    };
 
 	    _this.getSimilarArtists = function (response) {
-	      if (response.err || response.data.length === 0) {
+	      console.log(response);
+	      if (response.err) {
+	        console.log("hej");
 	        _this.state.errorMessage = "Sorry, no similar artists could be found";
 	      } else {
-	        _this.state.similarArtists = response.artists;
+	        _this.state.similarArtists = response.artists.data;
 	      }
 	      _this.emit("change");
 	    };
@@ -24298,6 +24310,11 @@
 
 	    _this.removeLoader = function () {
 	      _this.state.loader = false;
+	      _this.emit("change");
+	    };
+
+	    _this.setError = function (message) {
+	      _this.state.errorMessage = message;
 	      _this.emit("change");
 	    };
 
@@ -24380,6 +24397,9 @@
 	          break;
 	        case "REMOVE_LOADER":
 	          this.removeLoader();
+	          break;
+	        case "SET_ERROR":
+	          this.setError(action.message);
 	          break;
 	        case "HIDE_ERROR":
 	          this.hideError();
@@ -28404,6 +28424,7 @@
 	exports.previousTrack = previousTrack;
 	exports.getSimilarArtists = getSimilarArtists;
 	exports.hideError = hideError;
+	exports.setError = setError;
 	exports.getArtistInfo = getArtistInfo;
 	exports.getNextTrackInfo = getNextTrackInfo;
 	exports.deleteTrack = deleteTrack;
@@ -28497,7 +28518,6 @@
 	    url: url
 	  }).then(function (response) {
 	    _dispatcher2.default.dispatch({ type: "REMOVE_LOADER" });
-	    console.log(response);
 	    _dispatcher2.default.dispatch({
 	      type: "PREVIOUS_TRACK",
 	      track: response.data
@@ -28530,6 +28550,13 @@
 	  });
 	}
 
+	function setError(message) {
+	  _dispatcher2.default.dispatch({
+	    type: "SET_ERROR",
+	    message: message
+	  });
+	}
+
 	function getArtistInfo(userName) {
 	  _dispatcher2.default.dispatch({ type: "SHOW_LOADER" });
 	  _axios2.default.post("/apiHandler/getArtistInfo", {
@@ -28544,7 +28571,6 @@
 	}
 
 	function getNextTrackInfo(url) {
-	  console.log("hej", url);
 	  _axios2.default.post("/apiHandler", {
 	    url: url
 	  }).then(function (response) {
@@ -28553,8 +28579,6 @@
 	      track: response.data
 	    });
 	    return response;
-	  }).then(function (response) {
-	    console.log("reponse!!!!", response.data.uri);
 	  });
 	}
 
