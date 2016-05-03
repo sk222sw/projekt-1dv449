@@ -33,10 +33,10 @@ DAL.prototype.addTrack = function (playlistId, track) {
         else {
           resolve(true);
         }
-      })
-    })
+      });
+    });
   });
-}
+};
 
 DAL.prototype.deleteTrack = function (playlistId, track) {
   return new Promise((resolve, reject) => {
@@ -76,9 +76,16 @@ DAL.prototype.getSoundCloudData = function (url) {
   const apiString = "https://api.soundcloud.com/resolve.json?url=" + url + "&client_id=defe1307335b6141da3b5c880c33bbab";
   return new Promise((resolve, reject) => {
     request(apiString, (err, res, rawJson) => {
-      if (err) { reject(err); }
-      const json = JSON.parse(rawJson);
-      resolve(json);
+      if (err) {
+        reject(err);
+      } else {
+        const json = JSON.parse(rawJson);
+        if (json.hasOwnProperty("errors")) {
+          resolve(404);
+        } else {
+          resolve(json);
+        }
+      }
     });
   });
 };

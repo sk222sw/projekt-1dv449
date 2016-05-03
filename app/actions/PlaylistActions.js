@@ -43,7 +43,7 @@ export function createTrack(track, playlistId) {
     headers: {
       "Content-Type": "application/json"
     }
-  }).then(() => {
+  }).then((response) => {
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
     dispatcher.dispatch({
       type: "CREATE_TRACK",
@@ -51,6 +51,14 @@ export function createTrack(track, playlistId) {
     });
   })
   .catch(err => {
+    if (err.status === 400) {
+      const message = `Soundcloud couldn't find a track with that URL.
+                       Are your sure it's correctly spelled?`;
+      dispatcher.dispatch({
+        type: "SET_ERROR",
+        message
+      });
+    }
     dispatcher.dispatch({ type: "REMOVE_LOADER" });
   });
 }

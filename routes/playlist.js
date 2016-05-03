@@ -23,18 +23,24 @@ router.get('/:id', (req, res) => {
 router.post("/", (req, res) => {
   const regexp = /((https:\/\/)|(http:\/\/)|(www.)|(\s))+(soundcloud.com\/)+[a-zA-Z0-9\-\.]+(\/)+[a-zA-Z0-9\-\.]+/;
   if (req.body.track.url.match(regexp) && req.body.track.url.match(regexp)[2]) {
-    console.log("yep!!");
-    DAL.addTrack(req.body.playlistId, req.body.track)
-    .then(r => {
-      if (r) {
-        res.send(200);
+    DAL.getSoundCloudData(req.body.track.url)
+    .then(resp => {
+      if (resp === 404) {
+        res.send(400, "SoundCloud could not find the requested song");
       } else {
-        res.send(500);
+        DAL.addTrack(req.body.playlistId, req.body.track)
+        .then(r => {
+          if (r) {
+            res.send(200);
+          } else {
+            res.send(500);
+          }
+        });
       }
     })
     .catch(err => {
       console.log(err.message);
-      res.send("Sorry, there was an error adding the track to the database");
+      res.send(400, "Sorry, there was an error adding the track to the database");
     });
   } else {
     console.log("nope!");

@@ -50,7 +50,6 @@ export default class App extends React.Component {
       id: uuid.v4()
     };
     if (this.validateSoundCloudUrl(this.refs.newTrack.value)) {
-      console.log("should fucking validate, k");
       PlaylistActions.createTrack(newTrack, this.props.params.playlist);
     } else {
       PlaylistActions.setError(`The URL does not seem to be valid. Make sure it
