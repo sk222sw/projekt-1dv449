@@ -5,7 +5,9 @@ Plurlist är en sammansättning av orden *plural*, *url* och *list* och är en w
 
 Liknande appar jag hittat är native-appen [Tomwhawk-player](https://www.tomahawk-player.org/), som tydligen ska vara rätt besvärlig att få att funka, och iOS-appen [Amplifind](http://www.amplifindapp.com/). Ingen av dem har dock möjlighet att visa liknande artister eller artistinfo.
 
-I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, ReactJS (med Flux för att hantera dataflöde och state) och NodeJS. För frontendkod avänder jag mig av ES2015 som transpileras med hjälp av Babel, och Webpack för att bundla och minifiera kod. [OfflineJS](https://github.com/HubSpot/offline) används för att varna användaren för tappad uppkoppling.
+I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB (med Mongoose som ORM), ExpressJS, ReactJS (med Flux för att hantera dataflöde och state) och NodeJS. För frontendkod avänder jag mig av ES2015 som transpileras med hjälp av Babel, och Webpack för att bundla och minifiera kod. [OfflineJS](https://github.com/HubSpot/offline) används för att varna användaren för tappad uppkoppling.
+
+Jag tycker att Express och Mongoose är smidigt att arbeta med, därför valde jag dem. ReactJS är smidigt att arbeta med och jag upplever ofta att webbappar som kör React känns snabba, därför valde jag React. Jag föredrar ES6 framför ES5, därför använder jag det. Webpack gör det bland annat smidigt att bundla och minifiera kod, och gör transpileringen av ES6-kod till ES5-kod enkel, därför använder jag det.
 
 ### API:er
 En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info från [Soundclouds](www.soundcloud.com) API, artistinformation hämtas från [Discogs](www.discogs.com) API, och liknande artister hämtas från [Spotifys](www.spotify.com) API.
@@ -28,9 +30,11 @@ Det finns såklart risk att de API:er jag använder kan innehålla skadlig kod, 
 
 **Ostylad HTML-flash** Eftersom appen är byggd helt med React och all CSS är kopplad till React-element så laddas både CSS och Javascript samtidigt, därför blir det ingen flash med en ostylad HTML-sida, trots att CSS:en laddas kort efter sidan laddats.
 
-**Cachning** De två scriptiler som skickas till klientetn cachas. Eftersom appen är ny är chansen för ändringar relativt stora, därför cachas de endast en dag.
+**Cachning** De två scriptfiler som skickas till klienten cachas. Eftersom appen är ny är chansen för ändringar relativt stora, därför cachas de endast en dag.
 
-**Komprimering** Statiska filer komprimeras på servern med [express serve-static](https://github.com/expressjs/serve-static)
+**Komprimering** Statiska filer komprimeras på servern med [express serve-static](https://github.com/expressjs/serve-static).
+
+**Minifiering** Javascript och CSS bundlas och minifieras med hjälp av Webpack.
 
 ## Offline-first  
 Jag använder mig av OfflineJS för att varna användaren när den tappar uppkopplingen. Då visas en varningsruta, och OfflineJS fortsätter kontinuerligt att kolla om uppkopplingen är återupprättad, och meddelar isåfall användaren om detta. 
@@ -40,9 +44,17 @@ För att lägga till en låt i en spellista krävs det att man har tillgång til
 För att hämta artistinfo, hämta liknande artister eller för att spela en låt behöver anrop till API:er göras, så någon offline-first-lösning kring detta har också känts onödig, och inte implementerats.
 
 ## Risker med din applikation  
-Reflektera över vilka risker det finns med din applikation; rent tekniskt, säkerhet, etiskt m.m.
-visa urler funkar inte :S
+Eftersom hela appen är byggd med React krävs Javascript på klienten, så en del användare kan inte använda Plurlist alls om de inte slår på Javascript.  
 
+Det finns såklart risk att de API:er jag använder ligger nere. Dock är det endast Soundclouds API som är nödvändigt för att appen ska gå att använda, medan de andra API:erna endast tillför extra features.
+
+Uppdateringar i API:erna som gör att Plurlist inte fungerar är en risk. Soundclouds API fick en rejäl ansiktslyftning för ett tag sen, och jag har gjort bedömningen att den håller ett tag framöver. Den del av Spotifys API som jag använder hörde tidigare till [http://the.echonest.com/](http://the.echonest.com/), och därför finns såklart en risk att Spotify kan göra ändringar i API:et, men när Spotify gick från version 1 till version 2 i sitt API så fortsatte de stödja version 1 en lång tid, därför anser jag att det borde finnas tid att uppdatera Plurlist om Spotify gör ändringar.
+
+För att hämta information från Soundclouds API skickar jag in URL:en till en låt från Soundcloud, till exempel https://soundcloud.com/artist_name/track_title, så som Soundcloud rekommenderar. Trots detta har jag märkt att en del URL:er ger en 404. Jag har inte lyckats hitta några mönster i detta, men har rapporterat det som en bugg till Soundcloud. Det har dock varit svårt att testa då det bara hänt med ett fåtal URL:er.
+
+Ett annat problem uppstår när en artist är registrerad under ett Soundcloud-username som inte är samma som artistnamnet, då är det det registrerade användarnamnet som skickas till Spotify/Discogs, och det leder isåfall ofta till att ingen information hittas. Detta har jag tänkt lösa genom att användaren själv kan fylla i/ändra namn på låtar i spellistan, men jag har inte hunnit implementera detta ännu.
+
+Några etiska synpunkter kan jag inte komma på i dagsläget. Soundcloud uppmanar folk att använda deras API för att bygga egna appar, och eftersom låtarna spelas i en inbakad spelare som tillhandahålls av Soundcloud så går de inte miste av någon statistik etc, eftersom själva uppspelningen fortfarande sker via Soundcloud. När jag bygger ut appen med fler källor så bör jag dock se upp så att jag inte strider mot några regler i andra API:er kring blandningen av olika musikkällor.
 
 ## Egen reflektion kring projektet  
 Här tar du upp hur projektet har gått. Vilka eventuella problem har du stött på? Finns det funktioner som du velat implementera men inte hunnit? Hur skulle du vilja jobba vidare med din applikation?
