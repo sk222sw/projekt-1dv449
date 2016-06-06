@@ -8,7 +8,7 @@ Liknande appar jag hittat är native-appen [Tomwhawk-player](https://www.tomahaw
 I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, ReactJS (med Flux för att hantera dataflöde och state) och NodeJS. För frontendkod avänder jag mig av ES2015 som transpileras med hjälp av Babel, och Webpack för att bundla och minifiera kod.
 
 ### API:er
-En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info från [www.soundcloud.com](Soundclouds) API, artistinformation hämtas från [www.discogs.com](Discogs) API, och liknande artister hämtas från [www.spotify.com](Spotifys) API.
+En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info från [Soundclouds](www.soundcloud.com) API, artistinformation hämtas från [Discogs](www.discogs.com) API, och liknande artister hämtas från [Spotifys](www.spotify.com) API.
 
 ## schematisk bild  
 över applikationens beståndsdelar så att läsaren har enklare att förstå applikationens dataflöde.
