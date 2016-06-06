@@ -18,6 +18,8 @@ En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info fr�
 Hur har du funderat kring säkerhet och prestanda och vilken teori har du kopplat detta emot.
 
 ## Offline-first  
+
+
 Hur har du tänkt kring offline-first?
 
 ## Risker med din applikation  
