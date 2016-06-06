@@ -3,7 +3,7 @@
 ## Inledning  
 Plurlist är en sammansättning av orden *plural*, *url* och *list* och är en webbapp där man genom att kopiera URL:en till en låt kan skapa spellistor som man sedan kan bokmärka och dela med sig av via en URL. När man lyssnar på en låt kan man också få information om artisten, och lista liknande artister. I dagsläget finns endast stöd för SoundCloud, men planer finns att utöka stöd för YouTube och kanske även Spotify.
 
-Liknande appar jag hittat är native-appen [https://www.tomahawk-player.org/](Tomwhawk-player), som tydligen ska vara rätt besvärlig att få att funka, och iOS-appen [http://www.amplifindapp.com/](Amplifind). Ingen av dem har dock möjlighet att visa liknande artister eller artistinfo.
+Liknande appar jag hittat är native-appen [Tomwhawk-player](https://www.tomahawk-player.org/), som tydligen ska vara rätt besvärlig att få att funka, och iOS-appen [Amplifind](http://www.amplifindapp.com/). Ingen av dem har dock möjlighet att visa liknande artister eller artistinfo.
 
 I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, ReactJS (med Flux för att hantera dataflöde och state) och NodeJS. För frontendkod avänder jag mig av ES2015 som transpileras med hjälp av Babel, och Webpack för att bundla och minifiera kod.
 
