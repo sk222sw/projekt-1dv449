@@ -10,12 +10,12 @@ I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, Rea
 ### API:er
 En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info från [Soundclouds](www.soundcloud.com) API, artistinformation hämtas från [Discogs](www.discogs.com) API, och liknande artister hämtas från [Spotifys](www.spotify.com) API.
 
-## schematisk bild  
+## Schematisk bild  
 
 ![data flow](https://raw.githubusercontent.com/sk222sw/projekt-1dv449/master/dataflow.jpg)
 
 ## Säkerhet och prestandaoptimering  
-Hur har du funderat kring säkerhet och prestanda och vilken teori har du kopplat detta emot.
+
 
 ## Offline-first  
 Jag använder mig av OfflineJS för att varna användaren när den tappar uppkopplingen. Då visas en varningsruta, och OfflineJS fortsätter kontinuerligt att kolla om uppkopplingen är återupprättad, och meddelar isåfall användaren om detta. 
@@ -26,6 +26,8 @@ För att hämta artistinfo, hämta liknande artister eller för att spela en lå
 
 ## Risker med din applikation  
 Reflektera över vilka risker det finns med din applikation; rent tekniskt, säkerhet, etiskt m.m.
+visa urler funkar inte :S
+
 
 ## Egen reflektion kring projektet  
 Här tar du upp hur projektet har gått. Vilka eventuella problem har du stött på? Finns det funktioner som du velat implementera men inte hunnit? Hur skulle du vilja jobba vidare med din applikation?
