@@ -14,7 +14,16 @@ En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info fr�
 
 ![data flow](https://raw.githubusercontent.com/sk222sw/projekt-1dv449/master/dataflow.jpg)
 
-## Säkerhet och prestandaoptimering  
+## Säkerhet  
+Plurlist är en enkel applikation, många av de tekniker som möjliggör de vanligaste säkerhetshålen är täppta automatiskt. Det finns ett sätt att skicka data till servern, och det är genom en POST-request till routen "/playlist", och datat som skickas in där valideras med en regex som bara accepterar Soundcloud-URL:er. Denna validering sker såväl på klienten som på servern. 
+
+Sessions eller cookies används inte alls i dagsläget, och utgör därför ingen risk.
+
+Eftersom jag använder mig av MongoDB så går det inte att göra traditionella SQL-injections. NoSQL-injections är dock möjligt men stoppas i den tidigare nämnda valideringen.
+
+Det finns såklart risk att de API:er jag använder kan innehålla skadlig kod, men eftersom Soundcloud, Spotify och Discogs är tre stora tjänster, som alla använder sina respektive API:er själva, har jag valt att lita på att de har någon typ av säkerhet som hindrar att skadlig kod infekterar deras API.
+
+## Prestandaoptimering  
 
 
 ## Offline-first  
