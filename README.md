@@ -20,7 +20,9 @@ Hur har du funderat kring säkerhet och prestanda och vilken teori har du koppla
 ## Offline-first  
 Jag använder mig av OfflineJS för att varna användaren när den tappar uppkopplingen. Då visas en varningsruta, och OfflineJS fortsätter kontinuerligt att kolla om uppkopplingen är återupprättad, och meddelar isåfall användaren om detta. 
 
-Hur har du tänkt kring offline-first?
+För att lägga till en låt i en spellista krävs det att man har tillgång till en SoundCloud-URL, och för att få tillgång till SoundCloud krävs en uppkoppling, därför ansåg jag att en offline-first-lösning när man lägger till låtar kändes onödig, eftersom man hämtar URL:en från en annan webbplats och behöver vara uppkopplad för att göra det. 
+
+För att hämta artistinfo, hämta liknande artister eller för att spela en låt behöver anrop till API:er göras, så någon offline-first-lösning kring detta har också känts onödig, och inte implementerats.
 
 ## Risker med din applikation  
 Reflektera över vilka risker det finns med din applikation; rent tekniskt, säkerhet, etiskt m.m.
