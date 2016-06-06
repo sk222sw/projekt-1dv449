@@ -7,6 +7,8 @@ Liknande appar jag hittat är native-appen [https://www.tomahawk-player.org/](To
 
 I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, ReactJS (med Flux för att hantera dataflöde och state) och NodeJS. För frontendkod avänder jag mig av ES2015 som transpileras med hjälp av Babel, och Webpack för att bundla och minifiera kod.
 
+Låtar hämtas från [www.soundcloud.com](Soundcloud), artistinformation hämtas från [www.discogs.com](Discogs) API, och liknande artister hämtas från [www.spotify.com](Spotify's) API.
+
 ## schematisk bild  
 över applikationens beståndsdelar så att läsaren har enklare att förstå applikationens dataflöde.
 
