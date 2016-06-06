@@ -24,7 +24,13 @@ Eftersom jag använder mig av MongoDB så går det inte att göra traditionella 
 Det finns såklart risk att de API:er jag använder kan innehålla skadlig kod, men eftersom Soundcloud, Spotify och Discogs är tre stora tjänster, som alla använder sina respektive API:er själva, har jag valt att lita på att de har någon typ av säkerhet som hindrar att skadlig kod infekterar deras API.
 
 ## Prestandaoptimering  
+**Få HTTP-requests** Jag använder Webpack för att slå ihop all klientside-javascript. Även CSS bundlas ihop med Javascript, vilket ger ännu färre requests. React och egen Javascript bundlas med CSS till en fil, och andra externa script (Soundcloud och OfflineJS) bundlas till en annan fil. Inga statiska bilder etc används.
 
+**Ostylad HTML-flash** Eftersom appen är byggd helt med React och all CSS är kopplad till React-element så laddas både CSS och Javascript samtidigt, därför blir det ingen flash med en ostylad HTML-sida, trots att CSS:en laddas kort efter sidan laddats.
+
+**Cachning** De två scriptiler som skickas till klientetn cachas. Eftersom appen är ny är chansen för ändringar relativt stora, därför cachas de endast en dag.
+
+**Komprimering** Statiska filer komprimeras på servern med [express serve-static](https://github.com/expressjs/serve-static)
 
 ## Offline-first  
 Jag använder mig av OfflineJS för att varna användaren när den tappar uppkopplingen. Då visas en varningsruta, och OfflineJS fortsätter kontinuerligt att kolla om uppkopplingen är återupprättad, och meddelar isåfall användaren om detta. 
