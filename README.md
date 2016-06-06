@@ -57,7 +57,11 @@ Ett annat problem uppstår när en artist är registrerad under ett Soundcloud-u
 Några etiska synpunkter kan jag inte komma på i dagsläget. Soundcloud uppmanar folk att använda deras API för att bygga egna appar, och eftersom låtarna spelas i en inbakad spelare som tillhandahålls av Soundcloud så går de inte miste av någon statistik etc, eftersom själva uppspelningen fortfarande sker via Soundcloud. När jag bygger ut appen med fler källor så bör jag dock se upp så att jag inte strider mot några regler i andra API:er kring blandningen av olika musikkällor.
 
 ## Egen reflektion kring projektet  
-Här tar du upp hur projektet har gått. Vilka eventuella problem har du stött på? Finns det funktioner som du velat implementera men inte hunnit? Hur skulle du vilja jobba vidare med din applikation?
+Det finns massvis med grejer som jag gärna hade hunnit med att implementera. För det första så vill jag att nästa låt i spellistan ska spelas upp automatiskt när en låt är slut. Det finns ett finish-event i Soundcloud-spelaren där jag kan kalla på en funktion som laddar nästa låt, men detta fungerar endast första gången spelaren laddas. En lösning på detta är att ladda om sidan när en låt tar slut, och hålla reda på state i en session. Eftersom script etc cachas skulle inte detta medföra några längre väntetider, men jag hann inte undersöka detta ytterligare.  
+
+Jag vill också utöka så att man kan lägga till låtar från Youtube, och eventellt Spotify, men detta har jag inte hunnit med. Nästa steg är alltså att lägga till stöd för Youtube, och undersöka om Spotifys ganska begränsade API går att använda för att lägga till låtar från Spotify också.
+
+Utöver detta tycker jag att arbetet har flutit på rätt bra. Jag tycker API:erna har varit ganska smidiga att jobba med, och att det varit en rolig, givande och inspirerande uppgift.
 
 ## Betygshöjande  
-Skriv också om de eventuella delar du anser vara betygshöjande med din applikation. Motivera varför du anser dessa vara betygshöjande.
+Jag har använt mig av fler än två externa tjänster och jag tycker att jag har en bra motivation till mina tekniker och optimering, annars håller jag mig nog mest på betygsnivå 3.
