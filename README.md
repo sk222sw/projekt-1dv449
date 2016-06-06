@@ -11,7 +11,8 @@ I detta projekt har jag använt mig av MERN-stacken, dvs MongoDB, ExpressJS, Rea
 En URL sparas, och när den spelas upp skapas en "embedded"-spelare med info från [Soundclouds](www.soundcloud.com) API, artistinformation hämtas från [Discogs](www.discogs.com) API, och liknande artister hämtas från [Spotifys](www.spotify.com) API.
 
 ## schematisk bild  
-över applikationens beståndsdelar så att läsaren har enklare att förstå applikationens dataflöde.
+
+![data flow](https://raw.githubusercontent.com/sk222sw/projekt-1dv449/master/dataflow.jpg)
 
 ## Säkerhet och prestandaoptimering  
 Hur har du funderat kring säkerhet och prestanda och vilken teori har du kopplat detta emot.
