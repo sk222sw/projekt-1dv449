@@ -4,10 +4,12 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const favicon = require("serve-favicon");
+const compression = require("compression");
 
 const routes = require('./routes/index');
 const playlist = require('./routes/playlist');
 const apiHandler = require('./routes/apiHandler');
+var serveStatic = require('serve-static')
 
 const app = express();
 
@@ -21,8 +23,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(__dirname + '/public', { maxAge: 86400000 })); // one day
+// app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(__dirname + '/public', { maxAge: 86400000 })); // one day
+
+app.use(compression());
+
+app.use(serveStatic(__dirname + '/public', {
+  maxAge: '1d'
+}));
 
 app.use('/', routes);
 app.use('/playlist', playlist);
