@@ -45,7 +45,7 @@ För att lägga till en låt i en spellista krävs det att man har tillgång til
 
 För att hämta artistinfo, hämta liknande artister eller för att spela en låt behöver anrop till API:er göras, så någon offline-first-lösning kring detta har också känts onödig, och inte implementerats.
 
-## Risker med din applikation  
+## Risker med applikationen  
 Eftersom hela appen är byggd med React krävs Javascript på klienten, så en del användare kan inte använda Plurlist alls om de inte slår på Javascript.  
 
 Det finns såklart risk att de API:er jag använder ligger nere. Dock är det endast Soundclouds API som är nödvändigt för att appen ska gå att använda, medan de andra API:erna endast tillför extra features.
