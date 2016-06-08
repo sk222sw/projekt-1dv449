@@ -101,10 +101,7 @@ DAL.prototype.getDiscogsInfo = function (artist) {
     request(options, (err, res, rawJson) => {
       if (err) { reject(err); }
       const jsonData = JSON.parse(rawJson);
-      if (jsonData.results > 0) {
-        resolve(jsonData.results[0].resource_url);
-      }
-      else resolve(false);
+      resolve(jsonData.results[0].resource_url);
     });
   });
 };

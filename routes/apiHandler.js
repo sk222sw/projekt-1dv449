@@ -54,16 +54,11 @@ apiHandler.post("/getSimilarArtists", (req, res) => {
 });
 
 apiHandler.post("/getArtistInfo", (req, res) => {
+  console.log(req.body.userName);
   DAL.getDiscogsInfo(req.body.userName)
-  .then(data => {
-    if (data === false) {
-      res.send(404);
-    } else {
-      DAL.getArtistInfo()
-      .then(response => {
-        res.send(response);
-      });
-    }
+  .then(DAL.getArtistInfo)
+  .then(response => {
+    res.send(response);
   });
 });
 

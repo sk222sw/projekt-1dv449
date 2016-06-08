@@ -28686,6 +28686,7 @@
 	  _axios2.default.post("/apiHandler/getArtistInfo", {
 	    userName: userName
 	  }).then(function (artistInfo) {
+	    console.log("info", artistInfo);
 	    _dispatcher2.default.dispatch({
 	      type: "GET_ARTIST_INFO",
 	      artistInfo: artistInfo

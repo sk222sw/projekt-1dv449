@@ -143,6 +143,7 @@ export function getArtistInfo(userName) {
     userName
   })
   .then(artistInfo => {
+    console.log("info", artistInfo);
     dispatcher.dispatch({
       type: "GET_ARTIST_INFO",
       artistInfo
